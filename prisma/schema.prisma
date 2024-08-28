@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CampaignStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum Platforms {
+  FACEBOOK
+  INSTAGRAM
+  TWITTER
+  LINKEDIN
+}
+
+enum CardStatus {
+  PENDING
+  INPROGRESS
+  COMPLETED
+}
+
+enum CardPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PostStatus {
+  SCHEDULED
+  PUBLISHED
+  DRAFT
+  CANCELED
+}
+
+model Client {
+  id          String     @id @default(uuid())
+  name        String
+  email       String
+  phoneNumber String
+  companyName String
+  industry    String
+  website     String     @db.Text()
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  campaigns   Campaign[]
+}
+
+model Campaign {
+  id        String         @id @default(uuid())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  status    CampaignStatus
+  budget    Int
+  platforms Platforms[]
+  orgId     String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  List     List[]
+  Post     Post[]
+}
+
+model List {
+  id    String @id @default(uuid())
+  title String
+  order Int
+
+  campaignId String
+  campaing   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  Card       Card[]
+}
+
+model Card {
+  id          String        @id @default(uuid())
+  title       String
+  order       Int
+  description String?
+  status      CardStatus    @default(PENDING)
+  priority    CardPriority?
+  dueDate     DateTime
+
+  listId String
+  list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id            String     @id @default(uuid())
+  scheduledDate DateTime
+  platform      Platforms
+  content       String     @db.Text
+  mediaUrl      String     @db.Text
+  status        PostStatus
+
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
