@@ -46,7 +46,8 @@ model Client {
   phoneNumber String
   companyName String
   industry    String
-  website     String     @db.Text()
+  orgId       String
+  website     String?    @db.Text()
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   campaigns   Campaign[]
