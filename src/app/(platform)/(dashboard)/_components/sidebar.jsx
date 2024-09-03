@@ -37,7 +37,7 @@ export function Sidebar() {
   ]
 
   return (
-    <aside className="flex flex-col gap-y-6 min-h-screen w-64 py-8 px-2 border-r border-main-shade shadow">
+    <aside className="flex flex-col sticky top-0 gap-y-6 h-screen w-64 py-8 px-2 border-r bg-main-light border-main-shade shadow">
       <ul className="flex flex-col gap-y-4">
         {navLinks.map(({ title, href, icon }) => (
           <NavItem
