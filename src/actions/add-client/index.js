@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { AddClient } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
+import { revalidatePath } from "next/cache";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -26,10 +27,12 @@ export async function handler(data) {
       }
     })
 
+    revalidatePath(`/agency/${orgId}/clients`)
+
     return { ok: true, data: client }
   } catch (error) {
     return { error: "Error creating the client!" }
   }
 }
 
-export let addClient = createSafeAction(AddClient, handler)
+export const addClient = createSafeAction(AddClient, handler)
