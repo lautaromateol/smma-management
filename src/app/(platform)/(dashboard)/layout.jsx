@@ -1,4 +1,3 @@
-import { ModalProvider } from "@/providers/modal-provider";
 import { Header } from "./_components/header";
 import { Sidebar } from "./_components/sidebar";
 import { Toaster } from "sonner";
@@ -11,7 +10,6 @@ export default function DashboardLayout({ children }) {
         <Header />
         <main className="flex-1 p-6">
           <Toaster />
-          <ModalProvider />
           {children}
         </main>
       </div>
