@@ -1,55 +1,39 @@
-import { ClientsTable } from "./_components/clients-table";
-import { Heading } from "../_components/heading";
-import { useOpenModal } from "@/hooks/use-open-modal";
-import ClientsButtons from "./_components/clients-buttons";
+import { DataTable } from "../_components/data-table";
+import { Heading } from "../../../_components/heading";
+import { ClientsButtons } from "./_components/clients-buttons";
+import { columns } from "./columns";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
-const clients = [
-  {
-    name: "Lautaro",
-    email: "lautaromateol@gmail.com",
-    phoneNumber: "3794280293",
-    companyName: "The Industry Inc",
-    industry: "Marketing",
-    website: "http://localhost:3000"
-  },
-  {
-    name: "Lautaro",
-    email: "lautaromateol@gmail.com",
-    phoneNumber: "3794280293",
-    companyName: "The Industry Inc",
-    industry: "Marketing",
-    website: "http://localhost:3000"
-  },
-  {
-    name: "Lautaro",
-    email: "lautaromateol@gmail.com",
-    phoneNumber: "3794280293",
-    companyName: "The Industry Inc",
-    industry: "Marketing",
-    website: "http://localhost:3000"
-  },
-  {
-    name: "Lautaro",
-    email: "lautaromateol@gmail.com",
-    phoneNumber: "3794280293",
-    companyName: "The Industry Inc",
-    industry: "Marketing",
-    website: "http://localhost:3000"
-  }
-]
+export default async function ClientsPage() {
 
-export default function ClientsPage() {
+  const { orgId } = auth()
+
+  const clients = await prisma.client.findMany({
+    where: {
+      orgId
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  })
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-8">
       <div className="flex items-center justify-between">
         <Heading
-          title="Clients page"
+          title="Clients"
           subtitle="View all your clients data here"
         />
         <ClientsButtons />
       </div>
-      <ClientsTable clients={clients} />
+      <div className="space-y-6">
+        <DataTable
+          data={clients}
+          columns={columns}
+          filterBy="name"
+          className="rounded-md border" />
+      </div>
     </section>
   )
 }
