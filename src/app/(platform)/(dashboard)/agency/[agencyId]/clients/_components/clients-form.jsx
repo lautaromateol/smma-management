@@ -5,38 +5,58 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { AddClient } from "@/actions/add-client/schema"
-import { useAction } from "@/hooks/use-action"
+import { EditClient } from "@/actions/edit-client/schema"
 import { addClient } from "@/actions/add-client"
-import { toast } from "sonner"
+import { editClient } from "@/actions/edit-client"
+import { useAction } from "@/hooks/use-action"
 import { useOpenModal } from "@/hooks/use-open-modal"
+import { toast } from "sonner"
 
-export function ClientsForm() {
+export function ClientsForm({ editValues = {} }) {
+
+  const { id } = editValues
+
+  const isEditSession = Boolean(id)
 
   const { onClose } = useOpenModal((state) => state)
 
   const form = useForm({
-    resolver: zodResolver(AddClient)
+    resolver: zodResolver(isEditSession ? EditClient : AddClient),
+    defaultValues:
+      isEditSession
+        ?
+        { ...editValues }
+        :
+        {}
   })
 
-  const { execute, isPending } = useAction(addClient, {
+  const { execute: executeCreate, isPending: isCreating } = useAction(addClient, {
     onSuccess: (data) => {
-      toast.success(`Client ${data.name} added to database`)
+      toast.success(`Client "${data.name}" added to database`)
       onClose()
     },
     onError: (error) => toast.error(error)
   })
 
-  function onSubmit({ name, email, phoneNumber, companyName, industry, website }) {
-    console.log({ name, email, phoneNumber, companyName, industry, website })
+  const { execute: executeEdit, isPending: isEditing } = useAction(editClient, {
+    onSuccess: (data) => {
+      toast.success(`Client "${data.name}" edited successfully`)
+      onClose()
+    },
+    onError: (error) => toast.error(error)
+  })
+
+  function onSubmit(data) {
+    isEditSession ? executeEdit({ ...data }) : executeCreate({ ...data })
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField 
-           control={form.control}
-           name="name"
-           render={({ field }) => (
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
@@ -44,12 +64,12 @@ export function ClientsForm() {
               </FormControl>
               <FormMessage />
             </FormItem>
-           )}
+          )}
         />
-        <FormField 
-           control={form.control}
-           name="email"
-           render={({ field }) => (
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
@@ -57,12 +77,12 @@ export function ClientsForm() {
               </FormControl>
               <FormMessage />
             </FormItem>
-           )}
+          )}
         />
-        <FormField 
-           control={form.control}
-           name="phoneNumber"
-           render={({ field }) => (
+        <FormField
+          control={form.control}
+          name="phoneNumber"
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
@@ -70,12 +90,12 @@ export function ClientsForm() {
               </FormControl>
               <FormMessage />
             </FormItem>
-           )}
+          )}
         />
-        <FormField 
-           control={form.control}
-           name="companyName"
-           render={({ field }) => (
+        <FormField
+          control={form.control}
+          name="companyName"
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Company Name</FormLabel>
               <FormControl>
@@ -83,12 +103,12 @@ export function ClientsForm() {
               </FormControl>
               <FormMessage />
             </FormItem>
-           )}
+          )}
         />
-        <FormField 
-           control={form.control}
-           name="industry"
-           render={({ field }) => (
+        <FormField
+          control={form.control}
+          name="industry"
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Industry</FormLabel>
               <FormControl>
@@ -96,12 +116,12 @@ export function ClientsForm() {
               </FormControl>
               <FormMessage />
             </FormItem>
-           )}
+          )}
         />
-        <FormField 
-           control={form.control}
-           name="website"
-           render={({ field }) => (
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Website (optional)</FormLabel>
               <FormControl>
@@ -109,13 +129,13 @@ export function ClientsForm() {
               </FormControl>
               <FormMessage />
             </FormItem>
-           )}
+          )}
         />
         <Button
           type="submit"
           variant="main"
           className="w-full"
-          disabled={isPending}
+          disabled={isCreating || isEditing || !form.formState.isDirty}
         >
           Submit
         </Button>
