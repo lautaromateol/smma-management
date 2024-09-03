@@ -5,8 +5,8 @@ const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata = {
   title: {
-    default: "SMMA Management",
-    template: "%s | SMMA Management"
+    default: "Adsync",
+    template: "%s | Adsync"
   }
 }
 
