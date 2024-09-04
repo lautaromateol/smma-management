@@ -15,7 +15,7 @@ export async function generatePDF(headers, data, title = 'Document') {
 
   // Título del documento
   page.drawText(title, {
-    x: 50,
+    x: 40,
     y: 820,
     size: 20,
     color: rgb(0, 0, 0.8),
@@ -26,7 +26,7 @@ export async function generatePDF(headers, data, title = 'Document') {
 
   // Calcular el espacio horizontal para las columnas
   const pageWidth = 595;
-  const margin = 50;
+  const margin = 20; // Márgenes ajustados al mínimo
   const availableWidth = pageWidth - margin * 2; // Espacio disponible para las columnas
   const columnWidth = availableWidth / headers.length; // Ancho para cada columna
 
@@ -37,6 +37,7 @@ export async function generatePDF(headers, data, title = 'Document') {
       y,
       size: 12,
       color: rgb(0, 0, 0),
+      maxWidth: columnWidth - 5, // Ajuste del ancho para evitar que el texto salga de su columna
     });
   });
 
@@ -53,6 +54,7 @@ export async function generatePDF(headers, data, title = 'Document') {
         y: y - rowIndex * 20,
         size: 10,
         color: rgb(0, 0, 0),
+        maxWidth: columnWidth - 5, // Ajuste del ancho para evitar que el texto salga de su columna
       });
     });
   });
