@@ -235,7 +235,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
-                    disabled={(date) => form.getValues().startDate ? date < new Date(form.getValues().startDate) : date < new Date()}
+                    disabled={(date) => form.getValues().start ? date < new Date(form.getValues().start) : date < new Date()}
                     initialFocus
                   />
                 </PopoverContent>
