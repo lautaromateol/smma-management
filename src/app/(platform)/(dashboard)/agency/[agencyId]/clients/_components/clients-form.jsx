@@ -81,7 +81,7 @@ export function ClientsForm({ editValues = {} }) {
         />
         <FormField
           control={form.control}
-          name="phoneNumber"
+          name="phone"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Phone Number</FormLabel>
@@ -94,7 +94,7 @@ export function ClientsForm({ editValues = {} }) {
         />
         <FormField
           control={form.control}
-          name="companyName"
+          name="company"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Company Name</FormLabel>

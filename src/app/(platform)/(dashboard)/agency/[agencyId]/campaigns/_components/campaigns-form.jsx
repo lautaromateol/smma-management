@@ -168,7 +168,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
         />
         <FormField
           control={form.control}
-          name="startDate"
+          name="start"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Start date</FormLabel>
@@ -207,7 +207,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
         />
         <FormField
           control={form.control}
-          name="endDate"
+          name="end"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>End date</FormLabel>
