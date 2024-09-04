@@ -7,6 +7,8 @@ import { useOpenModal } from "@/hooks/use-open-modal";
 import { Ellipsis, Pencil, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { ClientsForm } from "./clients-form";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export function ClientDropdown({ client }) {
 
@@ -18,6 +20,8 @@ export function ClientDropdown({ client }) {
     },
     onError: (error) => toast.error(error)
   })
+
+  const pathname = usePathname()
 
   return (
     <DropdownMenu>
@@ -54,7 +58,11 @@ export function ClientDropdown({ client }) {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer">
-          Campaigns history
+          <Link
+            href={`${pathname}/${client.id}`}
+          >
+            Client page
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
       <Modal
