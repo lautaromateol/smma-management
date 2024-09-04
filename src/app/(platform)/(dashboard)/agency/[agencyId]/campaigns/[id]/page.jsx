@@ -1,6 +1,6 @@
-import { Heading } from "@/app/(platform)/(dashboard)/_components/heading"
 import { prisma } from "@/lib/prisma"
 import { BudgetDistribution, CampaignDescription, CampaignPageButtons, CampaignStats, SocialMediaPosts } from "./_components"
+import { Heading } from "../../_components"
 
 export default async function CampaignPage({ params: { id } }) {
 
