@@ -32,6 +32,7 @@ export default async function ClientsPage() {
           data={clients}
           columns={columns}
           filterBy="name"
+          title="Clients"
           className="rounded-md border" />
       </div>
     </section>

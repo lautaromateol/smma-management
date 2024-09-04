@@ -36,6 +36,7 @@ export default async function CampaignsPage() {
         <DataTable
           data={campaigns}
           columns={columns}
+          title="Campaigns"
         />
       </div>
     </section>
