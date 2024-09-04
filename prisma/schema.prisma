@@ -40,23 +40,23 @@ enum PostStatus {
 }
 
 model Client {
-  id          String     @id @default(uuid())
-  name        String
-  email       String
-  phoneNumber String
-  companyName String
-  industry    String
-  orgId       String
-  website     String?    @db.Text()
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  campaigns   Campaign[]
+  id        String     @id @default(uuid())
+  name      String
+  email     String
+  phone     String
+  company   String
+  industry  String
+  orgId     String
+  website   String?    @db.Text()
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  campaigns Campaign[]
 }
 
 model Campaign {
   id        String         @id @default(uuid())
-  startDate DateTime
-  endDate   DateTime
+  start     DateTime
+  end       DateTime
   status    CampaignStatus @default(ACTIVE)
   budget    Int
   platforms Platforms[]
