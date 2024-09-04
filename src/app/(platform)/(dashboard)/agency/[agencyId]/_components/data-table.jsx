@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 import {
@@ -17,15 +18,22 @@ import {
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { generatePDF } from "@/lib/generatePDF"
 
 export function DataTable({
   columns,
   data,
   filterBy,
-  className
+  title,
+  className,
 }) {
 
+  const headers = columns.filter((column) => typeof column.header === "string").map((column) => column.header)
+
   const [columnFilters, setColumnFilters] = useState([])
+  const [sorting, setSorting] = useState([])
+  const [columnVisibility, setColumnVisibility] = useState({})
 
   const table = useReactTable({
     data,
@@ -34,21 +42,57 @@ export function DataTable({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
-      columnFilters
+      columnFilters,
+      columnVisibility,
+      sorting,
     }
   })
 
   return (
     <div className="flex flex-col gap-y-2">
-      {filterBy && <div className="flex items-center">
-        <Input
-          placeholder="Filter by name..."
-          value={table.getColumn(filterBy)?.getFilterValue() ?? ""}
-          onChange={(event) => table.getColumn(filterBy)?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
-      </div>}
+      <div className="flex items-center">
+        {filterBy &&
+          <Input
+            placeholder="Filter by name..."
+            value={table.getColumn(filterBy)?.getFilterValue() ?? ""}
+            onChange={(event) => table.getColumn(filterBy)?.setFilterValue(event.target.value)}
+            className="max-w-sm"
+          />
+        }
+        <div className="flex items-center gap-x-2 ml-auto">
+          <Button
+            onClick={() =>  generatePDF(headers, data, title)} 
+            variant="outline">
+            Download to PDF
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {
+                table.getAllColumns().filter((column) => column.getCanHide())
+                  .map((column) => (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))
+              }
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
       <div className={className}>
         <Table>
           <TableHeader>
