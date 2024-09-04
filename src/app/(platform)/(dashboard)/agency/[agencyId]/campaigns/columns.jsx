@@ -40,7 +40,7 @@ export const columns = [
     accessorKey: "start",
     header: "Start",
     cell: ({ row }) => {
-      const date = row.getValue("startDate")
+      const date = row.getValue("start")
       return <p>{formatDate(new Date(date))}</p>
     }
   },
@@ -48,7 +48,7 @@ export const columns = [
     accessorKey: "end",
     header: "End",
     cell: ({ row }) => {
-      const date = row.getValue("endDate")
+      const date = row.getValue("end")
       return <p>{formatDate(new Date(date))}</p>
     }
   },
