@@ -37,16 +37,16 @@ export const columns = [
     header: "Status"
   },
   {
-    accessorKey: "startDate",
-    header: "Start date",
+    accessorKey: "start",
+    header: "Start",
     cell: ({ row }) => {
       const date = row.getValue("startDate")
       return <p>{formatDate(new Date(date))}</p>
     }
   },
   {
-    accessorKey: "endDate",
-    header: "End Date",
+    accessorKey: "end",
+    header: "End",
     cell: ({ row }) => {
       const date = row.getValue("endDate")
       return <p>{formatDate(new Date(date))}</p>
