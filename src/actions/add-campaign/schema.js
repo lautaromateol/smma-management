@@ -13,10 +13,10 @@ export const AddCampaign = z.object({
   }).min(10, {
     message: "Campaign objective must be at least of 10 characters"
   }),
-  startDate: z.date({
+  start: z.date({
     message: "Start date is required"
   }),
-  endDate: z.date({
+  end: z.date({
     message: "Start date is required"
   })
 })

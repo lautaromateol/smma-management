@@ -12,15 +12,15 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { client, budget, startDate, endDate, objective, platforms } = data
+  const { client, budget, start, end, objective, platforms } = data
 
   try {
     const campaign = await prisma.campaign.create({
       data: {
         clientId: client,
         budget: Number(budget),
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
+        start: new Date(start),
+        end: new Date(end),
         platforms,
         objective,
         orgId

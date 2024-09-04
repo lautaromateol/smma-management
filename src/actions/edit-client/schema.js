@@ -16,12 +16,12 @@ export const EditClient = z.object({
   }).email({
     message: "This is not a valid email"
   }),
-  phoneNumber: z.string({
+  phone: z.string({
     message: "Client phone number is required"
   }).min(3, {
     message: "Client phone number must be at least of 3 characters"
   }),
-  companyName: z.string({
+  company: z.string({
     message: "Client company name is required"
   }).min(3, {
     message: "Client company name must be at least of 3 characters"

@@ -12,15 +12,15 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { name, email, phoneNumber, companyName, industry, website } = data
+  const { name, email, phone, company, industry, website } = data
 
   try {
     const client = await prisma.client.create({
       data: {
         name,
         email,
-        phoneNumber,
-        companyName,
+        phone,
+        company,
         industry,
         website,
         orgId
