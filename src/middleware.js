@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const isPublicRoute = createRouteMatcher(["/", "/api/webhook", '/sign-in(.*)', '/sign-up(.*)']);
+const isPublicRoute = createRouteMatcher(["/","/api/facebook-auth", "/api/webhook", '/sign-in(.*)', '/sign-up(.*)']);
 
 export default clerkMiddleware((auth, req) => {
   const { userId, orgId } = auth()
