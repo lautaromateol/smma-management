@@ -18,7 +18,7 @@ export default async function CampaignPage({ params: { id } }) {
   })
 
   return (
-    <div className="space-y-8">
+    <section className="space-y-8">
       <header className="space-y-4">
         <div className="flex items-center justify-between">
           <Heading
@@ -33,6 +33,6 @@ export default async function CampaignPage({ params: { id } }) {
         <BudgetDistribution />
         <CampaignStats />
       </div> */}
-    </div>
+    </section>
   )
 }
