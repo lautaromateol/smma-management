@@ -4,6 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { EditClient } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { revalidatePath } from "next/cache";
+import { createAudtiLog } from "@/lib/create-audit-log";
+import { Action, EntityType } from "@prisma/client";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -21,6 +23,13 @@ export async function handler(data) {
       data: {
         ...data
       }
+    })
+
+    await createAudtiLog({
+      action: Action.UPDATE,
+      entityType: EntityType.CLIENT,
+      entityTitle: client.name,
+      entityId: client.id
     })
 
     revalidatePath(`/agency/${orgId}/clients`)
