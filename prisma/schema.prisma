@@ -48,13 +48,21 @@ model Client {
   industry  String
   orgId     String
   website   String?    @db.Text()
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
   campaigns Campaign[]
+  contracts Contract[]
+
+  userAccessToken            String?
+  pageAccessToken            String?
+  instagramBusinessAccountId String?
+  adAccountId                String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Campaign {
   id        String         @id @default(uuid())
+  name      String
   start     DateTime
   end       DateTime
   status    CampaignStatus @default(ACTIVE)
@@ -107,4 +115,39 @@ model Post {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Contract {
+  id   String @id @default(uuid())
+  name String
+
+  fullPath    String
+  contractUrl String @db.Text()
+
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+enum EntityType {
+  CLIENT
+  CAMPAIGN
+}
+
+enum Action {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+model ActivityLog {
+  id          String     @id @default(uuid())
+  orgId       String
+  entityTitle String
+  entityId    String
+  entityType  EntityType
+  action      Action
+  userName    String
+  userImage   String
+  createdAt   DateTime   @default(now())
 }
