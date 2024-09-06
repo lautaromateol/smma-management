@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
-import { ClientInfo, SocialAccountsLink } from "./_components"
+import { ClientContracts, ClientInfo, SocialAccountsLink, Timeline } from "./_components"
 import { DataTable, Heading } from "../../_components"
 import { clientCampaignColumns } from "./columns"
 
@@ -9,7 +9,10 @@ export default async function ClientPage({ params: { id } }) {
   const { orgId } = auth()
 
   const client = await prisma.client.findUnique({
-    where: { id, orgId }
+    where: { id, orgId },
+    include: {
+      contracts: true
+    }
   })
 
   const campaigns = await prisma.campaign.findMany({
@@ -17,6 +20,17 @@ export default async function ClientPage({ params: { id } }) {
       clientId: client.id,
       orgId
     }
+  })
+
+  const activityLogs = await prisma.activityLog.findMany({
+    where: {
+      entityId: client.id,
+      orgId
+    },
+    orderBy: {
+      createdAt: "desc"
+    },
+    take: 4
   })
 
   return (
@@ -33,7 +47,11 @@ export default async function ClientPage({ params: { id } }) {
         data={campaigns}
         title={`${client.name} campaigns`}
       />
-      <SocialAccountsLink />
+      <SocialAccountsLink id={client.id} />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-x-4">
+        <ClientContracts id={client.id} contracts={client.contracts} />
+        <Timeline activities={activityLogs} />
+      </div>
     </section>
   )
 }
