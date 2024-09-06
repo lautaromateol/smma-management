@@ -3,7 +3,7 @@ import { CardWrapper } from "../../../_components";
 import { Button } from "@/components/ui/button";
 import { FacebookButton } from ".";
 
-export function SocialAccountsLink({ id }) {
+export function SocialAccountsLink({ id, orgId }) {
   return (
     <CardWrapper
       title="Social media accounts"
@@ -11,7 +11,7 @@ export function SocialAccountsLink({ id }) {
       className="border-none"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-       <FacebookButton id={id} />
+       <FacebookButton id={id} orgId={orgId} />
         <div className="flex items-center justify-between border p-4 rounded-md">
           <div className="flex items-center gap-x-2">
             <Instagram className="size-4" />

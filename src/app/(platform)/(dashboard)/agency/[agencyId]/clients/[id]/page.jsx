@@ -47,7 +47,7 @@ export default async function ClientPage({ params: { id } }) {
         data={campaigns}
         title={`${client.name} campaigns`}
       />
-      <SocialAccountsLink id={client.id} />
+      <SocialAccountsLink id={client.id} orgId={client.orgId} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-x-4">
         <ClientContracts id={client.id} contracts={client.contracts} />
         <Timeline activities={activityLogs} />
