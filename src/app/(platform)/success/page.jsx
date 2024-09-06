@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { useState, useTransition } from "react"
 import { API_URL } from "@/constants/site"
 
@@ -10,7 +10,6 @@ export default function SuccessPage() {
   const [pending, startTransition] = useTransition()
   const [error, setError] = useState(false)
   const searchParams = useSearchParams()
-  const router = useRouter()
 
   const code = searchParams.get("code")
   const state = searchParams.get("state")
@@ -25,9 +24,6 @@ export default function SuccessPage() {
       const response = await fetch(`${API_URL}/facebook-auth?code=${code}&id=${id}&agencyId=${agencyId}`)
       if (!response.ok) {
         setError(true)
-      } else {
-        const { token } = await response.json()
-        router.push(`/agency/${agencyId}/clients/${token.clientId}`)
       }
     })
   }

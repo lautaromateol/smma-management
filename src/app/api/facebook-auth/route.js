@@ -17,7 +17,7 @@ export async function GET(req) {
 
   try {
     const response = await fetch(`https://graph.facebook.com/v20.0/oauth/access_token?client_id=${process.env.FACEBOOK_CLIENT_ID}&redirect_uri=${process.env.FACEBOOK_REDIRECT_URI}&client_secret=${process.env.FACEBOOK_CLIENT_SECRET}&code=${code}`)
-        
+
     const data = await response.json()
 
     console.log(data)
@@ -34,7 +34,7 @@ export async function GET(req) {
 
       revalidatePath(`/agency/${agencyId}/clients/${token.clientId}`)
 
-      return NextResponse.json({ token }, { status: 200 })
+      return NextResponse.redirect(new URL(`/agency/${agencyId}/clients/${token.clientId}`, req.url))
     }
 
   } catch (error) {
