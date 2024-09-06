@@ -50,11 +50,10 @@ model Client {
   website   String?    @db.Text()
   campaigns Campaign[]
   contracts Contract[]
+  metaAccessToken MetaAccessToken?
 
-  metaAccessToken String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 }
 
 model Campaign {
@@ -147,4 +146,14 @@ model ActivityLog {
   userName    String
   userImage   String
   createdAt   DateTime   @default(now())
+}
+
+model MetaAccessToken {
+  id        String   @id @default(uuid())
+  token     String
+  type      String?
+  expiresIn DateTime
+
+  clientId String @unique
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 }
