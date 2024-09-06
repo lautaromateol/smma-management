@@ -34,7 +34,7 @@ export async function GET(req) {
 
       revalidatePath(`/agency/${agencyId}/clients/${token.clientId}`)
 
-      return NextResponse.redirect(new URL(`/agency/${agencyId}/clients/${token.clientId}`, req.url))
+      return NextResponse.json({ token })
     }
 
   } catch (error) {
