@@ -40,20 +40,24 @@ enum PostStatus {
 }
 
 model Client {
-  id        String     @id @default(uuid())
-  name      String
-  email     String
-  phone     String
-  company   String
-  industry  String
-  orgId     String
-  website   String?    @db.Text()
-  campaigns Campaign[]
-  contracts Contract[]
-  metaAccessToken MetaAccessToken?
+  id                 String              @id @default(uuid())
+  name               String
+  email              String
+  phone              String
+  company            String
+  industry           String
+  orgId              String
+  website            String?             @db.Text()
+  campaigns          Campaign[]
+  contracts          Contract[]
+  metaAccessToken    MetaAccessToken?
+  twitterAccessToken TwitterAccessToken?
+  linkedInAccessToken LinkedInAccessToken?
+  facebookProfile    FacebookProfile?
+  twitterProfile     TwitterProfile?
 
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
 }
 
 model Campaign {
@@ -153,6 +157,45 @@ model MetaAccessToken {
   token     String
   type      String?
   expiresIn DateTime
+
+  clientId String @unique
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model TwitterAccessToken {
+  id           String   @id @default(uuid())
+  token        String
+  type         String
+  expiresIn    DateTime
+  refreshToken String
+
+  clientId String @unique
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model LinkedInAccessToken {
+  id        String   @id @default(uuid())
+  token     String
+  expiresIn DateTime
+
+  clientId String @unique
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model FacebookProfile {
+  id    String @id @default(uuid())
+  name  String
+  image String
+
+  clientId String @unique
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model TwitterProfile {
+  id       String @id @default(uuid())
+  name     String
+  username String
+  image    String
 
   clientId String @unique
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
