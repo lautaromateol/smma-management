@@ -12,7 +12,8 @@ export default async function ClientPage({ params: { id } }) {
     where: { id, orgId },
     include: {
       contracts: true,
-      metaAccessToken: true
+      metaAccessToken: true,
+      twitterAccessToken: true
     }
   })
 
@@ -48,11 +49,11 @@ export default async function ClientPage({ params: { id } }) {
         data={campaigns}
         title={`${client.name} campaigns`}
       />
-      <SocialAccountsLink client={client} />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-x-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+        <SocialAccountsLink client={client} />
         <ClientContracts id={client.id} contracts={client.contracts} />
-        <Timeline activities={activityLogs} />
       </div>
+      <Timeline activities={activityLogs} />
     </section>
   )
 }
