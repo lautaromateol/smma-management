@@ -1,6 +1,6 @@
 import { OrganizationSwitcher } from "@clerk/nextjs"
 import { experimental__simple } from "@clerk/themes"
-import { Logo } from "./logo"
+import { Logo } from "../../../../components/logo"
 
 export function Header() {
   return (
