@@ -66,7 +66,7 @@ export function ClientContracts({ id, contracts }) {
     <CardWrapper
       title="Client contracts"
       description="Add or review your service contracts with this client"
-      className="col-span-2 border-none"
+      className="border-none"
     >
       <div className="space-y-2 mb-4">
         {

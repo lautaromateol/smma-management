@@ -5,9 +5,9 @@ export async function Timeline({ activities }) {
 
   return (
     <CardWrapper
-      title="Timeline & logs changes"
+      title="Timeline & activity logs"
       description="Review the activity of this client on the app"
-      className="border-none col-span-2"
+      className="border-none"
     >
       <div className="space-y-2">
         {activities.map((activity) => (
