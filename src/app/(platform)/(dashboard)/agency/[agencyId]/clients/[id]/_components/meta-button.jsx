@@ -16,21 +16,21 @@ export function MetaButton({ client }) {
 
   const { data, isPending } = useQuery({
     queryKey: ["client-meta-data", client.id],
-    queryFn: () => fetcher(`/api/clients/meta-data?token=${client.metaAccessToken.token}`)
+    queryFn: () => fetcher(`/api/clients/meta-data?token=${client.metaAccessToken.token}&client_id=${client.id}`)
   })
 
   const isTokenExpired = client.metaAccessToken ? isAfter(new Date(), new Date(client.metaAccessToken.expiresIn)) : false
 
   if (isPending && client.metaAccessToken) {
     return (
-      <Skeleton className="h-20 col-span-2" />
+      <Skeleton className="h-20" />
     )
   }
 
   if (!client.metaAccessToken || isTokenExpired) {
     return (
-      <div className="flex flex-col gap-y-2 col-span-2">
-        {isTokenExpired && 
+      <div className="flex flex-col gap-y-2">
+        {isTokenExpired &&
           <div className="bg-red-200 text-destructive border border-destructive p-2 font-medium text-sm rounded-md">
             The Meta access token for this account is expired. Please authenticate again.
           </div>
@@ -53,15 +53,17 @@ export function MetaButton({ client }) {
   }
 
   return (
-    <div className="flex items-center gap-x-2 border p-4 rounded-md col-span-2">
-      <Image
-        src={data.picture.data.url}
-        width={40}
-        height={40}
-        className="rounded-full"
-        alt="User Meta profile picture"
-      />
-      <p className="font-medium text-base text-neutral-700">{`${data.first_name} ${data.last_name}`}</p>
+    <div className="flex items-center justify-between border p-4 rounded-md">
+      <div className="flex items-center gap-x-2">
+        <Image
+          src={data.image}
+          width={40}
+          height={40}
+          className="rounded-full"
+          alt="User Meta profile picture"
+        />
+        <p className="font-medium text-base text-neutral-700">{data.name}</p>
+      </div>
       <FaFacebook className="size-4" />
     </div>
   )
