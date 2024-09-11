@@ -1,0 +1,2 @@
+export const LINKEDIN_CLIENT_ID = "77vnfis0dib2o9"
+export const LINKEDIN_REDIRECT_URI = process.env.NODE_ENV === "production" ? "https://adsync.vercel.app/success/linkedin" : "http://localhost:3000/success/linkedin" 
