@@ -1,12 +1,13 @@
-import { auth } from "@clerk/nextjs/server"
-import { Calendar, Info, LayoutDashboardIcon, Megaphone, User } from "lucide-react"
+"use client"
+import { Calendar, Info, LayoutDashboardIcon, Megaphone, User, X } from "lucide-react"
 import { NavItem } from "./nav-item"
 import { SignOutButton } from "./sign-out-button"
+import { useOpenSidebar } from "@/hooks/use-open-sidebar"
+import { cn } from "@/lib/utils"
 
+export function Sidebar({ orgId }) {
 
-export function Sidebar() {
-
-  const { orgId } = auth()
+  const { isOpen, close } = useOpenSidebar((state) => state)
 
   const navLinks = [
     {
@@ -37,18 +38,22 @@ export function Sidebar() {
   ]
 
   return (
-    <aside className="flex flex-col sticky top-0 gap-y-12 h-screen w-64 py-8 px-2 border-r bg-main-light border-main-shade shadow">
-      <ul className="flex flex-col gap-y-4">
-        {navLinks.map(({ title, href, icon }) => (
-          <NavItem
-            key={href}
-            title={title}
-            href={href}
-            icon={icon}
-          />
-        ))}
-      </ul>
-      <SignOutButton />
-    </aside>
+      <aside className={cn(
+        "flex flex-col top-14 md:top-0 left-0 transform -translate-x-full transition-transform duration-300 ease-in-out gap-y-12 h-screen w-64 py-8 px-2 z-50 border-r bg-main-light border-main-shade shadow",
+        isOpen ? "fixed md:sticky translate-x-0" : "fixed"
+      )}>
+        <X onClick={close} className="size-4 text-neutral-500 cursor-pointer absolute top-4 right-4" />
+        <ul className="flex flex-col gap-y-4 mt-4">
+          {navLinks.map(({ title, href, icon }) => (
+            <NavItem
+              key={href}
+              title={title}
+              href={href}
+              icon={icon}
+            />
+          ))}
+        </ul>
+        <SignOutButton />
+      </aside>
   )
 }
