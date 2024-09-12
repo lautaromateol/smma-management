@@ -34,12 +34,6 @@ const posts = [
 
 export function SocialMediaPosts() {
   return (
-    <CardWrapper
-        title="Social media ads"
-        description="Your campaign ads with filtering, sorting and searching."
-        className="border-none"
-      >
-        <DataTable data={posts} columns={socialMediaPostsColumns} />
-      </CardWrapper>
+    <DataTable data={posts} columns={socialMediaPostsColumns} />
   )
 }

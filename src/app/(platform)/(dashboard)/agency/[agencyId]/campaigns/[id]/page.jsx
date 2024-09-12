@@ -28,11 +28,11 @@ export default async function CampaignPage({ params: { id } }) {
         </div>
         <CampaignDescription campaign={campaign} />
       </header>
-      {/* <SocialMediaPosts />
+      <SocialMediaPosts />
       <div className="grid grid-cols-4">
         <BudgetDistribution />
         <CampaignStats />
-      </div> */}
+      </div>
     </section>
   )
 }
