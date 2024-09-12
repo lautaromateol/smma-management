@@ -1,9 +1,9 @@
 "use client"
+import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { useOpenNavbar } from "@/hooks/use-open-navbar";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
-import Link from "next/link";
 import { useRef } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 
@@ -68,6 +68,12 @@ export function NavBar() {
           </Link>
         </ul>
       </nav>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-40 lg:hidden"
+          onClick={close}
+        />
+      )}
     </>
   )
 }
