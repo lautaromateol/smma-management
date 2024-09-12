@@ -54,7 +54,7 @@ export function DataTable({
 
   return (
     <div className="flex flex-col gap-y-2">
-      <div className="flex items-center">
+      <div className="flex flex-col md:flex-row items-center gap-y-2">
         {filterBy &&
           <Input
             placeholder="Filter by name..."
@@ -63,7 +63,7 @@ export function DataTable({
             className="max-w-sm"
           />
         }
-        <div className="flex items-center gap-x-2 ml-auto">
+        <div className="flex items-center gap-x-2 md:ml-auto w-full md:w-auto">
           <Button
             onClick={() =>  generatePDF(headers, data, title)} 
             variant="outline">
@@ -71,7 +71,7 @@ export function DataTable({
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">
+              <Button className="w-full md:w-auto" variant="outline">
                 Columns
               </Button>
             </DropdownMenuTrigger>
