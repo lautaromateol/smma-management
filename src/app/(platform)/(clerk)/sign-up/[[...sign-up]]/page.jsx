@@ -1,3 +1,4 @@
+"use client"
 import { Logo } from "@/components/logo";
 import { SignUp, useSignUp } from "@clerk/nextjs";
 import Link from "next/link";
