@@ -1,6 +1,6 @@
 export function ClientInfo({ client }) {
   return (
-    <div className="flex items-center gap-x-6">
+    <div className="sm:grid grid-cols-2 md:flex items-center gap-x-6">
       <div className="flex items-center gap-x-2">
         <p className="text-sm font-light">Phone:</p>
         <p className="text-sm">{client.phone}</p>
