@@ -1,30 +1,37 @@
 import { Logo } from "@/components/logo";
-import { SignUp } from "@clerk/nextjs";
+import { SignUp, useSignUp } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default function SignUpPage() {
-  return (
-    <div className="flex flex-col items-center rounded-md shadow-md px-2 py-6 min-h-56">
-    <Logo />
-    <SignUp appearance={{
-      elements: {
-        card: {
-          paddingTop: "8px",
-          boxShadow: "none",
-          border: "none"
-        },
-        cardBox: {
-          boxShadow: "none",
-          border: "none"
-        },
-        footer: {
-          display: "none"
+
+  const { isLoaded } = useSignUp()
+
+  if(isLoaded) {
+    return (
+      <div className="flex flex-col items-center rounded-md shadow-md px-2 py-6 min-h-56">
+      <Logo />
+      <SignUp appearance={{
+        elements: {
+          card: {
+            paddingTop: "8px",
+            boxShadow: "none",
+            border: "none"
+          },
+          cardBox: {
+            boxShadow: "none",
+            border: "none"
+          },
+          footer: {
+            display: "none"
+          }
         }
-      }
-    }} />
-    <Link href="/sign-in" className="text-sm text-muted-foreground underline">
-    Already registered? Sign in now
-    </Link>
-  </div>
-  )
+      }} />
+      <Link href="/sign-in" className="text-sm text-muted-foreground underline">
+      Already registered? Sign in now
+      </Link>
+    </div>
+    )
+  }
+
+  return null
 }
