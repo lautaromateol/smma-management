@@ -1,6 +1,7 @@
-import { prisma } from "@/lib/prisma"
-import { BudgetDistribution, CampaignDescription, CampaignPageButtons, CampaignStats, SocialMediaPosts } from "./_components"
+import { CampaignDescription, MetaSection } from "./_components"
 import { Heading } from "../../_components"
+import { prisma } from "@/lib/prisma"
+import { fetcher } from "@/lib/fetcher"
 
 export default async function CampaignPage({ params: { id } }) {
 
@@ -11,28 +12,24 @@ export default async function CampaignPage({ params: { id } }) {
     include: {
       client: {
         select: {
-          name: true
+          name: true,
+          metaAccessToken: true
         }
       }
     }
   })
 
+  const metaPages = campaign.platforms.includes("META") ? await fetcher(`https://graph.facebook.com/v20.0/me/accounts?access_token=${campaign.client.metaAccessToken.token}`) : null
+
   return (
     <section className="space-y-8">
       <header className="space-y-4">
-        <div className="flex items-center justify-between">
-          <Heading
-            title={`${campaign.client.name}'s campaign`}
-          />
-          <CampaignPageButtons />
-        </div>
+        <Heading
+          title={`${campaign.client.name}'s campaign`}
+        />
         <CampaignDescription campaign={campaign} />
       </header>
-      <SocialMediaPosts />
-      <div className="grid grid-cols-4">
-        <BudgetDistribution />
-        <CampaignStats />
-      </div>
+      {metaPages?.data?.length > 0 && <MetaSection accessToken={campaign.client.metaAccessToken.token} pages={metaPages.data} />}
     </section>
   )
 }
