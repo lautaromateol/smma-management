@@ -12,7 +12,7 @@ export function Modal({ title, description, children, modalId }) {
         open={id}
         onOpenChange={onClose}
       >
-        <DialogContent>
+        <DialogContent className="overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-main-tint">
               {title}
