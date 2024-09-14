@@ -14,8 +14,7 @@ enum CampaignStatus {
 }
 
 enum Platforms {
-  FACEBOOK
-  INSTAGRAM
+  META
   TWITTER
   LINKEDIN
 }

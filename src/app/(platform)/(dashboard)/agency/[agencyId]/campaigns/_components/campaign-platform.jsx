@@ -1,22 +1,18 @@
-import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react"
 import { cloneElement } from "react"
+import { FaLinkedin, FaMeta, FaX } from "react-icons/fa6"
 
 const platforms = [
   {
-    name: "FACEBOOK",
-    icon: <Facebook />
-  },
-  {
-    name: "INSTAGRAM",
-    icon: <Instagram />
+    name: "META",
+    icon: <FaMeta />
   },
   {
     name: "LINKEDIN",
-    icon: <Linkedin />
+    icon: <FaLinkedin />
   },
   {
     name: "TWITTER",
-    icon: <Twitter />
+    icon: <FaX />
   }
 ]
 
