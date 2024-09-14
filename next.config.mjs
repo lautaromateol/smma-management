@@ -13,6 +13,14 @@ const nextConfig = {
       {
         hostname: "pbs.twimg.com",
         protocol: "https"
+      },
+      {
+        hostname: "z-p3-scontent.fcnq2-1.fna.fbcdn.net",
+        protocol: "https"
+      },
+      {
+        hostname: "z-p3-scontent.fcnq2-2.fna.fbcdn.net",
+        protocol: "https"
       }
     ]
   }
