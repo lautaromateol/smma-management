@@ -32,11 +32,13 @@ export async function GET(req) {
       const data = await response.json()
 
       if (data.first_name) {
+
+        const image = data.picture.data.is_silhouette ? "https://upload.wikimedia.org/wikipedia/commons/0/09/Man_Silhouette.png" : data.picture.data.url
         
         const facebookProfile = await prisma.facebookProfile.create({
           data: {
             name: `${data.first_name} ${data.last_name}`,
-            image: data.picture.data.url,
+            image,
             clientId
           }
         })
