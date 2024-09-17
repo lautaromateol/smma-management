@@ -5,7 +5,7 @@ import { useOpenModal } from "@/hooks/use-open-modal";
 import { TextSelect } from "lucide-react";
 import { MetaAddPostForm } from ".";
 
-export function MetaAddPostButton() {
+export function MetaAddPostButton({ data }) {
 
   const { onOpen } = useOpenModal((state) => state)
 
@@ -21,8 +21,10 @@ export function MetaAddPostButton() {
       </Button>
       <Modal
         modalId="meta-add-post-form"
+        title="Post something on Meta"
+        description="Fill the fields and upload something new on Facebook or Instagram"
       > 
-      <MetaAddPostForm />
+      <MetaAddPostForm data={data} />
       </Modal>
     </>
   )
