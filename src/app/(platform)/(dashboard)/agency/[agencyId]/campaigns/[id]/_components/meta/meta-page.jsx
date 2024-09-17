@@ -1,27 +1,33 @@
 import { fetcher } from "@/lib/fetcher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MetaManager } from ".";
+import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 
-export async function MetaPage({ page: { id, name }, accessToken }) {
+export async function MetaPage({ page: { id: fbPageId, name: fbPageName, access_token: pageAccessToken }, accessToken }) {
   
-  const facebookPageData = await fetcher(`https://graph.facebook.com/v20.0/${id}?access_token=${accessToken}&fields=instagram_business_account,picture,followers_count`)
+  const facebookPageData = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${fbPageId}?access_token=${accessToken}&fields=instagram_business_account,picture,followers_count`)
 
-  const instagramPageID = facebookPageData.instagram_business_account.id
+  const igPageId = facebookPageData.instagram_business_account.id
 
-  const instagramPageData = await fetcher(`https://graph.facebook.com/v20.0/${instagramPageID}?access_token=${accessToken}&fields=profile_picture_url,followers_count`)
+  const instagramPageData = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${igPageId}?access_token=${accessToken}&fields=profile_picture_url,followers_count,username`)
 
   const { picture: fbPicture, followers_count: fbFollowers } = facebookPageData
 
   const fbPictureUrl = fbPicture.data.is_silhouette ? "https://upload.wikimedia.org/wikipedia/commons/0/09/Man_Silhouette.png" : fbPicture.data.url
 
-  const { profile_picture_url: igPictureUrl, followers_count: igFollowers } = instagramPageData
+  const { username: igPageName ,profile_picture_url: igPictureUrl, followers_count: igFollowers } = instagramPageData
 
   const data = {
-    name,
+    fbPageId,
+    igPageId,
+    fbPageName,
+    igPageName,
     fbPictureUrl,
     fbFollowers,
     igPictureUrl,
-    igFollowers
+    igFollowers,
+    pageAccessToken,
+    userAccessToken: accessToken
   }
 
   return (

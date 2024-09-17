@@ -4,7 +4,10 @@ import { FileVideo, Megaphone, PlusCircle } from "lucide-react";
 import { FaFacebook, FaInstagram } from "react-icons/fa6";
 import { MetaAddPostButton } from ".";
 
-export function MetaManager({ data: { name, fbPictureUrl, igPictureUrl, fbFollowers, igFollowers } }) {
+export function MetaManager({ data }) {
+
+  const { fbPageName, fbPictureUrl, igPictureUrl, fbFollowers, igFollowers } = data
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -26,7 +29,10 @@ export function MetaManager({ data: { name, fbPictureUrl, igPictureUrl, fbFollow
                 className="object-cover border-2 border-white" />
             </div>
           </div>
-          <p className="font-semibold text-base">{name}</p>
+          <div className="space-y-1">
+            <div className="text-sm text-gray-500 font-light uppercase">Page name</div>
+            <p className="font-semibold text-base">{fbPageName}</p>
+          </div>
         </div>
         <div className="flex items-center gap-x-4">
           <div className="space-y-1">
@@ -46,7 +52,7 @@ export function MetaManager({ data: { name, fbPictureUrl, igPictureUrl, fbFollow
         </div>
       </div>
       <div className="grid grid-cols-6 gap-x-2">
-        <MetaAddPostButton />
+        <MetaAddPostButton data={data} />
         <Button
           className="flex items-center font-medium gap-x-2"
           variant="outline"
