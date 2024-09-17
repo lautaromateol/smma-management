@@ -21,6 +21,14 @@ const nextConfig = {
       {
         hostname: "z-p3-scontent.fcnq2-2.fna.fbcdn.net",
         protocol: "https"
+      },
+      {
+        hostname: "scontent.fcnq2-2.fna.fbcdn.net",
+        protocol: "https"
+      },
+      {
+        hostname: "scontent.fcnq2-1.fna.fbcdn.net",
+        protocol: "https"
       }
     ]
   }
