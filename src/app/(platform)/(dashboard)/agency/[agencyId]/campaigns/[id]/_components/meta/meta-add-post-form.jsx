@@ -3,7 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InsertLink, PlatformSelector, SchedulePost, UploadMedia } from ".";
+import { InsertLink, PlatformSelector, PostPreview, SchedulePost, UploadMedia } from ".";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,7 +12,9 @@ import { useOpenModal } from "@/hooks/use-open-modal";
 import { FacebookPost } from "@/actions/publish-facebook-post/schema";
 import { publishFacebookPost } from "@/actions/publish-facebook-post";
 
-export function MetaAddPostForm({ data: { fbPageId, fbPageName, igPageName, pageAccessToken } }) {
+export function MetaAddPostForm({ data }) {
+
+  const { fbPageId, fbPageName, igPageName, pageAccessToken, fbPictureUrl } = data
 
   const { onClose } = useOpenModal((state) => state)
 
@@ -23,7 +25,8 @@ export function MetaAddPostForm({ data: { fbPageId, fbPageName, igPageName, page
     defaultValues: {
       id: fbPageId,
       attached_media: mediaFbIds,
-      published: true
+      published: true,
+      access_token: pageAccessToken
     }
   })
 
@@ -40,7 +43,8 @@ export function MetaAddPostForm({ data: { fbPageId, fbPageName, igPageName, page
   })
 
   function onSubmit(data) {
-    console.log(data)
+    // console.log(data)
+    execute(data)
   }
 
   return (
@@ -89,6 +93,7 @@ export function MetaAddPostForm({ data: { fbPageId, fbPageName, igPageName, page
           </div>
         </form>
       </Form>
+      <PostPreview data={data} />
     </div>
   )
 }
