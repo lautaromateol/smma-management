@@ -39,7 +39,10 @@ export const FacebookPost = z.object({
   ),
   targeting: targetingSchema.optional(),
   attached_media: z.array(mediaFbidSchema).optional(),
-  unpublished_content_type: z.string().optional()
+  unpublished_content_type: z.string().optional(),
+  access_token: z.string({
+    message: "Please provide a page access token"
+  })
 }).refine((data) => {
   return data.published === true || data.scheduled_publish_time !== undefined
 },  {

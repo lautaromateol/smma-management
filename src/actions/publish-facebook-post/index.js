@@ -11,7 +11,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { id, message, link, published, scheduled_publish_time, targeting } = data
+  const { id, message, link, published, scheduled_publish_time, targeting, access_token } = data
 
   try {
     const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/feed`, {
@@ -24,14 +24,18 @@ export async function handler(data) {
         link,
         published,
         scheduled_publish_time,
-        targeting
+        targeting,
+        access_token
       })
     })
+    
+    const data = await response.json()
 
     if(response.ok) {
-      const data = await response.json()
-
       return { ok: true, id: data.id }
+    } else {
+      console.log(data.error)
+      return { error: "Error uploading the post to Facebook!" }
     }
   } catch (error) {
     console.log(error)
