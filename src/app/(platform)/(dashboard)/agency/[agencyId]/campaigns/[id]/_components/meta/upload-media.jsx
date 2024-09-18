@@ -31,7 +31,10 @@ export function UploadMedia({ form, fbPageId, accessToken, mediaFbIds, setMediaF
 
         toast.success(data.id)
 
-        setMediaFbIds((curr) => [...curr, { media_fbid: data.id }])
+        setMediaFbIds((curr) => {
+          form.setValue("attached_media", [...curr, { media_fbid: data.id }])
+          return [...curr, { media_fbid: data.id }]
+        })
       } else {
         toast.error("There was an error uploading the image")
         console.log(data.error.message)
