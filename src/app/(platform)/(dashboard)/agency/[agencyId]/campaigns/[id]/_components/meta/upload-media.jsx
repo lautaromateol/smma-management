@@ -35,7 +35,6 @@ export function UploadMedia({ form, fbPageId, accessToken }) {
       const data = await response.json()
 
       if (response.ok) {
-        setInputs("attached_media", [...inputs?.attached_media, { media_fbid: data.id }])
         form.setValue("attached_media", [...inputs?.attached_media, { media_fbid: data.id }])
 
       } else {
