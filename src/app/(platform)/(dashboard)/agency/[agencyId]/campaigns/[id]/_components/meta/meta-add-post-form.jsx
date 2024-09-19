@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,28 +11,27 @@ import { useAction } from "@/hooks/use-action";
 import { useOpenModal } from "@/hooks/use-open-modal";
 import { FacebookPost } from "@/actions/publish-facebook-post/schema";
 import { publishFacebookPost } from "@/actions/publish-facebook-post";
+import { useFormInputs } from "@/hooks/use-form-inputs";
 
 export function MetaAddPostForm({ data }) {
 
-  const { fbPageId, fbPageName, igPageName, pageAccessToken, fbPictureUrl } = data
+  const { fbPageId, fbPageName, igPageName, pageAccessToken } = data
 
   const { onClose } = useOpenModal((state) => state)
 
-  const [mediaFbIds, setMediaFbIds] = useState([])
+  const { setInputs } = useFormInputs((state) => state)
 
   const form = useForm({
     resolver: zodResolver(FacebookPost),
     defaultValues: {
       id: fbPageId,
-      attached_media: mediaFbIds,
       published: true,
+      attached_media: [],
       access_token: pageAccessToken
     }
   })
 
   const { errors } = form.formState
-
-  // console.log(errors)
 
   const { execute, isPending } = useAction(publishFacebookPost, {
     onSuccess: () => {
@@ -43,9 +42,16 @@ export function MetaAddPostForm({ data }) {
   })
 
   function onSubmit(data) {
-    // console.log(data)
     execute(data)
   }
+
+  useEffect(() => {
+    const subscription = form.watch((value, { name, type }) => {
+      setInputs(name, value[name]); 
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form, setInputs]);
 
   return (
     <div className="bg-main-light grid grid-cols-2 gap-x-10 p-8 max-w-5xl">
@@ -61,8 +67,6 @@ export function MetaAddPostForm({ data }) {
               form={form}
               fbPageId={fbPageId}
               accessToken={pageAccessToken}
-              mediaFbIds={mediaFbIds}
-              setMediaFbIds={setMediaFbIds}
             />
             <div className="bg-white space-y-2 p-4">
               <FormLabel>Post details</FormLabel>
