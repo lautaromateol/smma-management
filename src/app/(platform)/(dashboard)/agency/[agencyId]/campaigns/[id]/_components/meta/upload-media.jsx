@@ -3,11 +3,18 @@ import { toast } from "sonner";
 import { FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
+import { useFormInputs } from "@/hooks/use-form-inputs";
 
-export function UploadMedia({ form, fbPageId, accessToken, mediaFbIds, setMediaFbIds }) {
+export function UploadMedia({ form, fbPageId, accessToken }) {
+
+  const { inputs, setInputs } = useFormInputs((state) => state)
+
+  const { attached_media } = inputs
 
   async function handleSelectImage(e) {
     const image = e.target.files[0]
+
+    if(!image) return
 
     const formData = new FormData()
 
@@ -28,18 +35,15 @@ export function UploadMedia({ form, fbPageId, accessToken, mediaFbIds, setMediaF
       const data = await response.json()
 
       if (response.ok) {
+        setInputs("attached_media", [...inputs?.attached_media, { media_fbid: data.id }])
+        form.setValue("attached_media", [...inputs?.attached_media, { media_fbid: data.id }])
 
-        toast.success(data.id)
-
-        setMediaFbIds((curr) => {
-          form.setValue("attached_media", [...curr, { media_fbid: data.id }])
-          return [...curr, { media_fbid: data.id }]
-        })
       } else {
         toast.error("There was an error uploading the image")
         console.log(data.error.message)
       }
     } catch (error) {
+      console.log(error)
       toast.error("There was an error uploading the image")
     }
   }
@@ -63,7 +67,7 @@ export function UploadMedia({ form, fbPageId, accessToken, mediaFbIds, setMediaF
             <Input type="file" onChange={handleSelectVideo} />
           </div>
         </div>
-        <MediaPreview mediaFbIds={mediaFbIds} accessToken={accessToken} />
+        <MediaPreview attachedMedia={attached_media} accessToken={accessToken} />
       </div>
     </div>
   )
