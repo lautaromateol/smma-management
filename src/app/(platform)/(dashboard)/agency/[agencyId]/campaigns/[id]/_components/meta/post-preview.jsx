@@ -13,8 +13,6 @@ export function PostPreview({ data }) {
 
   const { message, images, link } = inputs
 
-  console.log(images)
-
   return (
     <div className="w-full h-auto">
       <div className="h-28 bg-white p-4 space-y-2.5">
@@ -60,7 +58,7 @@ export function PostPreview({ data }) {
             <div key={img.source} className="relative w-full h-auto">
               <Image
                 src={img.source}
-                className="object-cover"
+                className="object-center"
                 alt={`Media element ${i}`}
                 fill
               />
