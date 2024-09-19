@@ -1,10 +1,10 @@
-import { Suspense } from "react";
 import { MediaElement } from "./media-element";
 
-export function MediaPreview({ mediaFbIds, accessToken }) {
+export function MediaPreview({ attachedMedia, accessToken }) {
+
   return (
     <>
-      {mediaFbIds.map(({media_fbid}) => (
+      {attachedMedia?.map(({media_fbid}) => (
         <MediaElement
           key={media_fbid}
           id={media_fbid}
