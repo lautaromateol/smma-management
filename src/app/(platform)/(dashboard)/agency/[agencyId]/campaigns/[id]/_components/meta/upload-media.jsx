@@ -61,10 +61,10 @@ export function UploadMedia({ form, fbPageId, accessToken }) {
             <p className="text-sm font-medium">Add photo</p>
             <Input type="file" onChange={handleSelectImage} />
           </div>
-          <div className="space-y-1">
+          {/* <div className="space-y-1">
             <p className="text-sm font-medium">Add video</p>
             <Input type="file" onChange={handleSelectVideo} />
-          </div>
+          </div> */}
         </div>
         <MediaPreview attachedMedia={attached_media} accessToken={accessToken} />
       </div>
