@@ -32,6 +32,7 @@ export const FacebookPost = z.object({
     z.string().regex(/^https:\/\/[^\s$.?#].[^\s]*$/, {
       message: "Post link URL must be a valid URL"
     })
+    .nullable()
   ),
   published: z.boolean(),
   scheduled_publish_time: z.optional(
@@ -48,4 +49,10 @@ export const FacebookPost = z.object({
 },  {
   message: "Post scheduled publish time is required",
   path: ["scheduled_publish_time"]
+}).refine((data) => {
+  if(data.attached_media.length > 0 && !link) return
+  if(data.attached_media.length === 0) return
+}, {
+  message: "Post cannot have both attached media and a link",
+  path: ["link"]
 })
