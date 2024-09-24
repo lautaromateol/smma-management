@@ -5,7 +5,7 @@ import { ImageIcon, MessageSquare, Share2, ThumbsUp } from "lucide-react";
 import { useFormInputs } from "@/hooks/use-form-inputs";
 import { cn } from "@/lib/utils";
 
-export function PostPreview({ data }) {
+export function FacebookPostPreview({ data }) {
 
   const { fbPictureUrl, fbPageName } = data
 
