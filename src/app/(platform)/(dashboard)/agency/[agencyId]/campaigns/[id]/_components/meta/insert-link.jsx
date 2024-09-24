@@ -7,7 +7,6 @@ import { LinkIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useFormInputs } from "@/hooks/use-form-inputs";
-import { FaFacebook } from "react-icons/fa6";
 
 export function InsertLink({ form, message }) {
 
@@ -32,17 +31,7 @@ export function InsertLink({ form, message }) {
       <Popover open={showPopover} onOpenChange={setShowPopover}>
         <PopoverContent>
           <p className="font-semibold text-sm mb-2">Link preview</p>
-          <p className="text-sm mb-1">
-            {
-              attached_media?.length ?
-                "To preview a link, remove the media that you selected." :
-                "Add a link to preview and use the image from this link in your post."
-            }
-          </p>
-          <div className="flex items-center gap-x-2">
-            <FaFacebook className="size-4" />
-            <p className="text-sm">Facebook only</p>
-          </div>
+          <p className="text-sm mb-1">Add a link to preview and use the image from this link in your post.</p>
         </PopoverContent>
         <PopoverTrigger asChild>
           <Button
