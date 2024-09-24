@@ -5,18 +5,15 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Switch } from '@/components/ui/switch'
-import { useFormInputs } from '@/hooks/use-form-inputs'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 
 export function SchedulePost({ form, message }) {
-
-  const { inputs: { published, scheduled_publish_time } } = useFormInputs((state) => state)
   
-  const [scheduled, setScheduled] = useState(!published)
-  const [selectedDateTime, setSelectedDateTime] = useState(scheduled_publish_time) 
+  const [scheduled, setScheduled] = useState(false)
+  const [selectedDateTime, setSelectedDateTime] = useState(null) 
 
   function onChange(value) {
     setScheduled(value)

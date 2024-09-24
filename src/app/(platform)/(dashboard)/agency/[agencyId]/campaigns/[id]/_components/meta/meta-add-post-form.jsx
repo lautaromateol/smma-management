@@ -23,23 +23,34 @@ export function MetaAddPostForm({ data }) {
 
   const { inputs, setInputs, resetInputs } = useFormInputs((state) => state)
 
-  const { message, platform, published, attached_media, scheduled_publish_time, link } = inputs
+  const { platform, published, attached_media } = inputs
 
   const form = useForm({
     resolver: zodResolver(platform === "FACEBOOK" ? FacebookPost : InstagramPost),
-    defaultValues: {
-      id: platform === "FACEBOOK" ? fbPageId : igPageId,
-      access_token: pageAccessToken,
-      link,
-      platform,
-      message,
-      published,
-      attached_media,
-      scheduled_publish_time
-    }
+    defaultValues: platform === "FACEBOOK" ?
+      {
+        id: fbPageId,
+        access_token: pageAccessToken,
+        link: null,
+        platform,
+        published: true,
+        scheduled_publish_time: null,
+        attached_media,
+      }
+      :
+      {
+        id: igPageId,
+        access_token: pageAccessToken,
+        platform,
+        published: true,
+        scheduled_publish_time: null,
+        attached_media,
+      }
   })
 
   const { errors } = form.formState
+
+  console.log(errors)
 
   const { execute: postOnFacebook, isPending: isPostingOnFacebook } = useAction(publishFacebookPost, {
     onSuccess: () => {
@@ -85,6 +96,7 @@ export function MetaAddPostForm({ data }) {
             <UploadMedia
               form={form}
               fbPageId={fbPageId}
+              igPageId={igPageId}
               accessToken={pageAccessToken}
             />
             <div className="bg-white space-y-2 p-4">
