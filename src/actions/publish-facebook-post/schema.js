@@ -37,6 +37,7 @@ export const FacebookPost = z.object({
   published: z.boolean(),
   scheduled_publish_time: z.optional(
     z.date()
+    .nullable()
   ),
   targeting: targetingSchema.optional(),
   attached_media: z.array(mediaFbidSchema).optional(),
@@ -50,8 +51,8 @@ export const FacebookPost = z.object({
   message: "Post scheduled publish time is required",
   path: ["scheduled_publish_time"]
 }).refine((data) => {
-  if(data.attached_media.length > 0 && !link) return
-  if(data.attached_media.length === 0) return
+  if(data.attached_media.length > 0 && !data.link) return true
+  if(data.attached_media.length === 0) return true
 }, {
   message: "Post cannot have both attached media and a link",
   path: ["link"]
