@@ -23,7 +23,7 @@ export function MetaAddPostForm({ data }) {
 
   const { inputs, setInputs, resetInputs } = useFormInputs((state) => state)
 
-  const { platform, published, attached_media } = inputs
+  const { platform, published, attached_media, message } = inputs
 
   const form = useForm({
     resolver: zodResolver(platform === "FACEBOOK" ? FacebookPost : InstagramPost),
@@ -31,20 +31,22 @@ export function MetaAddPostForm({ data }) {
       {
         id: fbPageId,
         access_token: pageAccessToken,
-        link: null,
+        attached_media,
         platform,
+        message,
+        link: null,
         published: true,
         scheduled_publish_time: null,
-        attached_media,
       }
       :
       {
         id: igPageId,
         access_token: pageAccessToken,
+        attached_media,
         platform,
+        message,
         published: true,
         scheduled_publish_time: null,
-        attached_media,
       }
   })
 
