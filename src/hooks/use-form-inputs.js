@@ -4,10 +4,9 @@ const defaultInputs = {
   platform: "FACEBOOK",
   attached_media: [],
   images: [],
-  message: "",
+  message: null,
   link: null,
-  scheduled_publish_time: null,
-  published: true
+  published: true,
 }
 
 export const useFormInputs = create((set) => ({
