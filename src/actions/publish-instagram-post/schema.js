@@ -26,7 +26,9 @@ export const InstagramPost = z.object({
     message: "Please select a platform"
   }),
   message: z.string({
-    message: "Message text is required"
+    message: "Caption text cannot be empty"
+  }).min(1, {
+    message: "Caption text cannot be empty"
   }),
   published: z.boolean(),
   scheduled_publish_time: z.optional(

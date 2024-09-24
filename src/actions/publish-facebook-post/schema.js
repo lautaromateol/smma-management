@@ -26,7 +26,9 @@ export const FacebookPost = z.object({
     message: "Please select a platform"
   }),
   message: z.string({
-    message: "Message text is required"
+    message: "Caption text cannot be empty"
+  }).min(1, {
+    message: "Caption text cannot be empty"
   }),
   link: z.optional(
     z.string().regex(/^https:\/\/[^\s$.?#].[^\s]*$/, {
