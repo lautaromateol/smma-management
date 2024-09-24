@@ -11,7 +11,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { id, message, link, published, scheduled_publish_time, targeting, access_token } = data
+  const { id, message, link, published, scheduled_publish_time, targeting, attached_media, access_token } = data
 
   try {
     const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/feed`, {
@@ -24,6 +24,7 @@ export async function handler(data) {
         link,
         published,
         scheduled_publish_time,
+        attached_media,
         targeting,
         access_token
       })
