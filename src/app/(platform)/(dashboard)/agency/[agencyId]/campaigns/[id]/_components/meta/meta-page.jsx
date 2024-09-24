@@ -15,7 +15,7 @@ export async function MetaPage({ page: { id: fbPageId, name: fbPageName, access_
 
   const fbPictureUrl = fbPicture.data.is_silhouette ? "https://upload.wikimedia.org/wikipedia/commons/0/09/Man_Silhouette.png" : fbPicture.data.url
 
-  const { username: igPageName ,profile_picture_url: igPictureUrl, followers_count: igFollowers } = instagramPageData
+  const { username: igPageName, profile_picture_url: igPictureUrl, followers_count: igFollowers } = instagramPageData
 
   const data = {
     fbPageId,
