@@ -1,14 +1,21 @@
 import { create } from "zustand";
 
+const defaultInputs = {
+  platform: "FACEBOOK",
+  attached_media: [],
+  images: [],
+  message: "",
+  link: null,
+  scheduled_publish_time: null,
+  published: true
+}
+
 export const useFormInputs = create((set) => ({
-  inputs: {
-    attached_media: [],
-    images: [],
-    message: "", 
-    link: ""
-  },
+  inputs: defaultInputs,
   setInputs: (field, value) => set((state) => ({
     inputs: { ...state.inputs, [field]: value }
   })),
-  images: []
+  resetInputs: () => set(() => ({
+    inputs: defaultInputs
+  }))
 }))
