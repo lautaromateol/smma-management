@@ -46,7 +46,7 @@ export const FacebookPost = z.object({
     message: "Please provide a page access token"
   })
 }).refine((data) => {
-  return data.published === true || data.scheduled_publish_time !== undefined
+  return data.published === true || data.scheduled_publish_time !== null
 },  {
   message: "Post scheduled publish time is required",
   path: ["scheduled_publish_time"]

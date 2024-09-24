@@ -31,15 +31,16 @@ export const InstagramPost = z.object({
   published: z.boolean(),
   scheduled_publish_time: z.optional(
     z.date()
+    .nullable()
   ),
   targeting: targetingSchema.optional(),
   attached_media: z.array(mediaFbidSchema).optional(),
-  unpublished_content_type: z.string().optional(),
   access_token: z.string({
     message: "Please provide a profile access token"
   })
-}).refine((data) => {
-  return data.published === true || data.scheduled_publish_time !== undefined
+})
+.refine((data) => {
+  return data.published === true || data.scheduled_publish_time !== null
 },  {
   message: "Post scheduled publish time is required",
   path: ["scheduled_publish_time"]
