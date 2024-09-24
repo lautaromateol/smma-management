@@ -7,7 +7,7 @@ import { useFormInputs } from "@/hooks/use-form-inputs";
 
 export function UploadMedia({ form, fbPageId, accessToken }) {
 
-  const { inputs, setInputs } = useFormInputs((state) => state)
+  const { inputs } = useFormInputs((state) => state)
 
   const { attached_media } = inputs
 
@@ -36,6 +36,7 @@ export function UploadMedia({ form, fbPageId, accessToken }) {
 
       if (response.ok) {
         form.setValue("attached_media", [...inputs?.attached_media, { media_fbid: data.id }])
+        form.setValue("link", null)
 
       } else {
         toast.error("There was an error uploading the image")
