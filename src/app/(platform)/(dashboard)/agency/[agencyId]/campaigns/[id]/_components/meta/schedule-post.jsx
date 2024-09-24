@@ -5,14 +5,18 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Switch } from '@/components/ui/switch'
+import { useFormInputs } from '@/hooks/use-form-inputs'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 
 export function SchedulePost({ form, message }) {
-  const [scheduled, setScheduled] = useState(false)
-  const [selectedDateTime, setSelectedDateTime] = useState(null) // Almacena la fecha y hora combinada
+
+  const { inputs: { published, scheduled_publish_time } } = useFormInputs((state) => state)
+  
+  const [scheduled, setScheduled] = useState(!published)
+  const [selectedDateTime, setSelectedDateTime] = useState(scheduled_publish_time) 
 
   function onChange(value) {
     setScheduled(value)
@@ -21,7 +25,6 @@ export function SchedulePost({ form, message }) {
 
   function handleDateChange(date) {
     if (selectedDateTime) {
-      // Combinamos la fecha seleccionada con la hora previamente elegida
       const updatedDateTime = new Date(
         date.getFullYear(),
         date.getMonth(),
@@ -30,7 +33,7 @@ export function SchedulePost({ form, message }) {
         selectedDateTime.getMinutes()
       )
       setSelectedDateTime(updatedDateTime)
-      form.setValue("scheduled_publish_time", updatedDateTime) // Actualizamos el campo del formulario
+      form.setValue("scheduled_publish_time", updatedDateTime) 
       form.setValue("unpublished_content_type", "SCHEDULED")
     } else {
       setSelectedDateTime(date)
@@ -45,7 +48,6 @@ export function SchedulePost({ form, message }) {
     const minutes = parseInt(time[1], 10)
 
     if (selectedDateTime) {
-      // Combinamos la hora seleccionada con la fecha previamente elegida
       const updatedDateTime = new Date(
         selectedDateTime.getFullYear(),
         selectedDateTime.getMonth(),
@@ -54,7 +56,7 @@ export function SchedulePost({ form, message }) {
         minutes
       )
       setSelectedDateTime(updatedDateTime)
-      form.setValue("scheduled_publish_time", updatedDateTime) // Actualizamos el campo del formulario
+      form.setValue("scheduled_publish_time", updatedDateTime)
       form.setValue("unpublished_content_type", "SCHEDULED")
     } else {
       const now = new Date()
