@@ -1,53 +1,72 @@
 "use client"
 import { useEffect } from "react";
-import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InsertLink, PlatformSelector, PostPreview, SchedulePost, UploadMedia } from ".";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { useAction } from "@/hooks/use-action";
 import { useOpenModal } from "@/hooks/use-open-modal";
-import { FacebookPost } from "@/actions/publish-facebook-post/schema";
-import { publishFacebookPost } from "@/actions/publish-facebook-post";
 import { useFormInputs } from "@/hooks/use-form-inputs";
+import { FacebookPost } from "@/actions/publish-facebook-post/schema";
+import { InstagramPost } from "@/actions/publish-instagram-post/schema";
+import { publishFacebookPost } from "@/actions/publish-facebook-post";
+import { publishInstagramPost } from "@/actions/publish-instagram-post";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FacebookPostPreview, InsertLink, InstagramPostPreview, PlatformSelector, SchedulePost, UploadMedia } from ".";
 
 export function MetaAddPostForm({ data }) {
 
-  const { fbPageId, fbPageName, igPageName, pageAccessToken } = data
+  const { fbPageId, fbPageName, igPageId, igPageName, pageAccessToken } = data
 
   const { onClose } = useOpenModal((state) => state)
 
-  const { setInputs } = useFormInputs((state) => state)
+  const { inputs, setInputs, resetInputs } = useFormInputs((state) => state)
+
+  const { message, platform, published, attached_media, scheduled_publish_time, link } = inputs
 
   const form = useForm({
-    resolver: zodResolver(FacebookPost),
+    resolver: zodResolver(platform === "FACEBOOK" ? FacebookPost : InstagramPost),
     defaultValues: {
-      id: fbPageId,
-      published: true,
-      attached_media: [],
-      access_token: pageAccessToken
+      id: platform === "FACEBOOK" ? fbPageId : igPageId,
+      access_token: pageAccessToken,
+      link,
+      platform,
+      message,
+      published,
+      attached_media,
+      scheduled_publish_time
     }
   })
 
   const { errors } = form.formState
 
-  const { execute, isPending } = useAction(publishFacebookPost, {
+  const { execute: postOnFacebook, isPending: isPostingOnFacebook } = useAction(publishFacebookPost, {
     onSuccess: () => {
-      toast.success(`Post successfully ${form.getValues().published ? "created" : "scheduled"}`)
+      toast.success(`Facebook post successfully ${published ? "published" : "scheduled"}`)
+      resetInputs()
       onClose()
     },
     onError: (error) => toast.error(error)
   })
 
+  const { execute: postOnInstagram, isPending: isPostingOnInstagram } = useAction(publishInstagramPost, {
+    onSuccess: () => {
+      toast.success(`Instagram post successfully ${published ? "published" : "scheduled"}`)
+      resetInputs()
+      onClose()
+    },
+    onError: (error) => toast.error(error)
+  })
+
+
   function onSubmit(data) {
-    execute(data)
+    platform === "FACEBOOK" ? postOnFacebook(data) : postOnInstagram(data)
   }
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      setInputs(name, value[name]); 
+      setInputs(name, value[name]);
     });
 
     return () => subscription.unsubscribe();
@@ -83,11 +102,11 @@ export function MetaAddPostForm({ data }) {
                   </FormItem>
                 )}
               />
-              <InsertLink form={form} message={errors?.link?.message} />
+              {platform === "FACEBOOK" && <InsertLink form={form} message={errors?.link?.message} />}
             </div>
             <SchedulePost form={form} message={errors?.scheduled_publish_time?.message} />
             <Button
-              disabled={isPending}
+              disabled={isPostingOnFacebook || isPostingOnInstagram}
               type="submit"
               variant="main"
               className="w-full"
@@ -97,7 +116,11 @@ export function MetaAddPostForm({ data }) {
           </div>
         </form>
       </Form>
-      <PostPreview data={data} />
+      {platform === "FACEBOOK" ?
+        <FacebookPostPreview data={data} />
+        :
+        <InstagramPostPreview data={data} />
+      }
     </div>
   )
 }
