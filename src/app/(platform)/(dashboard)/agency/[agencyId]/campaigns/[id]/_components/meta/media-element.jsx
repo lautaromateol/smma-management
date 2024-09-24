@@ -16,20 +16,22 @@ export function MediaElement({ id, accessToken }) {
   const { data, isPending } = useQuery({
     queryKey: ["media-data", id],
     queryFn: () => fetcher(`${FACEBOOK_API_GRAPH_URL}/${id}?fields=images&access_token=${accessToken}`),
-
   })
 
+
   useEffect(() => {
-    if (data && data?.images) {
-      const image = data.images.find((img) => img.height >= 200 && img.height <= 300);
+    if (data && data.images) {
+      const image = data.images.find((img) => img.height >= 800 && img.height <= 1200);
+      
+      image.id = id
 
-      const alreadyExists = images.some((img) => img?.source === image?.source);
+      const imagesEl = images.find((img) => img.id === id)
 
-      if (!alreadyExists && image) {
-        setInputs("images", [...images, image]);
-      }
+      if (image && imagesEl) return
+
+      setInputs("images", [...images, image]);
     }
-  }, [data, images, setInputs]);
+  }, [data, images, setInputs, id]);
 
 
   if (isPending) {
