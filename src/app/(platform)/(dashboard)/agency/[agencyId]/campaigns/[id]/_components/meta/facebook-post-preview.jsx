@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { FaEarthAmericas } from "react-icons/fa6";
 import { ImageIcon, MessageSquare, Share2, ThumbsUp } from "lucide-react";
 import { useFormInputs } from "@/hooks/use-form-inputs";
-import { cn } from "@/lib/utils";
+import { Images } from ".";
 
 export function FacebookPostPreview({ data }) {
 
@@ -45,33 +45,12 @@ export function FacebookPostPreview({ data }) {
         }
       </div>
       {!images.length > 0 && !message && (
-        <div className="h-72 bg-neutral-100 flex items-center justify-center">
+        <div className="h-96 bg-neutral-100 flex items-center justify-center">
           <ImageIcon className="size-44 text-neutral-200 font-light" />
         </div>
       )}
       {images?.length > 0 && (
-        <div className={cn(
-          "h-72 grid",
-          images.length <= 3 ? `grid-cols-${images.length.toString()}` : "grid-cols-2"
-        )}>
-          {images.slice(0, 4).map((img, i) => (
-            <div key={img.source} className="relative w-full h-auto">
-              <Image
-                src={img.source}
-                className="object-center"
-                alt={`Media element ${i}`}
-                fill
-              />
-              {i === 3 && images.length > 4 && (
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                  <span className="text-white text-lg font-semibold">
-                    +{images.length - 4}
-                  </span>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        <Images images={images} />
       )}
       {link && (
         <div className="p-4 bg-neutral-100">
