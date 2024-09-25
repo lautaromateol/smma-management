@@ -27,32 +27,18 @@ export function MetaAddPostForm({ data }) {
 
   const form = useForm({
     resolver: zodResolver(platform === "FACEBOOK" ? FacebookPost : InstagramPost),
-    defaultValues: platform === "FACEBOOK" ?
-      {
-        id: fbPageId,
-        access_token: pageAccessToken,
-        attached_media,
-        platform,
-        message,
-        link: null,
-        published: true,
-        scheduled_publish_time: null,
-      }
-      :
-      {
-        id: igPageId,
-        access_token: pageAccessToken,
-        attached_media,
-        platform,
-        message,
-        published: true,
-        scheduled_publish_time: null,
-      }
+    defaultValues: {
+      access_token: pageAccessToken,
+      attached_media,
+      platform,
+      message,
+      link: null,
+      published: true,
+      scheduled_publish_time: null,
+    }
   })
 
   const { errors } = form.formState
-
-  console.log(errors)
 
   const { execute: postOnFacebook, isPending: isPostingOnFacebook } = useAction(publishFacebookPost, {
     onSuccess: () => {
@@ -78,12 +64,13 @@ export function MetaAddPostForm({ data }) {
   }
 
   useEffect(() => {
+    platform === "FACEBOOK" ? form.setValue("id", fbPageId) : form.setValue("id", igPageId)
     const subscription = form.watch((value, { name, type }) => {
       setInputs(name, value[name]);
     });
 
     return () => subscription.unsubscribe();
-  }, [form, setInputs]);
+  }, [form, setInputs, fbPageId, igPageId, platform]);
 
   return (
     <div className="bg-main-light grid grid-cols-2 gap-x-10 p-8 max-w-5xl">

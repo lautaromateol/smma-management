@@ -41,7 +41,62 @@ export async function handler(data) {
         creation_id = data.id
       } else {
         console.log(data.error)
-        return { error: "Error uploading media elements!" }
+        return { error: "Error uploading image!" }
+      }
+    } else {
+
+      const imagesPromise = attached_media.map((img) => {
+        return fetch(`${FACEBOOK_API_GRAPH_URL}/${img.media_fbid}?fields=images&access_token=${access_token}`)
+      })
+
+      const imagesResponses = await Promise.all(imagesPromise)
+
+      const imagesData = imagesResponses.map((response) => response.json())
+
+      const images = await Promise.all(imagesData)
+
+      const imagesUrl = images.map((img) => img.images).map((img) => img.find((obj) => obj.height >= 800 && obj.height <= 1200).source)
+
+      const mediaPromises = imagesUrl.map((url) => {
+
+        const formData = new FormData()
+        formData.append("image_url", url)
+        formData.append("caption", message)
+        formData.append("is_carousel_item", true)
+        formData.append("access_token", access_token)
+
+        return fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
+          method: "POST",
+          body: formData
+        })
+      })
+
+      const mediaResponses = await Promise.all(mediaPromises)
+
+      const mediaData = mediaResponses.map((response) => response.json())
+
+      const media = await Promise.all(mediaData)
+
+      const children = media.map((container) => container.id)
+
+      const formData = new FormData()
+
+      formData.append("media_type", "CAROUSEL")
+      formData.append("children", children)
+      formData.append("access_token", access_token)
+
+      const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
+        method: "POST",
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        creation_id = data.id
+      } else {
+        console.log(data.error)
+        return { error: "Error uploading images!" }
       }
     }
 
