@@ -1,6 +1,6 @@
 import { MediaElement } from "./media-element";
 
-export function MediaPreview({ attachedMedia, accessToken }) {
+export function MediaPreview({ attachedMedia, accessToken, form }) {
 
   return (
     <>
@@ -9,6 +9,7 @@ export function MediaPreview({ attachedMedia, accessToken }) {
           key={media_fbid}
           id={media_fbid}
           accessToken={accessToken}
+          form={form}
         />
       ))}
     </>

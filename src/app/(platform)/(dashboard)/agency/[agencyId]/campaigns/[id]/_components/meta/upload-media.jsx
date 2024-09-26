@@ -67,7 +67,7 @@ export function UploadMedia({ form, fbPageId, accessToken }) {
             <Input type="file" onChange={handleSelectVideo} />
           </div> */}
         </div>
-        <MediaPreview attachedMedia={attached_media} accessToken={accessToken} />
+        <MediaPreview form={form} attachedMedia={attached_media} accessToken={accessToken} />
       </div>
     </div>
   )

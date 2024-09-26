@@ -6,23 +6,33 @@ import { useFormInputs } from "@/hooks/use-form-inputs"
 import { fetcher } from "@/lib/fetcher"
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import { Trash } from "lucide-react"
 
-export function MediaElement({ id, accessToken }) {
+export function MediaElement({ id, accessToken, form }) {
 
   const { inputs, setInputs } = useFormInputs((state) => state)
 
-  const { images } = inputs
+  const { attached_media, images } = inputs
 
   const { data, isPending } = useQuery({
     queryKey: ["media-data", id],
     queryFn: () => fetcher(`${FACEBOOK_API_GRAPH_URL}/${id}?fields=images&access_token=${accessToken}`),
   })
 
+  function deleteImage() {
+    const newAttachedMedia = attached_media.filter(({media_fbid}) => media_fbid !== id)
+    const newImages = images.filter((image) => image.id !== id)
+
+    form.setValue("attached_media", newAttachedMedia)
+    setInputs("images", newImages)
+  }
+
 
   useEffect(() => {
     if (data && data.images) {
       const image = data.images.find((img) => img.height >= 800 && img.height <= 1200);
-      
+
       image.id = id
 
       const imagesEl = images.find((img) => img.id === id)
@@ -38,11 +48,7 @@ export function MediaElement({ id, accessToken }) {
     return (
       <div className="flex items-center justify-between">
         <Skeleton className="size-[80px]" />
-        <div className="flex items-center gap-x-2">
-          <Skeleton className="size-8" />
-          <Skeleton className="size-8" />
-          <Skeleton className="size-8" />
-        </div>
+        <Skeleton className="size-8" />
       </div>
     )
   }
@@ -57,11 +63,13 @@ export function MediaElement({ id, accessToken }) {
           className="object-cover"
         />
       </div>
-      <div className="flex items-center gap-x-2">
-        <Skeleton className="size-8" />
-        <Skeleton className="size-8" />
-        <Skeleton className="size-8" />
-      </div>
+      <Button
+        type="button"
+        onClick={deleteImage}
+        variant="ghost"
+      >
+        <Trash className="size-4 font-normal" />
+      </Button>
     </div>
   )
 }
