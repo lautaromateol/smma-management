@@ -4,6 +4,7 @@ const defaultInputs = {
   platform: "FACEBOOK",
   attached_media: [],
   images: [],
+  previews: [],
   message: null,
   link: null,
   published: true,

@@ -9,40 +9,71 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Trash } from "lucide-react"
 
-export function MediaElement({ id, accessToken, form }) {
+export function MediaElement({ id, type, accessToken, form }) {
 
   const { inputs, setInputs } = useFormInputs((state) => state)
 
-  const { attached_media, images } = inputs
+  const { attached_media, images, previews } = inputs
+
+  const url = type === "image"
+    ? `${FACEBOOK_API_GRAPH_URL}/${id}?fields=images&access_token=${accessToken}`
+    : `${FACEBOOK_API_GRAPH_URL}/${id}?fields=thumbnails&access_token=${accessToken}`
 
   const { data, isPending } = useQuery({
-    queryKey: ["media-data", id],
-    queryFn: () => fetcher(`${FACEBOOK_API_GRAPH_URL}/${id}?fields=images&access_token=${accessToken}`),
-  })
+    queryKey: [`${type}-data`, id],
+    queryFn: () => fetcher(url),
+    refetchInterval: (data) => {
+      if (data?.thumbnails || data?.images) return false;
+      return 3000;
+    },
+  });
 
-  function deleteImage() {
-    const newAttachedMedia = attached_media.filter(({media_fbid}) => media_fbid !== id)
+
+  function deleteMedia() {
+    const newAttachedMedia = attached_media.filter(({ media_fbid }) => media_fbid !== id)
     const newImages = images.filter((image) => image.id !== id)
 
     form.setValue("attached_media", newAttachedMedia)
     setInputs("images", newImages)
   }
 
-
   useEffect(() => {
-    if (data && data.images) {
-      const image = data.images.find((img) => img.height >= 800 && img.height <= 1200);
+    if (!data) return;
 
-      image.id = id
+    if (type === "image" && data.images) {
+      const image = data.images.find((img) => img.height >= 800)
+      const preview = data.images.find((img) => img.height >= 100)
+
+      if (image) {
+        image.id = id
+        preview.id = id
+      }
 
       const imagesEl = images.find((img) => img.id === id)
 
-      if (image && imagesEl) return
+      if (!imagesEl && image) {
+        setInputs("images", [...images, image])
+        setInputs("previews", [...previews, preview])
+      }
+    } else if (type === "video" && data.thumbnails) {
+      const image = data.thumbnails.data.find((img) => img.height >= 800)
+      const preview = data.thumbnails.data.find((img) => img.height >= 800)
 
-      setInputs("images", [...images, image]);
+      if (image) {
+        image.id = id
+        image.source = image.uri
+        preview.id = id
+        preview.source = preview.uri
+      }
+
+      const imagesEl = images.find((img) => img.id === id)
+
+      if (!imagesEl && image) {
+        setInputs("images", [...images, image])
+        setInputs("previews", [...previews, preview])
+      }
     }
-  }, [data, images, setInputs, id]);
-
+  }, [data, type, id, images, previews, setInputs])
 
   if (isPending) {
     return (
@@ -59,13 +90,13 @@ export function MediaElement({ id, accessToken, form }) {
         <Image
           fill
           alt="Media preview"
-          src={data.images.find((img) => img.height >= 100 && img.height <= 200).source}
+          src={previews?.find((preview) => preview.id === id)?.source}
           className="object-cover"
         />
       </div>
       <Button
         type="button"
-        onClick={deleteImage}
+        onClick={deleteMedia}
         variant="ghost"
       >
         <Trash className="size-4 font-normal" />
