@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { FileVideo, Megaphone, PlusCircle } from "lucide-react";
 import { FaFacebook, FaInstagram } from "react-icons/fa6";
 import { MetaAddPostButton } from ".";
+import { Separator } from "@/components/ui/separator";
 
 export function MetaManager({ data }) {
 
@@ -13,41 +14,68 @@ export function MetaManager({ data }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-x-2">
           <div className="relative w-32 h-32">
-            <div className="absolute w-20 h-20 rounded-full -left-4 z-10">
+            <div className="absolute w-20 h-20 rounded-full bg-white -left-4 z-10">
               <Image
                 src={fbPictureUrl}
                 fill
                 alt="Facebook picture"
-                className="object-cover border-2 border-white"
+                className="object-cover rounded-full border-2 border-gray-200"
               />
+              <div className="bg-white rounded-full absolute bottom-0 right-0 grid place-content-center p-1">
+                <FaFacebook className="text-blue-500" />
+              </div>
             </div>
             <div className="absolute w-20 h-20 rounded-full left-8">
               <Image
                 src={igPictureUrl}
                 fill
                 alt="Instagram picture"
-                className="object-cover border-2 border-white" />
+                className="object-cover rounded-full border-2 border-gray-200"
+              />
+              <div className="bg-white rounded-full absolute bottom-0 right-0 grid place-content-center p-1">
+                <FaInstagram className="text-pink-600" />
+              </div>
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="text-sm text-gray-500 font-light uppercase">Page name</div>
-            <p className="font-semibold text-base">{fbPageName}</p>
+          <div className="space-y-0.5">
+            <p className="font-semibold text-lg">{fbPageName}</p>
+            <div className="flex items-center gap-x-1">
+
+              <div
+                role="button"
+                className="text-sm text-main hover:underline"
+              >
+                Edit Facebook Profile
+              </div>
+              <span className="text-sm text-main">|</span>
+              <div
+                role="button"
+                className="text-sm text-main hover:underline"
+              >
+                Edit Instagram Profile
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-x-4">
-          <div className="space-y-1">
-            <p className="font-medium flex items-center gap-x-2">
-              <FaFacebook className="size-4" />
-              Followers
+          <div className="space-y-0.5">
+            <p className="text-sm text-muted-foreground">
+              Facebook followers
             </p>
-            <p><strong>{fbFollowers}</strong></p>
+            <div className="flex items-center gap-x-1">
+              <FaFacebook className="text-blue-500" />
+              <p className="font-medium">{fbFollowers}</p>
+            </div>
           </div>
-          <div className="space-y-1">
-            <p className="font-medium flex items-center gap-x-2">
-              <FaInstagram className="size-4" />
-              Followers
+          <Separator orientation="vertical" />
+          <div className="space-y-0.5">
+            <p className="text-sm text-muted-foreground">
+              Instagram followers
             </p>
-            <p><strong>{igFollowers}</strong></p>
+            <div className="flex items-center gap-x-1">
+              <FaInstagram className="text-pink-600" />
+              <p className="font-medium">{igFollowers}</p>
+            </div>
           </div>
         </div>
       </div>
