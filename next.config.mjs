@@ -17,9 +17,14 @@ const nextConfig = {
       {
         hostname: "*.fbcdn.net",
         protocol: "https",
+      },
+      {
+        hostname: "upload.wikimedia.org",
+        protocol: "https"
       }
     ]
   }
 };
 
 export default nextConfig;
+
