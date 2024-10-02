@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { addSeconds } from "date-fns";
+import { addMonths, addSeconds } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -40,7 +40,7 @@ export async function GET(req) {
         data: {
           token: data.access_token,
           type: data.token_type,
-          expiresIn: new Date(addSeconds(new Date(), data.expires_in)),
+          expiresIn: data.expires_in ? new Date(addSeconds(new Date(), data.expires_in)) : new Date(addMonths(new Date(), 2)),
           clientId
         },
       })
