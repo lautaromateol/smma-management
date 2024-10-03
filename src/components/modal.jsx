@@ -2,7 +2,7 @@
 import { useOpenModal } from "@/hooks/use-open-modal";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 
-export function Modal({ title, description, children, modalId }) {
+export function Modal({ title, description, className, children, modalId }) {
 
   const { onClose, id } = useOpenModal((state) => state)
 
@@ -12,7 +12,7 @@ export function Modal({ title, description, children, modalId }) {
         open={id}
         onOpenChange={onClose}
       >
-        <DialogContent>
+        <DialogContent className={className}>
           <DialogHeader>
             <DialogTitle className="text-main-tint">
               {title}
