@@ -24,7 +24,7 @@ export async function handler(data) {
         link,
         published,
         scheduled_publish_time,
-        attached_media,
+        attached_media: attached_media.map((media) => media.media_fbid),
         targeting,
         access_token
       })
