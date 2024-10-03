@@ -24,7 +24,7 @@ export async function handler(data) {
         link,
         published,
         scheduled_publish_time,
-        attached_media: attached_media.map((media) => media.media_fbid),
+        attached_media,
         targeting,
         access_token
       })
@@ -35,7 +35,7 @@ export async function handler(data) {
     if(response.ok) {
       return { ok: true, id: data.id }
     } else {
-      console.log(data.error)
+      console.log(data)
       return { error: "Error uploading the post to Facebook!" }
     }
   } catch (error) {
