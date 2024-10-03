@@ -11,7 +11,7 @@ import { isAfter } from "date-fns";
 export function MetaButton({ client }) {
 
   function onClick() {
-    window.location.href = `https://www.facebook.com/v20.0/dialog/oauth?client_id=${FACEBOOK_CLIENT_ID}&redirect_uri=${FACEBOOK_REDIRECT_URI}&state="{id=${client.id},agencyId=${client.orgId}}"&scope=instagram_basic,instagram_content_publish,instagram_manage_posts,instagram_manage_insights,pages_show_list,pages_manage_posts,pages_manage_engagement,pages_read_engagement,pages_manage_metadata,ads_management,ads_read,business_management,public_profile`
+    window.location.href = `https://www.facebook.com/v20.0/dialog/oauth?client_id=${FACEBOOK_CLIENT_ID}&redirect_uri=${FACEBOOK_REDIRECT_URI}&state="{id=${client.id},agencyId=${client.orgId}}"&scope=instagram_basic,instagram_content_publish,instagram_manage_insights,pages_show_list,pages_manage_posts,pages_manage_engagement,pages_read_engagement,pages_manage_metadata,ads_management,ads_read,business_management,public_profile`
   }
 
   const { data, isPending } = useQuery({
