@@ -22,6 +22,10 @@ export const FacebookProfile = z.object({
     city: z.string({
       message: "Location city is required"
     }),
+    country: z.string({
+      message: "Location country is required"
+    }),
+    state: z.string().optional().nullable(),
     street: z.string({
       message: "Location city is required"
     }),
