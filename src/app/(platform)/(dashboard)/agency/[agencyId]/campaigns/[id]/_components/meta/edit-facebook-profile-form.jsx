@@ -18,7 +18,7 @@ export function EditFacebookProfileForm({ page, data }) {
 
   const { onClose } = useOpenModal((state) => state)
 
-  const { fbPageId, pageAccessToken } = data
+  const { fbPageId, pageAccessToken, userAccessToken } = data
 
   const form = useForm({
     resolver: zodResolver(FacebookProfile),
@@ -111,7 +111,7 @@ export function EditFacebookProfileForm({ page, data }) {
             </FormItem>
           )}
         />
-        <UpdateLocation form={form} />
+        <UpdateLocation form={form} accessToken={userAccessToken} />
         <FormField
           name="website"
           control={form.control}

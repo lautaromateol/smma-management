@@ -4,15 +4,18 @@ import { FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Home, Pencil } from "lucide-react"
 import { useState } from "react"
+import { CityInput } from "."
 
-export function UpdateLocation({ form }) {
+export function UpdateLocation({ form, accessToken }) {
 
   const formLocation = form.getValues().location
 
   const [showInputs, setShowInputs] = useState(false)
-  const [location, setLocation] = useState(formLocation ? `${formLocation.city}, ${formLocation.street}, ${formLocation.zip}` : "")
+  const [location, setLocation] = useState(formLocation ? `${formLocation.street}, ${formLocation.city}, ${formLocation.country}, ${formLocation.zip}` : "")
   const [street, setStreet] = useState(formLocation?.street ?? "")
   const [city, setCity] = useState(formLocation?.city ?? "")
+  const [state, setState] = useState(formLocation?.state ?? "")
+  const [country, setCountry] = useState(formLocation?.country ?? "")
   const [zip, setZip] = useState(formLocation?.zip ?? "")
 
   function handleCancel() {
@@ -25,6 +28,8 @@ export function UpdateLocation({ form }) {
 
     setStreet(location.street)
     setCity(location.city)
+    setCountry(location.country)
+    setState(location.state)
     setZip(location.zip)
     setShowInputs(false)
   }
@@ -33,11 +38,13 @@ export function UpdateLocation({ form }) {
     const location = {
       street,
       city,
+      state,
+      country,
       zip
     }
 
     form.setValue("location", location, { shouldDirty: true })
-    setLocation(`${street}, ${city}, ${zip}`)
+    setLocation(`${street}, ${city}, ${country}, ${zip}`)
     setShowInputs(false)
   }
 
@@ -64,7 +71,21 @@ export function UpdateLocation({ form }) {
             </div>
             <div className="space-y-1">
               <FormLabel>City</FormLabel>
-              <Input value={city} onChange={(e) => setCity(e.target.value)} />
+              <CityInput
+                accessToken={accessToken}
+                city={city}
+                setCity={setCity}
+                setState={setState}
+                setCountry={setCountry}
+              />
+            </div>
+            <div className="space-y-1">
+              <FormLabel>State</FormLabel>
+              <Input placeholder="No state" value={state} disabled />
+            </div>
+            <div className="space-y-1">
+              <FormLabel>Country</FormLabel>
+              <Input placeholder="No country" value={country} disabled />
             </div>
             <div className="space-y-1">
               <FormLabel>ZIP</FormLabel>
@@ -74,7 +95,7 @@ export function UpdateLocation({ form }) {
               <Button
                 type="button"
                 variant="primary"
-                disabled={!street || !city || !zip}
+                disabled={!street || !city || !country || !zip}
                 onClick={saveLocation}
               >
                 Save
