@@ -70,7 +70,7 @@ export function TwitterButton({ client }) {
           width={40}
           height={40}
           className="rounded-full"
-          alt="User Meta profile picture"
+          alt="X profile picture"
         />
         <div className="space-y-0 5">
           <p className="font-medium text-base text-neutral-700">{data.name}</p>
