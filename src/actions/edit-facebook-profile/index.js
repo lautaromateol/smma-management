@@ -24,7 +24,7 @@ export async function handler(data) {
         about,
         website,
         phone,
-        // location
+        location
       })
     })
 
