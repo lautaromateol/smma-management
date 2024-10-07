@@ -25,7 +25,7 @@ export function EditInstagramProfileForm({ data }) {
       username: igPageName,
       biography: igBiography ?? null,
       website: igWebsite ?? null,
-      accessToken: pageAccessToken
+      access_token: pageAccessToken
     }
   })
 

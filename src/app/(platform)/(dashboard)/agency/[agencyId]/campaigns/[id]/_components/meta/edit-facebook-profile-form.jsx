@@ -23,7 +23,7 @@ export function EditFacebookProfileForm({ page, data }) {
     resolver: zodResolver(FacebookProfile),
     defaultValues: {
       id: fbPageId,
-      accessToken: pageAccessToken,
+      access_token: pageAccessToken,
       about: fbAbout ?? null,
       category: fbCategory ?? null,
       email: fbEmails?.length > 0 ? fbEmails[0] : null,

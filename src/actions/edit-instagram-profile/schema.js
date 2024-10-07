@@ -2,7 +2,9 @@ import { z } from "zod";
 
 export const InstagramProfile = z.object({
   id: z.string(),
-  accessToken: z.string(),
+  access_token: z.string({
+    message: "Page Access Token is required"
+  }),
   biography: z.string().min(1, {
     message: "You can't leave this field empty."
   }).optional().nullable(),

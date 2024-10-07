@@ -12,11 +12,11 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { accessToken, id, about, category, email, website, phone, location } = data
+  const { access_token, id, about, category, email, website, phone, location } = data
 
   try {
 
-    const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}?access_token=${accessToken}`, {
+    const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}?access_token=${access_token}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
