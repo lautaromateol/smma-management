@@ -3,13 +3,12 @@ import { updateFacebookProfile } from "@/actions/edit-facebook-profile"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { useAction } from "@/hooks/use-action"
-import { Home, LinkIcon, Mail, Phone } from "lucide-react"
+import { LinkIcon, Mail, Phone } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { UpdateLocation } from "."
+import { ProfilePicture, UpdateLocation } from "."
 import { useOpenModal } from "@/hooks/use-open-modal"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FacebookProfile } from "@/actions/edit-facebook-profile/schema"
@@ -18,19 +17,19 @@ export function EditFacebookProfileForm({ page, data }) {
 
   const { onClose } = useOpenModal((state) => state)
 
-  const { fbPageId, pageAccessToken, userAccessToken } = data
+  const { fbPageId, pageAccessToken, userAccessToken, fbAbout, fbCategory, fbEmails, fbWebsite, fbPhone, fbLocation, fbPictureUrl } = data
 
   const form = useForm({
     resolver: zodResolver(FacebookProfile),
     defaultValues: {
       id: fbPageId,
       accessToken: pageAccessToken,
-      about: page?.about ?? null,
-      category: page?.category ?? null,
-      email: page?.emails?.length > 0 ? page.emails[0] : null,
-      website: page?.website ?? null,
-      phone: page?.phone ?? null,
-      location: page?.location ?? null
+      about: fbAbout ?? null,
+      category: fbCategory ?? null,
+      email: fbEmails?.length > 0 ? fbEmails[0] : null,
+      website: fbWebsite ?? null,
+      phone: fbPhone ?? null,
+      location: fbLocation ?? null
     }
   })
 
@@ -49,6 +48,12 @@ export function EditFacebookProfileForm({ page, data }) {
   return (
     <Form {...form}>
       <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <ProfilePicture
+          form={form}
+          accessToken={pageAccessToken}
+          picture={fbPictureUrl}
+          fbPageId={fbPageId}
+        />
         <FormField
           name="about"
           control={form.control}
@@ -140,61 +145,5 @@ export function EditFacebookProfileForm({ page, data }) {
         </Button>
       </form>
     </Form>
-  )
-}
-
-EditFacebookProfileForm.Skeleton = function EditFacebookProfileFormSkeleton() {
-  return (
-    <div className="space-y-4">
-      <div>
-        <FormLabel>Bio</FormLabel>
-        <Skeleton className="h-20 w-full" />
-      </div>
-
-      <div>
-        <FormLabel>Category</FormLabel>
-        <Skeleton className="h-10 w-full" />
-      </div>
-
-      <div>
-        <FormLabel>
-          <div className="flex items-center gap-x-2">
-            <Phone className="size-4" />
-            Phone
-          </div>
-        </FormLabel>
-        <Skeleton className="h-10 w-full" />
-      </div>
-
-      <div>
-        <FormLabel>
-          <div className="flex items-center gap-x-2">
-            <Mail className="size-4" />
-            Email address
-          </div>
-        </FormLabel>
-        <Skeleton className="h-10 w-full" />
-      </div>
-
-      <div>
-        <FormLabel>
-          <div className="flex items-center gap-x-2">
-            <Home className="size-4" />
-            Address
-          </div>
-        </FormLabel>
-        <Skeleton className="h-10 w-full" />
-      </div>
-
-      <div>
-        <FormLabel>
-          <div className="flex items-center gap-x-2">
-            <LinkIcon className="size-4" />
-            Website
-          </div>
-        </FormLabel>
-        <Skeleton className="h-10 w-full" />
-      </div>
-    </div>
   )
 }
