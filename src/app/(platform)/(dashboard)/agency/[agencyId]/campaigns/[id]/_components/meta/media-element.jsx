@@ -41,7 +41,7 @@ export function MediaElement({ id, type, accessToken, form }) {
     if (!data) return;
 
     if (type === "image" && data.images) {
-      const image = data.images.find((img) => img.height >= 800)
+      const image = data.images[0]
       const preview = data.images.find((img) => img.height >= 100)
 
       if (image) {
@@ -56,7 +56,7 @@ export function MediaElement({ id, type, accessToken, form }) {
         setInputs("previews", [...previews, preview])
       }
     } else if (type === "video" && data.thumbnails) {
-      const image = data.thumbnails.data.find((img) => img.height >= 800)
+      const image = data.thumbnails.data[0]
       const preview = data.thumbnails.data.find((img) => img.height >= 800)
 
       if (image) {
