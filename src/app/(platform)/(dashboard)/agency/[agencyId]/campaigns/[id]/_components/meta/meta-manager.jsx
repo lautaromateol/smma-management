@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { FileVideo, Megaphone, PlusCircle } from "lucide-react";
 import { FaFacebook, FaInstagram } from "react-icons/fa6";
-import { EditFacebookProfile, MetaAddPostButton } from ".";
+import { EditFacebookProfile, EditInstagramProfile, MetaAddPostButton } from ".";
 import { Separator } from "@/components/ui/separator";
 
 export function MetaManager({ data }) {
@@ -42,12 +42,7 @@ export function MetaManager({ data }) {
             <div className="flex items-center gap-x-1">
               <EditFacebookProfile data={data} />
               <span className="text-sm text-main">|</span>
-              <div
-                role="button"
-                className="text-sm text-main hover:underline"
-              >
-                Edit Instagram Profile
-              </div>
+              <EditInstagramProfile data={data} />
             </div>
           </div>
         </div>
