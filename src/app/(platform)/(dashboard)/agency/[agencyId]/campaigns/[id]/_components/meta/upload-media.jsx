@@ -79,8 +79,12 @@ export function UploadMedia({ form, fbPageId, accessToken }) {
       <p className="text-sm">Share photos or a video. Instagram posts can&apos;t exceed 10 photos.</p>
       <div className="space-y-4">
         <div className="space-y-1">
-          <p className="text-sm font-medium">Upload media (photo/video)</p>
-          <Input type="file" onChange={uploadMedia} />
+          <p className="text-sm font-medium">Upload photos. Videos not available yet.</p>
+          <Input
+            accept="image/*"
+            type="file"
+            onChange={uploadMedia}
+          />
         </div>
         <MediaPreview form={form} attachedMedia={attached_media} accessToken={accessToken} />
       </div>
