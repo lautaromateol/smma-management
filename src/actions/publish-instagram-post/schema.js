@@ -36,9 +36,11 @@ export const InstagramPost = z.object({
     .nullable()
   ),
   targeting: targetingSchema.optional(),
-  attached_media: z.array(mediaFbidSchema).optional(),
+  attached_media: z.array(mediaFbidSchema, {
+    message: "You have to upload a photo or a video to continue"
+  }),
   access_token: z.string({
-    message: "Please provide a profile access token"
+    message: "Page Access Token is required"
   })
 })
 .refine((data) => {
