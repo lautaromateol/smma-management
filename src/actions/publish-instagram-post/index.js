@@ -4,6 +4,8 @@ import { InstagramPost } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { fetcher } from "@/lib/fetcher";
+import { isVideoReady } from "@/lib/is-video-ready";
+import { isContainerReady } from "@/lib/is-container-ready";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -12,56 +14,71 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { id, message, published, scheduled_publish_time, targeting, attached_media, access_token } = data
+  const { id, message, published, scheduled_publish_time, targeting, urls, access_token } = data
 
   try {
 
     let creation_id
 
-    if (attached_media.length === 1) {
+    if (urls.length === 1) {
 
-      const imagesData = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${attached_media[0].media_fbid}?fields=images&access_token=${access_token}`)
+      if (urls[0].type === "image") {
 
-      const imageUrl = imagesData.images.find((img) => img.height >= 800 && img.height <= 1200).source
-
-      const formData = new FormData()
-
-      formData.append("image_url", imageUrl)
-      formData.append("caption", message)
-      formData.append("access_token", access_token)
-
-      const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
-        method: "POST",
-        body: formData
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        creation_id = data.id
-      } else {
-        console.log(data.error)
-        return { error: "Error uploading image!" }
-      }
-    } else {
-
-      const imagesPromise = attached_media.map((img) => {
-        return fetch(`${FACEBOOK_API_GRAPH_URL}/${img.media_fbid}?fields=images&access_token=${access_token}`)
-      })
-
-      const imagesResponses = await Promise.all(imagesPromise)
-
-      const imagesData = imagesResponses.map((response) => response.json())
-
-      const images = await Promise.all(imagesData)
-
-      const imagesUrl = images.map((img) => img.images).map((img) => img.find((obj) => obj.height >= 800 && obj.height <= 1200).source)
-
-      const mediaPromises = imagesUrl.map((url) => {
+        const imageUrl = urls[0].source
 
         const formData = new FormData()
-        formData.append("image_url", url)
+
+        formData.append("image_url", imageUrl)
         formData.append("caption", message)
+        formData.append("access_token", access_token)
+
+        const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
+          method: "POST",
+          body: formData
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+          creation_id = data.id
+        } else {
+          console.log(data.error)
+          return { error: "Error uploading image!" }
+        }
+      } else {
+        const videoUrl = urls[0].source
+
+        const formData = new FormData()
+
+        formData.append("video_url", videoUrl)
+        formData.append("media_type", "REELS")
+        formData.append("caption", message)
+        formData.append("access_token", access_token)
+
+        const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
+          method: "POST",
+          body: formData
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+          creation_id = data.id
+        } else {
+          console.log(data.error)
+          return { error: "Error uploading video!" }
+        }
+      }
+
+
+    } else {
+
+      const mediaPromises = urls.map((item) => {
+
+        const formData = new FormData()
+
+        item.type === "image" ? formData.append("image_url", item.source) : formData.append("video_url", item.source)
+        item.type === "video" && formData.append("media_type", "VIDEO")
         formData.append("is_carousel_item", true)
         formData.append("access_token", access_token)
 
@@ -83,6 +100,7 @@ export async function handler(data) {
 
       formData.append("media_type", "CAROUSEL")
       formData.append("children", children)
+      formData.append("caption", message)
       formData.append("access_token", access_token)
 
       const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
@@ -96,9 +114,13 @@ export async function handler(data) {
         creation_id = data.id
       } else {
         console.log(data.error)
-        return { error: "Error uploading images!" }
+        return { error: "Error uploading post to Instagram!" }
       }
     }
+
+    const ready = await isContainerReady(creation_id, access_token)
+
+    if(!ready) return { error: "Error uploading post to Instagram!" }
 
     const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media_publish`, {
       method: "POST",
