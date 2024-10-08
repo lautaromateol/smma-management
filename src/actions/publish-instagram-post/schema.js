@@ -14,8 +14,9 @@ const targetingSchema = z.object({
   geo_locations: geoLocationsSchema
 })
 
-const mediaFbidSchema = z.object({
-  media_fbid: z.string()
+const urlSchema = z.object({
+  source: z.string(),
+  type: z.string()
 })
 
 export const InstagramPost = z.object({
@@ -36,7 +37,7 @@ export const InstagramPost = z.object({
     .nullable()
   ),
   targeting: targetingSchema.optional(),
-  attached_media: z.array(mediaFbidSchema, {
+  urls: z.array(urlSchema, {
     message: "You have to upload a photo or a video to continue"
   }),
   access_token: z.string({
