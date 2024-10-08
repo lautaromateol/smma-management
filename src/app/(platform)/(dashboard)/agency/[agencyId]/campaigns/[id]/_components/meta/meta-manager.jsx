@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { FileVideo, Megaphone, PlusCircle } from "lucide-react";
 import { FaFacebook, FaInstagram } from "react-icons/fa6";
-import { EditFacebookProfile, EditInstagramProfile, MetaAddPostButton } from ".";
+import { EditFacebookProfile, EditInstagramProfile, MetaAddPostButton, MetaCreateStoryButton } from ".";
 import { Separator } from "@/components/ui/separator";
 
 export function MetaManager({ data }) {
@@ -84,13 +84,7 @@ export function MetaManager({ data }) {
           Create Reel
           <FileVideo className="size-4" />
         </Button>
-        <Button
-          className="flex items-center font-medium gap-x-2"
-          variant="outline"
-        >
-          Create Story
-          <PlusCircle className="size-4" />
-        </Button>
+       <MetaCreateStoryButton data={data} />
       </div>
     </div>
   )
