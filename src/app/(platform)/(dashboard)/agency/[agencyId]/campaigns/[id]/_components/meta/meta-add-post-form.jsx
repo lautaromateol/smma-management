@@ -23,13 +23,14 @@ export function MetaAddPostForm({ data }) {
 
   const { inputs, setInputs, resetInputs } = useFormInputs((state) => state)
 
-  const { platform, published, attached_media, message } = inputs
+  const { platform, published, attached_media, urls, message } = inputs
 
   const form = useForm({
     resolver: zodResolver(platform === "FACEBOOK" ? FacebookPost : InstagramPost),
     defaultValues: {
       access_token: pageAccessToken,
       attached_media,
+      urls,
       platform,
       message,
       link: null,
@@ -39,6 +40,8 @@ export function MetaAddPostForm({ data }) {
   })
 
   const { errors } = form.formState
+
+  console.log(errors)
 
   const { execute: postOnFacebook, isPending: isPostingOnFacebook } = useAction(publishFacebookPost, {
     onSuccess: () => {
@@ -60,6 +63,7 @@ export function MetaAddPostForm({ data }) {
 
 
   function onSubmit(data) {
+    // console.log(data)
     platform === "FACEBOOK" ? postOnFacebook(data) : postOnInstagram(data)
   }
 
