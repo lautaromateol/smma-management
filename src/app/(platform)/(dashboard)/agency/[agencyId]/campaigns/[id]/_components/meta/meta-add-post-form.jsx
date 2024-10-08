@@ -41,8 +41,6 @@ export function MetaAddPostForm({ data }) {
 
   const { errors } = form.formState
 
-  console.log(errors)
-
   const { execute: postOnFacebook, isPending: isPostingOnFacebook } = useAction(publishFacebookPost, {
     onSuccess: () => {
       toast.success(`Facebook post successfully ${published ? "published" : "scheduled"}`)
@@ -91,6 +89,7 @@ export function MetaAddPostForm({ data }) {
               fbPageId={fbPageId}
               igPageId={igPageId}
               accessToken={pageAccessToken}
+              message={errors?.urls?.message}
             />
             <div className="bg-white space-y-2 p-4">
               <FormLabel>Post details</FormLabel>

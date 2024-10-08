@@ -50,3 +50,9 @@ export const InstagramPost = z.object({
   message: "Post scheduled publish time is required",
   path: ["scheduled_publish_time"]
 })
+.refine((data) => {
+  return data.urls.length <= 1 || data.urls.every((url) => url.type !== "video");
+}, {
+  message: "Videos are not allowed in carousels",
+  path: ["urls"]
+});

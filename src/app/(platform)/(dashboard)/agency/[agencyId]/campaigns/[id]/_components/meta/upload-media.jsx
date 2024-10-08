@@ -1,13 +1,13 @@
 import { MediaPreview } from ".";
 import { toast } from "sonner";
-import { FormLabel } from "@/components/ui/form";
+import { FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { useFormInputs } from "@/hooks/use-form-inputs";
 import { fetcher } from "@/lib/fetcher";
 import { getVideo } from "@/lib/is-video-ready";
 
-export function UploadMedia({ form, fbPageId, accessToken, type }) {
+export function UploadMedia({ form, fbPageId, accessToken, type, message }) {
 
   const { inputs, setInputs } = useFormInputs((state) => state)
 
@@ -150,6 +150,7 @@ export function UploadMedia({ form, fbPageId, accessToken, type }) {
           onChange={uploadMedia}
         />
         <MediaPreview form={form} />
+        <FormMessage>{message ? message : ""}</FormMessage>
       </div>
     </div>
   )
