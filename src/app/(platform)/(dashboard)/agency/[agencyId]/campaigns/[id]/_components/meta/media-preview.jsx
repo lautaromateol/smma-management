@@ -1,15 +1,20 @@
+"use client"
+import { useFormInputs } from "@/hooks/use-form-inputs";
 import { MediaElement } from "./media-element";
 
-export function MediaPreview({ attachedMedia, accessToken, form }) {
+export function MediaPreview({ form }) {
+
+  const { inputs } = useFormInputs((state) => state)
+
+  const { previews } = inputs
 
   return (
     <>
-      {attachedMedia?.map(({media_fbid, type}) => (
+      {previews?.map(({id, source}) => (
         <MediaElement
-          key={media_fbid}
-          id={media_fbid}
-          type={type}
-          accessToken={accessToken}
+          key={id}
+          id={id}
+          source={source}
           form={form}
         />
       ))}

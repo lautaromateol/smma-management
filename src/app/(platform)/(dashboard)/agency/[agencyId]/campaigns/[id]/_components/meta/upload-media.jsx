@@ -4,12 +4,14 @@ import { FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { useFormInputs } from "@/hooks/use-form-inputs";
+import { fetcher } from "@/lib/fetcher";
+import { getVideo } from "@/lib/is-video-ready";
 
-export function UploadMedia({ form, fbPageId, accessToken }) {
+export function UploadMedia({ form, fbPageId, accessToken, type }) {
 
-  const { inputs } = useFormInputs((state) => state)
+  const { inputs, setInputs } = useFormInputs((state) => state)
 
-  const { attached_media } = inputs
+  const { images, previews, urls } = inputs
 
   async function uploadMedia(e) {
     const file = e.target.files[0]
@@ -39,12 +41,40 @@ export function UploadMedia({ form, fbPageId, accessToken }) {
 
         if (response.ok) {
           form.setValue("attached_media", [...inputs?.attached_media, { media_fbid: data.id, type: "image" }])
+
+          const imagesData = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${data.id}?fields=images&access_token=${accessToken}`)
+
+          if (!imagesData.images) {
+            console.log(imagesData)
+            toast.error("There was an error uploading the image")
+            return
+          }
+
+          const image = imagesData.images[0]
+          const preview = imagesData.images.at(-1)
+          const id = imagesData.id
+
+          if (image) {
+            image.id = id
+            preview.id = id
+          }
+
+          const imagesEl = images.find((img) => img.id === id)
+
+          if (!imagesEl && image) {
+            setInputs("images", [...images, image])
+            setInputs("previews", [...previews, preview])
+            form.setValue("urls", [...urls, { source: image.source, type: "image", id: image.id }])
+          }
+
           form.setValue("link", null)
 
         } else {
+          console.log(data)
           toast.error("There was an error uploading the image")
         }
       } catch (error) {
+        console.log(error)
         toast.error("There was an error uploading the image")
       }
     } else if (mimeType.startsWith('video/')) {
@@ -62,10 +92,41 @@ export function UploadMedia({ form, fbPageId, accessToken }) {
           form.setValue("attached_media", [...inputs?.attached_media, { media_fbid: data.id, type: "video" }])
           form.setValue("link", null)
 
+          const videoData = await getVideo(data.id, accessToken)
+
+          if(!videoData) {
+            toast.error("There was an error uploading the video")
+            return
+          }
+
+          console.log(videoData)
+
+          const image = videoData.thumbnails.data[0]
+          const preview = videoData.thumbnails.data.at(-1)
+          const source = videoData.source
+          const id = videoData.id
+
+          if (image) {
+            image.id = id
+            image.source = image.uri
+            preview.id = id
+            preview.source = preview.uri
+          }
+
+          const imagesEl = images.find((img) => img.id === id)
+
+          if (!imagesEl && image) {
+            setInputs("images", [...images, image])
+            setInputs("previews", [...previews, preview])
+            form.setValue("urls", [...urls, { source, type: "video", id }])
+          }
+
         } else {
+          console.log(data)
           toast.error("There was an error uploading the video")
         }
       } catch (error) {
+        console.log(error)
         toast.error("There was an error uploading the video")
       }
     } else {
@@ -76,17 +137,19 @@ export function UploadMedia({ form, fbPageId, accessToken }) {
   return (
     <div className="bg-white space-y-2 p-4">
       <FormLabel>Media</FormLabel>
-      <p className="text-sm">Share photos or a video. Instagram posts can&apos;t exceed 10 photos.</p>
+      <p className="text-sm">{
+        type === "story" ?
+          "You can upload up to 10 images and videos."
+          :
+          "Share photos or a video. Instagram posts can't exceed 10 photos."
+      }
+      </p>
       <div className="space-y-4">
-        <div className="space-y-1">
-          <p className="text-sm font-medium">Upload photos. Videos not available yet.</p>
-          <Input
-            accept="image/*"
-            type="file"
-            onChange={uploadMedia}
-          />
-        </div>
-        <MediaPreview form={form} attachedMedia={attached_media} accessToken={accessToken} />
+        <Input
+          type="file"
+          onChange={uploadMedia}
+        />
+        <MediaPreview form={form} />
       </div>
     </div>
   )
