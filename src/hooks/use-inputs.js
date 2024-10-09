@@ -3,7 +3,6 @@ import { create } from "zustand";
 const createPostInputs = {
   platform: "FACEBOOK",
   attached_media: [],
-  images: [],
   previews: [],
   urls: [],
   message: null,
@@ -14,6 +13,8 @@ const createPostInputs = {
 const createStoryInputs = {
   platform: "FACEBOOK",
   attached_media: [],
+  previews: [],
+  urls: [],
 }
 
 export const useFormInputs = create((set) => ({

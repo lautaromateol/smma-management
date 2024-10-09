@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { LinkIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useFormInputs } from "@/hooks/use-form-inputs";
+import { useFormInputs } from "@/hooks/use-inputs";
 
 export function InsertLink({ form, message }) {
 

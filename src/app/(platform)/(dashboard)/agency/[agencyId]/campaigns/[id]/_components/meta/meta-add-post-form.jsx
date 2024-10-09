@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "@/hooks/use-action";
 import { useOpenModal } from "@/hooks/use-open-modal";
-import { useFormInputs } from "@/hooks/use-form-inputs";
+import { useFormInputs } from "@/hooks/use-inputs";
 import { FacebookPost } from "@/actions/publish-facebook-post/schema";
 import { InstagramPost } from "@/actions/publish-instagram-post/schema";
 import { publishFacebookPost } from "@/actions/publish-facebook-post";
@@ -90,6 +90,8 @@ export function MetaAddPostForm({ data }) {
               igPageId={igPageId}
               accessToken={pageAccessToken}
               message={errors?.urls?.message}
+              inputs={inputs}
+              setInputs={setInputs}
             />
             <div className="bg-white space-y-2 p-4">
               <FormLabel>Post details</FormLabel>

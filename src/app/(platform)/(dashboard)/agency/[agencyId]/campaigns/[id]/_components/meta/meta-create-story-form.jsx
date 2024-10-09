@@ -2,8 +2,8 @@
 import { useEffect } from "react"
 import { Form } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
-import { PlatformSelector, SchedulePost, UploadMedia } from "."
-import { useMetaStoryInputs } from "@/hooks/use-form-inputs"
+import { InstagramStoryPreview, PlatformSelector, SchedulePost, UploadMedia } from "."
+import { useMetaStoryInputs } from "@/hooks/use-inputs"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { InstagramStory } from "@/actions/publish-instagram-story/schema"
 
@@ -13,13 +13,13 @@ export function MetaCreateStoryForm({ data }) {
 
   const { inputs, setInputs } = useMetaStoryInputs((state) => state)
 
-  const { platform, attached_media } = inputs
+  const { platform, urls } = inputs
 
   const form = useForm({
     resolver: zodResolver(InstagramStory),
     defaultValues: {
       platform,
-      attached_media,
+      urls,
       access_token: pageAccessToken
     }
   })
@@ -52,12 +52,15 @@ export function MetaCreateStoryForm({ data }) {
             accessToken={pageAccessToken}
             fbPageId={fbPageId}
             type="story"
+            setInputs={setInputs}
+            inputs={inputs}
           />
           <SchedulePost 
             form={form}
           />
         </form>
       </Form>
+      <InstagramStoryPreview data={data} />
     </div>
   )
 }
