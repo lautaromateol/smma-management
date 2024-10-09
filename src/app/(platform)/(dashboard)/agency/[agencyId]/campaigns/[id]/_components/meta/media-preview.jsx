@@ -1,10 +1,7 @@
 "use client"
-import { useFormInputs } from "@/hooks/use-form-inputs";
 import { MediaElement } from "./media-element";
 
-export function MediaPreview({ form }) {
-
-  const { inputs } = useFormInputs((state) => state)
+export function MediaPreview({ form, inputs, setInputs }) {
 
   const { previews } = inputs
 
@@ -16,6 +13,8 @@ export function MediaPreview({ form }) {
           id={id}
           source={source}
           form={form}
+          inputs={inputs}
+          setInputs={setInputs}
         />
       ))}
     </>
