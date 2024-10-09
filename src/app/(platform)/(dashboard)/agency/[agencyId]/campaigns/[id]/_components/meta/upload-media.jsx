@@ -3,15 +3,12 @@ import { toast } from "sonner";
 import { FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
-import { useFormInputs } from "@/hooks/use-form-inputs";
 import { fetcher } from "@/lib/fetcher";
 import { getVideo } from "@/lib/is-video-ready";
 
-export function UploadMedia({ form, fbPageId, accessToken, type, message }) {
+export function UploadMedia({ form, fbPageId, accessToken, type, message, setInputs, inputs }) {
 
-  const { inputs, setInputs } = useFormInputs((state) => state)
-
-  const { images, previews, urls } = inputs
+  const { previews, urls } = inputs
 
   async function uploadMedia(e) {
     const file = e.target.files[0]
@@ -59,10 +56,9 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message }) {
             preview.id = id
           }
 
-          const imagesEl = images.find((img) => img.id === id)
+          const imagesEl = urls.find((img) => img.id === id)
 
           if (!imagesEl && image) {
-            setInputs("images", [...images, image])
             setInputs("previews", [...previews, preview])
             form.setValue("urls", [...urls, { source: image.source, type: "image", id: image.id }])
           }
@@ -113,10 +109,9 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message }) {
             preview.source = preview.uri
           }
 
-          const imagesEl = images.find((img) => img.id === id)
+          const imagesEl = urls.find((img) => img.id === id)
 
           if (!imagesEl && image) {
-            setInputs("images", [...images, image])
             setInputs("previews", [...previews, preview])
             form.setValue("urls", [...urls, { source, type: "video", id }])
           }
@@ -149,7 +144,7 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message }) {
           type="file"
           onChange={uploadMedia}
         />
-        <MediaPreview form={form} />
+        <MediaPreview form={form} inputs={inputs} setInputs={setInputs} />
         <FormMessage>{message ? message : ""}</FormMessage>
       </div>
     </div>

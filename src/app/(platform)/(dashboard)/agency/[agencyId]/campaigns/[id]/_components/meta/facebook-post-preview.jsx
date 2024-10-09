@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FaEarthAmericas } from "react-icons/fa6";
 import { ImageIcon, MessageSquare, Share2, ThumbsUp } from "lucide-react";
-import { useFormInputs } from "@/hooks/use-form-inputs";
+import { useFormInputs } from "@/hooks/use-inputs";
 import { Images } from ".";
 
 export function FacebookPostPreview({ data }) {
@@ -11,7 +11,7 @@ export function FacebookPostPreview({ data }) {
 
   const { inputs } = useFormInputs((state) => state)
 
-  const { message, images, link } = inputs
+  const { message, urls, link } = inputs
 
   return (
     <div className="w-full h-auto">
@@ -44,13 +44,13 @@ export function FacebookPostPreview({ data }) {
           </div>
         }
       </div>
-      {!images.length > 0 && !message && (
+      {!urls.length > 0 && !message && (
         <div className="h-96 bg-neutral-100 flex items-center justify-center">
           <ImageIcon className="size-44 text-neutral-200 font-light" />
         </div>
       )}
-      {images?.length > 0 && (
-        <Images images={images} />
+      {urls?.length > 0 && (
+        <Images images={urls} />
       )}
       {link && (
         <div className="p-4 bg-neutral-100">

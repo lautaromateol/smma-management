@@ -1,14 +1,13 @@
 import Image from "next/image";
 import { Bookmark, Heart, ImageIcon, MessageCircle, Send } from "lucide-react";
-import { useFormInputs } from "@/hooks/use-form-inputs";
-import { cn } from "@/lib/utils";
+import { useFormInputs } from "@/hooks/use-inputs";
 import { ImagesCarousel } from ".";
 
 export function InstagramPostPreview({ data }) {
 
   const { igPictureUrl, igPageName } = data
 
-  const { inputs: { images } } = useFormInputs((state) => state)
+  const { inputs: { urls } } = useFormInputs((state) => state)
 
   return (
     <div className="w-full h-auto">
@@ -27,13 +26,13 @@ export function InstagramPostPreview({ data }) {
           </p>
         </div>
       </div>
-      {!images.length > 0 && (
+      {!urls.length > 0 && (
         <div className="h-96 bg-neutral-100 flex items-center justify-center">
           <ImageIcon className="size-44 text-neutral-200 font-light" />
         </div>
       )}
-      {images?.length > 0 && (
-       <ImagesCarousel images={images} />
+      {urls?.length > 0 && (
+       <ImagesCarousel data={data} images={urls} />
       )}
       <div className="h-10 bg-white p-4 flex items-center justify-start gap-x-2">
         <Heart className="size-4 font-semibold" />
