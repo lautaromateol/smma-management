@@ -31,5 +31,8 @@ export const useMetaStoryInputs = create((set) => ({
   inputs: createStoryInputs,
   setInputs: (field, value) => set((state) => ({
     inputs: { ...state.inputs, [field]: value }
+  })),
+  resetInputs: () => set(() => ({
+    inputs: createStoryInputs
   }))
 }))
