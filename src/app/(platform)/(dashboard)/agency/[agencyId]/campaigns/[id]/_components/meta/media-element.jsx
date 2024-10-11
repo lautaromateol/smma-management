@@ -14,7 +14,6 @@ export function MediaElement({ id, source, form, setInputs, inputs }) {
 
     form.setValue("attached_media", newAttachedMedia)
     form.setValue("urls", newUrls)
-    setInputs("images", newImages)
     setInputs("previews", newPreviews)
   }
 
