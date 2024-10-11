@@ -4,14 +4,21 @@ import { Form } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { InstagramStoryPreview, PlatformSelector, SchedulePost, UploadMedia } from "."
 import { useMetaStoryInputs } from "@/hooks/use-inputs"
+import { useOpenModal } from "@/hooks/use-open-modal"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { InstagramStory } from "@/actions/publish-instagram-story/schema"
+import { Button } from "@/components/ui/button"
+import { useAction } from "@/hooks/use-action"
+import { publishInstagramStory } from "@/actions/publish-instagram-story"
+import { toast } from "sonner"
 
 export function MetaCreateStoryForm({ data }) {
 
   const { igPageId, fbPageId, fbPageName, igPageName, pageAccessToken } = data
 
-  const { inputs, setInputs } = useMetaStoryInputs((state) => state)
+  const { onClose } = useOpenModal((state) => state)
+
+  const { inputs, setInputs, resetInputs } = useMetaStoryInputs((state) => state)
 
   const { platform, urls } = inputs
 
@@ -24,8 +31,17 @@ export function MetaCreateStoryForm({ data }) {
     }
   })
 
-  function onSubmit(data) {
+  const { execute, isPending } = useAction(publishInstagramStory, {
+    onSuccess: () => {
+      toast.success("Story published successfully")
+      resetInputs()
+      onClose()
+    },
+    onError: (error) => toast.error(error)
+  })
 
+  function onSubmit(data) {
+    execute(data)
   }
 
   useEffect(() => {
@@ -47,7 +63,7 @@ export function MetaCreateStoryForm({ data }) {
             igPageName={igPageName}
             form={form}
           />
-          <UploadMedia 
+          <UploadMedia
             form={form}
             accessToken={pageAccessToken}
             fbPageId={fbPageId}
@@ -55,12 +71,20 @@ export function MetaCreateStoryForm({ data }) {
             setInputs={setInputs}
             inputs={inputs}
           />
-          <SchedulePost 
+          <SchedulePost
             form={form}
           />
+          <Button
+            disabled={isPending}
+            type="submit"
+            variant="main"
+            className="w-full"
+          >
+            Publish
+          </Button>
         </form>
       </Form>
-      <InstagramStoryPreview data={data} />
+      <InstagramStoryPreview images={urls} data={data} />
     </div>
   )
 }
