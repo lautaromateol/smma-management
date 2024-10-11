@@ -18,18 +18,25 @@ export function ImagesCarousel({ images }) {
 
   return (
     <div className="h-96 relative overflow-hidden">
-       <div
+      <div
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
-        {images.map((image, i) => (
+        {images.map((media, i) => (
           <div key={i} className="w-full h-96 flex-shrink-0 relative">
-            <Image
-              src={image.source}
-              layout="fill"
-              objectFit="cover"
-              alt={`Carousel image ${i + 1}`}
-            />
+            {media.type === "image" ?
+              <Image
+                src={media.source}
+                layout="fill"
+                objectFit="cover"
+                alt={`Carousel image ${i + 1}`}
+              />
+              :
+              <video className="w-auto h-auto max-w-full max-h-full" controls>
+                <source src={media.source} type="video/mp4" />
+                Your browser don&apos;t support video reproduction.
+              </video>
+            }
           </div>
         ))}
       </div>
