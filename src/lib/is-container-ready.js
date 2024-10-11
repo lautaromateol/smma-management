@@ -9,6 +9,12 @@ export async function isContainerReady(creation_id, access_token) {
     const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${creation_id}?fields=status_code&access_token=${access_token}`);
     const data = await response.json();
 
+    if(data.error) {
+      console.log(data)
+      return false
+    } 
+      
+
     if (data.status_code === 'FINISHED') {
       return true;
     }
