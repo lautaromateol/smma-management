@@ -5,6 +5,8 @@ const createPostInputs = {
   attached_media: [],
   previews: [],
   urls: [],
+  selectedCountries: [],
+  targeting: {},
   message: null,
   link: null,
   published: true,
