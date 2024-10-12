@@ -114,11 +114,11 @@ Targeting.Form = function LocationForm({ form, message, setShowTargetingForm, sh
           </div>
           <>
             {results?.length > 0 && (
-              <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto">
+              <ul className="absolute z-10 w-auto bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto">
                 {results.map((result) => (
                   <li
                     key={result.key}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    className="px-4 py-2 text-sm font-medium hover:bg-gray-100 cursor-pointer"
                     onClick={() => {
                       setSearchTerm(result.name)
                       if(selectedCountries.includes({ key: result.key, name: result.name })) return 
