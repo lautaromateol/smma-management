@@ -1,5 +1,5 @@
 "use client"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,17 +13,22 @@ import { publishInstagramPost } from "@/actions/publish-instagram-post";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { FacebookPostPreview, InsertLink, InstagramPostPreview, PlatformSelector, SchedulePost, UploadMedia } from ".";
+import { FacebookPostPreview, InsertLink, InstagramPostPreview, PlatformSelector, SchedulePost, UploadMedia, Targeting } from ".";
 
 export function MetaAddPostForm({ data }) {
 
-  const { fbPageId, fbPageName, igPageId, igPageName, pageAccessToken } = data
+  const { fbPageId, fbPageName, igPageId, igPageName, pageAccessToken, userAccessToken } = data
 
   const { onClose } = useOpenModal((state) => state)
 
   const { inputs, setInputs, resetInputs } = useFormInputs((state) => state)
 
-  const { platform, published, attached_media, urls, message } = inputs
+  const { platform, published, attached_media, urls, message, targeting } = inputs
+
+  const [linkValue, setLinkValue] = useState("")
+  const [showLinkForm, setShowLinkForm] = useState(false)
+
+  const [showTargetingForm, setShowTargetingForm] = useState(false)
 
   const form = useForm({
     resolver: zodResolver(platform === "FACEBOOK" ? FacebookPost : InstagramPost),
@@ -33,6 +38,7 @@ export function MetaAddPostForm({ data }) {
       urls,
       platform,
       message,
+      targeting,
       link: null,
       published: true,
       scheduled_publish_time: null,
@@ -61,7 +67,7 @@ export function MetaAddPostForm({ data }) {
 
 
   function onSubmit(data) {
-    // console.log(data)
+    console.log(data)
     platform === "FACEBOOK" ? postOnFacebook(data) : postOnInstagram(data)
   }
 
@@ -108,7 +114,42 @@ export function MetaAddPostForm({ data }) {
                   </FormItem>
                 )}
               />
-              {platform === "FACEBOOK" && <InsertLink form={form} message={errors?.link?.message} />}
+              <div className="flex items-center gap-x-1">
+                {platform === "FACEBOOK" &&
+                  <InsertLink
+                    setShowLinkForm={setShowLinkForm}
+                  />}
+                <Targeting
+                  setShowTargetingForm={setShowTargetingForm}
+                />
+                {/* <Location 
+                  setShowLocationForm={setShowLocationForm}
+                /> */}
+              </div>
+              <InsertLink.Form
+                form={form}
+                setShowLinkForm={setShowLinkForm}
+                showLinkForm={showLinkForm}
+                linkValue={linkValue}
+                setLinkValue={setLinkValue}
+                message={errors?.link?.message}
+              />
+              <Targeting.Form
+                accessToken={userAccessToken}
+                form={form}
+                message={errors?.targeting?.message}
+                setShowTargetingForm={setShowTargetingForm}
+                showTargetingForm={showTargetingForm}
+              />
+              {/* <Location.Form
+               form={form}
+               setShowLocationForm={setShowLocationForm}
+               showLocationForm={showLocationForm}
+               locationValue={locationValue}
+               setLocationValue={setLocationValue}
+               message={errors?.location?.message}
+               accessToken={userAccessToken}
+              /> */}
             </div>
             <SchedulePost form={form} message={errors?.scheduled_publish_time?.message} />
             <Button
