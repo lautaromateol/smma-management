@@ -7,7 +7,7 @@ const citySchema = z.object({
 
 const geoLocationsSchema = z.object({
   countries: z.array(z.string()),
-  cities: z.array(citySchema)
+  // cities: z.array(citySchema)
 })
 
 const targetingSchema = z.object({
@@ -36,7 +36,7 @@ export const InstagramPost = z.object({
     z.date()
     .nullable()
   ),
-  targeting: targetingSchema.optional(),
+  targeting: targetingSchema.optional().nullable(),
   urls: z.array(urlSchema, {
     message: "You have to upload a photo or a video to continue"
   }),
