@@ -12,7 +12,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { id, message, published, scheduled_publish_time, targeting, urls, access_token } = data
+  const { id, message, urls, access_token } = data
 
   try {
 
@@ -127,9 +127,6 @@ export async function handler(data) {
       },
       body: JSON.stringify({
         creation_id,
-        published,
-        scheduled_publish_time,
-        targeting,
         access_token
       })
     })
