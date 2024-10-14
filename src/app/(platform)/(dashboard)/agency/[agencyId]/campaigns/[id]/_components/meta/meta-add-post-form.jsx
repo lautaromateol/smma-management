@@ -119,9 +119,11 @@ export function MetaAddPostForm({ data }) {
                   <InsertLink
                     setShowLinkForm={setShowLinkForm}
                   />}
-                <Targeting
-                  setShowTargetingForm={setShowTargetingForm}
-                />
+                {platform === "FACEBOOK" &&
+                  <Targeting
+                    setShowTargetingForm={setShowTargetingForm}
+                  />
+                }
                 {/* <Location 
                   setShowLocationForm={setShowLocationForm}
                 /> */}
