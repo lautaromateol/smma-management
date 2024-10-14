@@ -71,9 +71,9 @@ export function MetaCreateStoryForm({ data }) {
             setInputs={setInputs}
             inputs={inputs}
           />
-          <SchedulePost
+          {/* <SchedulePost
             form={form}
-          />
+          /> */}
           <Button
             disabled={isPending}
             type="submit"
