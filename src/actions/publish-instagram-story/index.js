@@ -12,7 +12,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { id, published, scheduled_publish_time, targeting, urls, access_token } = data
+  const { id, urls, access_token } = data
 
   try {
 
