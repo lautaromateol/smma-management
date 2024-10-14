@@ -1,82 +1,77 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function InstagramStoryPreview({ images, data }) {
-
-  const { igPictureUrl, igPageName } = data
-
-  const [index, setIndex] = useState(0)
+  const { igPictureUrl, igPageName } = data;
+  const [index, setIndex] = useState(0);
 
   function handleNext() {
-    setIndex((prevIndex) => prevIndex === images.length - 1 ? 0 : prevIndex + 1)
+    setIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   }
 
   function handlePrev() {
-    setIndex((prevIndex) => prevIndex === 0 ? images.length - 1 : prevIndex - 1)
+    setIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
   }
 
   return (
     <div className="min-h-[500px] flex items-center justify-center relative overflow-hidden bg-black">
-      <div className="absolute top-4 left-4 flex items-center z-50">
-        <div className="flex items-center gap-x-2">
-          <div className="rounded-full size-6 relative">
-            <Image
-              src={igPictureUrl}
-              className="rounded-full object-cover border border-gray-400"
-              alt="Instagram page profile picture"
-              fill
-            />
-          </div>
-          <p className="text-sm font-semibold text-white text-border">
-            {igPageName}
-          </p>
+      <div className="absolute top-4 left-4 flex items-center z-50 gap-x-2">
+        <div className="w-8 h-8 relative">
+          <Image
+            src={igPictureUrl}
+            className="rounded-full object-cover border border-gray-400"
+            alt="Instagram page profile picture"
+            fill
+          />
         </div>
+        <p className="text-sm font-semibold text-white">{igPageName}</p>
       </div>
-      <div className="flex h-[400px] transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${index * 100}%)` }}>
+
+      <div className="relative w-full h-[400px] flex transition-transform duration-500 ease-in-out" 
+           style={{ transform: `translateX(-${index * 100}%)` }}>
         {images.map((media, i) => (
-          <div key={i} className="w-full flex-shrink-0 relative z-10">
-            {media.type === "image" ?
+          <div key={i} className="w-full flex-shrink-0 relative">
+            {media.type === "image" ? (
               <Image
                 src={media.source}
+                alt={`Carousel image ${i + 1}`}
                 fill
                 className="object-cover"
-                alt={`Carousel image ${i + 1}`}
               />
-              :
-              <video className="w-auto h-auto max-w-full max-h-full" controls>
+            ) : (
+              <video className="w-full h-full object-cover" controls>
                 <source src={media.source} type="video/mp4" />
                 Tu navegador no soporta la reproducción de videos.
               </video>
-            }
+            )}
           </div>
         ))}
       </div>
 
-      <div className="absolute flex items-center justify-center gap-x-0.5 bottom-2 inset-x-0">
+      <div className="absolute bottom-2 inset-x-0 flex items-center justify-center gap-x-1">
         {images.map((_, i) => (
-          <div className={cn(
-            "size-1.5 rounded-full",
-            i === index ? "bg-blue-600" : "bg-neutral-400"
-          )} key={i} />
+          <div
+            key={i}
+            className={`size-2 rounded-full ${i === index ? "bg-blue-600" : "bg-neutral-400"}`}
+          />
         ))}
       </div>
-      <div
+
+      <button
         onClick={handlePrev}
-        role="button"
-        className="absolute left-2 top-1/2 transform -translate-y-1/2"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white"
       >
-        <ChevronLeft className="font-semibold text-white text-border size-12" />
-      </div>
-      <div
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+
+      <button
         onClick={handleNext}
-        role="button"
-        className="absolute right-2 top-1/2 transform -translate-y-1/2"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white"
       >
-        <ChevronRight className="font-semibold text-white text-border size-12" />
-      </div>
+        <ChevronRight className="w-6 h-6" />
+      </button>
     </div>
-  )
+  );
 }
