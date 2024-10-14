@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-const citySchema = z.object({
-  key: z.string(),
-  name: z.string()
-})
+// const citySchema = z.object({
+//   key: z.string(),
+//   name: z.string()
+// })
 
 const geoLocationsSchema = z.object({
   countries: z.array(z.string()),
@@ -31,11 +31,11 @@ export const InstagramPost = z.object({
   }).min(1, {
     message: "Caption text cannot be empty"
   }),
-  published: z.boolean(),
-  scheduled_publish_time: z.optional(
-    z.date()
-    .nullable()
-  ),
+  // published: z.boolean(),
+  // scheduled_publish_time: z.optional(
+  //   z.date()
+  //   .nullable()
+  // ),
   targeting: targetingSchema.optional().nullable(),
   urls: z.array(urlSchema, {
     message: "You have to upload a photo or a video to continue"

@@ -3,7 +3,7 @@ import { isContainerReady } from "./is-container-ready"
 
 export async function publishContainerId(data, creation_id) {
 
-  const { id, access_token, published, scheduled_publish_time, targeting } = data
+  const { id, access_token } = data
 
   const ready = await isContainerReady(creation_id, access_token)
 
@@ -16,9 +16,8 @@ export async function publishContainerId(data, creation_id) {
     },
     body: JSON.stringify({
       creation_id,
-      published,
-      scheduled_publish_time,
-      targeting,
+      // published,
+      // scheduled_publish_time,
       access_token
     })
   })

@@ -151,7 +151,9 @@ export function MetaAddPostForm({ data }) {
                accessToken={userAccessToken}
               /> */}
             </div>
-            <SchedulePost form={form} message={errors?.scheduled_publish_time?.message} />
+            {platform === "FACEBOOK" && (
+              <SchedulePost form={form} message={errors?.scheduled_publish_time?.message} />
+            )}
             <Button
               disabled={isPostingOnFacebook || isPostingOnInstagram}
               type="submit"
