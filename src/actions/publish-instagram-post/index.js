@@ -3,8 +3,6 @@ import { auth } from "@clerk/nextjs/server";
 import { InstagramPost } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
-import { fetcher } from "@/lib/fetcher";
-import { isVideoReady } from "@/lib/is-video-ready";
 import { isContainerReady } from "@/lib/is-container-ready";
 
 export async function handler(data) {
