@@ -23,7 +23,7 @@ export function MetaAddPostForm({ data }) {
 
   const { inputs, setInputs, resetInputs } = useFormInputs((state) => state)
 
-  const { platform, published, attached_media, urls, message, targeting } = inputs
+  const { platform, published, attached_media, urls, message, targeting, link } = inputs
 
   const [linkValue, setLinkValue] = useState("")
   const [showLinkForm, setShowLinkForm] = useState(false)
@@ -39,7 +39,7 @@ export function MetaAddPostForm({ data }) {
       platform,
       message,
       targeting,
-      link: null,
+      link,
       published: true,
       scheduled_publish_time: null,
     }
