@@ -6,7 +6,7 @@ const createPostInputs = {
   previews: [],
   urls: [],
   selectedCountries: [],
-  targeting: {},
+  targeting: null,
   message: null,
   link: null,
   published: true,
