@@ -17,13 +17,16 @@ export function ImagesCarousel({ images }) {
   }
 
   return (
-    <div className="h-96 relative overflow-hidden">
+    <div className="h-96 relative overflow-hidden bg-neutral-100">
       <div
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
         {images.map((media, i) => (
-          <div key={i} className="w-full h-96 flex-shrink-0 relative">
+          <div key={i} className={cn(
+            "w-full h-96 flex-shrink-0 relative",
+            media.type === "video" && "flex items-center justify-center"
+          )}>
             {media.type === "image" ?
               <Image
                 src={media.source}
