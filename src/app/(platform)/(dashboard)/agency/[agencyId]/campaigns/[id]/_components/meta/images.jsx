@@ -4,7 +4,7 @@ import Image from "next/image";
 export function Images({ images }) {
   return (
     <div className={cn(
-      "h-96 relative overflow-hidden grid bg-neutral-100",
+      "h-96 relative overflow-hidden grid bg-black",
       images.length <= 3 ? `grid-cols-${images.length.toString()}` : "grid-cols-2"
     )}>
       {images.slice(0, 4).map((media, i) => (

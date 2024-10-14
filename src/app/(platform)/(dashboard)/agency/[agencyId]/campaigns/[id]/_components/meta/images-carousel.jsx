@@ -17,7 +17,7 @@ export function ImagesCarousel({ images }) {
   }
 
   return (
-    <div className="h-96 relative overflow-hidden bg-neutral-100">
+    <div className="h-96 relative overflow-hidden bg-black">
       <div
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
