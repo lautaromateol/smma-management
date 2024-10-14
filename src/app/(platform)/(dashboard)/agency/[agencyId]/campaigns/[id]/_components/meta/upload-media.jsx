@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { fetcher } from "@/lib/fetcher";
 import { getVideo } from "@/lib/is-video-ready";
+import { cn } from "@/lib/utils";
 
 export function UploadMedia({ form, fbPageId, accessToken, type, message, setInputs, inputs }) {
 
@@ -90,7 +91,7 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
 
           const videoData = await getVideo(data.id, accessToken)
 
-          if(!videoData) {
+          if (!videoData) {
             toast.error("There was an error uploading the video")
             return
           }
@@ -141,6 +142,7 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
       </p>
       <div className="space-y-4">
         <Input
+          className={cn(urls.length === 1 && urls[0].type === "video" && "hidden")}
           type="file"
           onChange={uploadMedia}
         />
