@@ -4,6 +4,7 @@ import { InstagramPost } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { isContainerReady } from "@/lib/is-container-ready";
+import { publishContainerId } from "@/lib/publish-container-id";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -116,27 +117,12 @@ export async function handler(data) {
       }
     }
 
-    const ready = await isContainerReady(creation_id, access_token)
+    const upload = await publishContainerId(data, creation_id)
 
-    if(!ready) return { error: "Error uploading post to Instagram!" }
-
-    const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media_publish`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        creation_id,
-        access_token
-      })
-    })
-
-    const data = await response.json()
-
-    if (response.ok) {
-      return { ok: true, id: data.id }
+    if (upload.id) {
+      return { ok: true, id: upload.id }
     } else {
-      console.log(data.error)
+      console.log(upload.error)
       return { error: "Error uploading the post to Instagram!" }
     }
   } catch (error) {
