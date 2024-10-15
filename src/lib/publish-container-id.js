@@ -9,25 +9,14 @@ export async function publishContainerId(data, creation_id) {
 
   if (!ready) return { error: "Error uploading the story to Instagram!" }
 
-  const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media_publish`, {
+  const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media_publish?creation_id=${creation_id}`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Authorization": `OAuth ${access_token}`
     },
-    body: JSON.stringify({
-      creation_id,
-      // published,
-      // scheduled_publish_time,
-      access_token
-    })
   })
 
-  const container = await response.json()
+  const upload = await response.json()
 
-  if (container.id) {
-    return { id: container.id }
-  } else {
-    console.log(container.error)
-    return { error: "Error uploading the story to Instagram!" }
-  }
+  return upload
 }
