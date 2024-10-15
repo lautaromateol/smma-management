@@ -5,6 +5,7 @@ import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { publishContainerId } from "@/lib/publish-container-id";
 import { fetcher } from "@/lib/fetcher";
+import { getVideo } from "@/lib/is-video-ready";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -41,10 +42,12 @@ export async function handler(data) {
       } else {
         const formData = new FormData()
         formData.append("upload_phase", "start")
-        formData.append("access_token", access_token)
 
         const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/video_stories`, {
           method: "POST",
+          headers: {
+            "Authorization": `OAuth ${access_token}`,
+          },
           body: formData
         })
 
@@ -54,6 +57,7 @@ export async function handler(data) {
           const response = await fetch(data.upload_url, {
             method: "POST",
             headers: {
+              "Authorization": `OAuth ${access_token}`,
               "file_url": element.source,
             }
           })
@@ -61,13 +65,15 @@ export async function handler(data) {
           const video = await response.json()
 
           if (video.success) {
-            const videoInfo = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${data.video_id}?fields=status`)
 
-            if (!videoInfo.status.processing_phase.error) {
+            const videoInfo = await getVideo(data.video_id, access_token, true)
+
+            if (videoInfo) {
               const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/video_stories`, {
                 method: "POST",
                 headers: {
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
+                  "Authorization": `OAuth ${access_token}`,
                 },
                 body: JSON.stringify({
                   video_id: data.video_id,
@@ -75,12 +81,14 @@ export async function handler(data) {
                 })
               })
 
-              const data = await response.json()
+              const upload = await response.json()
 
-              if (data.success) {
+              console.log(upload)
+
+              if (upload.success) {
                 return { ok: true }
               } else {
-                throw new Error(data.error.message)
+                throw new Error(upload.error.message)
               } 
 
             } else {
