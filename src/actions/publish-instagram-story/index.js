@@ -4,6 +4,7 @@ import { InstagramStory } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { publishContainerId } from "@/lib/publish-container-id";
+import { isContainerReady } from "@/lib/is-container-ready";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -18,34 +19,93 @@ export async function handler(data) {
 
     if (urls.length === 1) {
 
-      const url = urls[0].source
+      const url = urls[0]
 
-      const formData = new FormData()
+      if (url.type === "image") {
+        const formData = new FormData()
 
-      urls[0].type === "image" ? formData.append("image_url", url) : formData.append("video_url", url)
-      formData.append("media_type", "STORIES")
-      formData.append("access_token", access_token)
+        formData.append("image_url", url.source)
+        formData.append("media_type", "STORIES")
+        formData.append("access_token", access_token)
 
-      const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
-        method: "POST",
-        body: formData
-      })
+        const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
+          method: "POST",
+          body: formData
+        })
 
-      const containerData = await response.json()
+        const containerData = await response.json()
 
-      if (containerData.id) {
-        const creation_id = containerData.id
+        if (containerData.id) {
 
-        const container = await publishContainerId(data, creation_id)
+          const upload = await publishContainerId(data, containerData.id)
+
+          if (upload.id) {
+            return { ok: true, id: upload.id }
+          } else {
+            console.log(upload)
+            throw new Error(upload.error.message)
+          }
+
+        } else {
+          return { error: "Error uploading the story to Instagram!" }
+        }
+      } else {
+        const formData = new FormData()
+
+        formData.append("media_type", "STORIES")
+        formData.append("upload_type", "resumable")
+
+        const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Authorization": `OAuth ${access_token}`
+          }
+        })
+
+        const container = await response.json()
 
         if (container.id) {
-          return { ok: true, id: container.id }
-        } else {
-          return { error: container.error }
-        }
 
-      } else {
-        return { error: "Error uploading the story to Instagram!" }
+          const response = await fetch(container.uri, {
+            method: "POST",
+            headers: {
+              "Authorization": `OAuth ${access_token}`,
+              "file_url": url.source,
+            }
+          })
+
+          const upload = await response.json()
+
+          const isReady = await isContainerReady(container.id, access_token)
+
+          if(!isReady) throw new Error("Error uploading container")
+
+          if (upload.success) {
+
+            const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media_publish?creation_id=${container.id}`, {
+              method: "POST",
+              headers: {
+                "Authorization": `OAuth ${access_token}`
+              },
+            })
+
+            const story = await response.json()
+
+            if(story.id) {
+              return { ok: true }
+            } else {
+              console.log(story)
+              throw new Error(story.error.message)
+            }
+
+          } else {
+            console.log(upload)
+            if (upload.type === "ProcessingFailedError") return { error: "The video must be shorter than 60 seconds. Upload another video" }
+            throw new Error(upload.debug_info.message)
+          }
+        } else throw new Error(container.error.message)
+
       }
 
     } else {
