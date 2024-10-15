@@ -2,14 +2,16 @@
 import { useEffect } from "react"
 import { Form } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
-import { InstagramStoryPreview, PlatformSelector, SchedulePost, UploadMedia } from "."
+import { InstagramStoryPreview, PlatformSelector, UploadMedia } from "."
 import { useMetaStoryInputs } from "@/hooks/use-inputs"
 import { useOpenModal } from "@/hooks/use-open-modal"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { InstagramStory } from "@/actions/publish-instagram-story/schema"
+import { FacebookStory } from "@/actions/publish-facebook-story/schema"
+import { publishInstagramStory } from "@/actions/publish-instagram-story"
+import { publishFacebookStory } from "@/actions/publish-facebook-story"
 import { Button } from "@/components/ui/button"
 import { useAction } from "@/hooks/use-action"
-import { publishInstagramStory } from "@/actions/publish-instagram-story"
 import { toast } from "sonner"
 
 export function MetaCreateStoryForm({ data }) {
@@ -23,7 +25,7 @@ export function MetaCreateStoryForm({ data }) {
   const { platform, urls } = inputs
 
   const form = useForm({
-    resolver: zodResolver(InstagramStory),
+    resolver: zodResolver(platform === "FACEBOOK" ? FacebookStory : InstagramStory),
     defaultValues: {
       platform,
       urls,
@@ -31,9 +33,18 @@ export function MetaCreateStoryForm({ data }) {
     }
   })
 
-  const { execute, isPending } = useAction(publishInstagramStory, {
+  const { execute: publishToInstagram, isPending: isUploadingToInstagram } = useAction(publishInstagramStory, {
     onSuccess: () => {
-      toast.success("Story published successfully")
+      toast.success("Instagram story published successfully")
+      resetInputs()
+      onClose()
+    },
+    onError: (error) => toast.error(error)
+  })
+
+  const { execute: publishToFacebook, isPending: isUploadingToFacebook } = useAction(publishFacebookStory, {
+    onSuccess: () => {
+      toast.success("Facebook story published successfully")
       resetInputs()
       onClose()
     },
@@ -41,7 +52,7 @@ export function MetaCreateStoryForm({ data }) {
   })
 
   function onSubmit(data) {
-    execute(data)
+    platform === "FACEBOOK" ? publishToFacebook(data) : publishToInstagram(data)
   }
 
   useEffect(() => {
@@ -75,7 +86,7 @@ export function MetaCreateStoryForm({ data }) {
             form={form}
           /> */}
           <Button
-            disabled={isPending}
+            disabled={isUploadingToFacebook || isUploadingToInstagram}
             type="submit"
             variant="main"
             className="w-full"
