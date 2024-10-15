@@ -16,3 +16,9 @@ export const InstagramStory = z.object({
     message: "You have to upload a photo or a video to continue"
   })
 })
+.refine((data) => {
+  return data.urls.length > 0
+}, {
+  message: "You have to upload a photo or a video to continue",
+  path: ["urls"]
+})
