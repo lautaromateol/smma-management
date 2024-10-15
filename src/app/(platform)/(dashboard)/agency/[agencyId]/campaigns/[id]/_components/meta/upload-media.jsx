@@ -132,7 +132,7 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
 
   return (
     <div className="bg-white space-y-2 p-4">
-      <FormLabel className={cn(message && "text-destructive")}>Media</FormLabel>
+      <FormLabel className={cn(message && urls.length === 0 &&"text-destructive")}>Media</FormLabel>
       <p className="text-sm">{
         type === "story" ?
           "You can upload up to 10 images and videos."
@@ -147,7 +147,7 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
           onChange={uploadMedia}
         />
         <MediaPreview form={form} inputs={inputs} setInputs={setInputs} />
-        <FormMessage>{message ? message : ""}</FormMessage>
+        <FormMessage className={cn(urls.length > 0 && "hidden")}>{message ? message : ""}</FormMessage>
       </div>
     </div>
   )
