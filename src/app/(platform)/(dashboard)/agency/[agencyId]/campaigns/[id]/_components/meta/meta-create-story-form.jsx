@@ -33,6 +33,8 @@ export function MetaCreateStoryForm({ data }) {
     }
   })
 
+  const { errors } = form.formState
+
   const { execute: publishToInstagram, isPending: isUploadingToInstagram } = useAction(publishInstagramStory, {
     onSuccess: () => {
       toast.success("Instagram story published successfully")
@@ -81,6 +83,7 @@ export function MetaCreateStoryForm({ data }) {
             type="story"
             setInputs={setInputs}
             inputs={inputs}
+            message={errors.urls?.message}
           />
           {/* <SchedulePost
             form={form}
