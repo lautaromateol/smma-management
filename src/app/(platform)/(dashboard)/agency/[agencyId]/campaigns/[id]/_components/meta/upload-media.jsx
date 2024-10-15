@@ -132,7 +132,7 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
 
   return (
     <div className="bg-white space-y-2 p-4">
-      <FormLabel>Media</FormLabel>
+      <FormLabel className={cn(message && "text-destructive")}>Media</FormLabel>
       <p className="text-sm">{
         type === "story" ?
           "You can upload up to 10 images and videos."
