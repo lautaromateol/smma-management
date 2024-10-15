@@ -77,20 +77,9 @@ export async function handler(data) {
 
           const upload = await response.json()
 
-          const isReady = await isContainerReady(container.id, access_token)
-
-          if(!isReady) throw new Error("Error uploading container")
-
           if (upload.success) {
 
-            const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media_publish?creation_id=${container.id}`, {
-              method: "POST",
-              headers: {
-                "Authorization": `OAuth ${access_token}`
-              },
-            })
-
-            const story = await response.json()
+            const story = await publishContainerId(data, container.id)
 
             if(story.id) {
               return { ok: true }
