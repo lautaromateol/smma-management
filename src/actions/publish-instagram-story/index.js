@@ -90,7 +90,11 @@ export async function handler(data) {
 
           } else {
             console.log(upload)
-            if (upload.type === "ProcessingFailedError") return { error: "The video must be shorter than 60 seconds. Upload another video" }
+
+            if(JSON.parse(upload.debug_info.message)?.error.message === "Video process failed with error: Unsupported format: The video format is not supported. Please check spec for supported duration format") {
+              return { error: "The video must be shorter than 60 seconds. Upload another video" }
+            }
+
             throw new Error(upload.debug_info.message)
           }
         } else throw new Error(container.error.message)
