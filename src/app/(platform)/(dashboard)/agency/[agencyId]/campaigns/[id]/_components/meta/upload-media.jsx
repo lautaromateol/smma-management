@@ -145,7 +145,7 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
       </p>
       <div className="space-y-4">
         <Input
-          className={cn(urls.every((url) => url.type === "video") && "hidden")}
+          className={cn(urls.length > 0 && urls.every((url) => url.type === "video") && "hidden")}
           type="file"
           onChange={uploadMedia}
         />
