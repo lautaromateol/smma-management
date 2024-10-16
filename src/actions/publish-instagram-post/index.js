@@ -3,7 +3,6 @@ import { auth } from "@clerk/nextjs/server";
 import { InstagramPost } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
-import { isContainerReady } from "@/lib/is-container-ready";
 import { publishContainerId } from "@/lib/publish-container-id";
 
 export async function handler(data) {
@@ -52,10 +51,12 @@ export async function handler(data) {
         formData.append("video_url", videoUrl)
         formData.append("media_type", "REELS")
         formData.append("caption", message)
-        formData.append("access_token", access_token)
 
         const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
           method: "POST",
+          headers: {
+            "Authorization": `OAuth ${access_token}`
+          },
           body: formData
         })
 
@@ -72,17 +73,24 @@ export async function handler(data) {
 
     } else {
 
+      const video = urls.filter((url) => url.type === "video")[0]
+
       const mediaPromises = urls.map((item) => {
-
         const formData = new FormData()
-
-        item.type === "image" ? formData.append("image_url", item.source) : formData.append("video_url", item.source)
-        item.type === "video" && formData.append("media_type", "VIDEO")
-        formData.append("is_carousel_item", true)
-        formData.append("access_token", access_token)
-
+        formData.append("is_carousel_item", true)          
+        
+        if(item.type === "image") {
+          formData.append("image_url", item.source)
+        } else {
+          formData.append("media_type", "VIDEO")
+          formData.append("upload_type", "resumable")
+        }
+        
         return fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
           method: "POST",
+          headers: {
+            "Authorization": `OAuth ${access_token}`
+          },
           body: formData
         })
       })
@@ -93,6 +101,34 @@ export async function handler(data) {
 
       const media = await Promise.all(mediaData)
 
+      if(video) {
+        
+      const uploadURI = media.find((container) => container.uri !== undefined).uri
+
+      const uploadVideo = await fetch(uploadURI, {
+        method: "POST",
+        headers: {
+          "Authorization": `OAuth ${access_token}`,
+          "file_url": video.source
+        }
+      })
+      
+      const upload = await uploadVideo.json()
+
+      if(!upload.success) {
+
+        if(JSON.parse(upload.debug_info.message)?.error.message === "Video process failed with error: Unsupported format: The video format is not supported. Please check spec for supported frame_rate format") {
+          return { error: "The video dimensions are wrong. Edit your video or upload another." }
+        }
+
+        if(JSON.parse(upload.debug_info.message)?.error.message === "Video process failed with error: Unsupported format: The video format is not supported. Please check spec for supported duration format") {
+          return { error: "The video must be shorter than 60 seconds. Upload another video" }
+        }
+        
+        throw new Error(upload.debug_info.message)
+      }
+    }
+
       const children = media.map((container) => container.id)
 
       const formData = new FormData()
@@ -100,10 +136,11 @@ export async function handler(data) {
       formData.append("media_type", "CAROUSEL")
       formData.append("children", children)
       formData.append("caption", message)
-      formData.append("access_token", access_token)
-
       const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
         method: "POST",
+        headers: {
+          "Authorization": `OAuth ${access_token}`,
+        },
         body: formData
       })
 
