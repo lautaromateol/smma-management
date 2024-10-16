@@ -51,12 +51,6 @@ export const InstagramPost = z.object({
   path: ["scheduled_publish_time"]
 })
 .refine((data) => {
-  return data.urls.length <= 1 || data.urls.every((url) => url.type !== "video");
-}, {
-  message: "Videos are not allowed in carousels",
-  path: ["urls"]
-})
-.refine((data) => {
   return data.urls.length > 0
 }, {
   message: "You have to upload a photo or a video to continue",
