@@ -16,6 +16,11 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
 
     if (!file) return
 
+    if(urls.some((url) => url.type === "video")) {
+      toast.error("You already uploaded a video.")
+      return
+    }
+
     const formData = new FormData()
 
     formData.append("source", file)
@@ -96,8 +101,6 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
             return
           }
 
-          console.log(videoData)
-
           const image = videoData.thumbnails.data[0]
           const preview = videoData.thumbnails.data.at(-1)
           const source = videoData.source
@@ -142,7 +145,7 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
       </p>
       <div className="space-y-4">
         <Input
-          className={cn(urls.length === 1 && urls[0].type === "video" && "hidden")}
+          className={cn(urls.every((url) => url.type === "video") && "hidden")}
           type="file"
           onChange={uploadMedia}
         />
