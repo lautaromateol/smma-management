@@ -16,11 +16,6 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
 
     if (!file) return
 
-    if(urls.some((url) => url.type === "video")) {
-      toast.error("You already uploaded a video.")
-      return
-    }
-
     const formData = new FormData()
 
     formData.append("source", file)
@@ -80,6 +75,11 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
         toast.error("There was an error uploading the image")
       }
     } else if (mimeType.startsWith('video/')) {
+
+      if(urls.some((url) => url.type === "video")) {
+        toast.error("You already uploaded a video.")
+        return
+      }
 
       try {
         const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${fbPageId}/videos`,
