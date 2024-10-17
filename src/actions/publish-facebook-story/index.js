@@ -3,8 +3,6 @@ import { auth } from "@clerk/nextjs/server";
 import { FacebookStory } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
-import { publishContainerId } from "@/lib/publish-container-id";
-import { fetcher } from "@/lib/fetcher";
 import { getVideo } from "@/lib/is-video-ready";
 
 export async function handler(data) {
@@ -18,123 +16,90 @@ export async function handler(data) {
 
   try {
 
-    if (urls.length === 1) {
+    const video = urls.filter((url) => url.type === "video")[0]
 
-      const element = urls[0]
+    let videoInfo
+    let startPhase
 
-      if (element.type === "image") {
+    if (video) {
+      const formData = new FormData()
+      formData.append("upload_phase", "start")
 
-        const formData = new FormData()
-        formData.append("photo_id", element.id)
-        formData.append("access_token", access_token)
+      const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/video_stories`, {
+        method: "POST",
+        headers: {
+          "Authorization": `OAuth ${access_token}`,
+        },
+        body: formData
+      })
 
-        const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/photo_stories`, {
-          method: "POST",
-          body: formData
-        })
+      startPhase = await response.json()
 
-        const data = await response.json()
-
-        if (data.success) {
-          return { ok: true }
-        } else throw new Error(data)
-
-      } else {
-        const formData = new FormData()
-        formData.append("upload_phase", "start")
-
-        const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/video_stories`, {
+      if (startPhase.video_id) {
+        const response = await fetch(startPhase.upload_url, {
           method: "POST",
           headers: {
             "Authorization": `OAuth ${access_token}`,
-          },
-          body: formData
+            "file_url": video.source,
+          }
         })
 
-        const data = await response.json()
+        const uploadingPhase = await response.json()
 
-        if (data.video_id) {
-          const response = await fetch(data.upload_url, {
-            method: "POST",
-            headers: {
-              "Authorization": `OAuth ${access_token}`,
-              "file_url": element.source,
-            }
-          })
+        if (uploadingPhase.success) {
 
-          const video = await response.json()
-
-          if (video.success) {
-
-            const videoInfo = await getVideo(data.video_id, access_token, true)
-
-            if (videoInfo) {
-              const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/video_stories`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": `OAuth ${access_token}`,
-                },
-                body: JSON.stringify({
-                  video_id: data.video_id,
-                  upload_phase: "finish"
-                })
-              })
-
-              const upload = await response.json()
-
-              console.log(upload)
-
-              if (upload.success) {
-                return { ok: true }
-              } else {
-                throw new Error(upload.error.message)
-              } 
-
-            } else {
-              throw new Error(videoInfo.error.message)
-            }
-
-          } else {
-            throw new Error(video.debug_info.message)
-          }
+          videoInfo = await getVideo(startPhase.video_id, access_token, true)
 
         } else {
-          throw new Error(data.error.message)
+          throw new Error(uploadingPhase.debug_info.message)
+        }
+
+      } else {
+        throw new Error(startPhase.error.message)
+      }
+    }
+
+    const mediaPromises = urls.map((item) => {
+
+      const formData = new FormData()
+
+      if (item.type === "image") {
+        formData.append("photo_id", item.id)
+
+        return fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/photo_stories`, {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Authorization": `OAuth ${access_token}`
+          }
+        })
+      } else {
+        if (videoInfo) {
+          return fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/video_stories`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `OAuth ${access_token}`,
+            },
+            body: JSON.stringify({
+              video_id: startPhase.video_id,
+              upload_phase: "finish"
+            })
+          })
+
+        } else {
+          throw new Error(videoInfo.error.message)
         }
       }
+    })
 
-    } else {
+    const mediaResponses = await Promise.all(mediaPromises)
 
-      const mediaPromises = urls.map((item) => {
+    const mediaData = mediaResponses.map((response) => response.json())
 
-        const formData = new FormData()
+    const media = await Promise.all(mediaData)
 
-        item.type === "image" ? formData.append("image_url", item.source) : formData.append("video_url", item.source)
-        formData.append("media_type", "STORIES")
-        formData.append("is_carousel_item", true)
-        formData.append("access_token", access_token)
-
-        return fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/media`, {
-          method: "POST",
-          body: formData
-        })
-      })
-
-      const mediaResponses = await Promise.all(mediaPromises)
-
-      const mediaData = mediaResponses.map((response) => response.json())
-
-      const media = await Promise.all(mediaData)
-
-      const children = media.map((container) => container.id)
-
-      const childrenPromises = children.map((children) => {
-        publishContainerId(data, children)
-      })
-
-      await Promise.all(childrenPromises)
-    }
+    return { ok: true, data: media }
 
   } catch (error) {
     console.log(error)
