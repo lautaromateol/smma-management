@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { FacebookPost } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
+import { revalidatePath } from "next/cache";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -33,6 +34,7 @@ export async function handler(data) {
     const data = await response.json()
 
     if(response.ok) {
+      revalidatePath(`/agency/${orgId}/campaigns/${userId}`)
       return { ok: true, id: data.id }
     } else {
       console.log(data)

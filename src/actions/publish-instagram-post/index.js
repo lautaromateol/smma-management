@@ -4,6 +4,7 @@ import { InstagramPost } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { publishContainerId } from "@/lib/publish-container-id";
+import { revalidatePath } from "next/cache";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -157,6 +158,7 @@ export async function handler(data) {
     const upload = await publishContainerId(data, creation_id)
 
     if (upload.id) {
+      revalidatePath(`/agency/${orgId}/campaigns/${userId}`)
       return { ok: true, id: upload.id }
     } else {
       console.log(upload)
