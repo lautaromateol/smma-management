@@ -36,8 +36,8 @@ export function MetaCreateStoryForm({ data }) {
   const { errors } = form.formState
 
   const { execute: publishToInstagram, isPending: isUploadingToInstagram } = useAction(publishInstagramStory, {
-    onSuccess: () => {
-      toast.success("Instagram story published successfully")
+    onSuccess: (data) => {
+      data.length === urls.length ? toast.success("All stories were published successfully to Instagram") : toast.success("Some stories were published successfully to Instagram")
       resetInputs()
       onClose()
     },
@@ -45,8 +45,8 @@ export function MetaCreateStoryForm({ data }) {
   })
 
   const { execute: publishToFacebook, isPending: isUploadingToFacebook } = useAction(publishFacebookStory, {
-    onSuccess: () => {
-      toast.success("Facebook story published successfully")
+    onSuccess: (data) => {
+      data.map((post) => post.post_id).length === urls.length ? toast.success("All stories were published successfully to Facebook") : toast.success("Some stories were published successfully to Facebook")
       resetInputs()
       onClose()
     },
