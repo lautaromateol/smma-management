@@ -21,6 +21,10 @@ const nextConfig = {
       {
         hostname: "upload.wikimedia.org",
         protocol: "https"
+      },
+      {
+        hostname: "scontent.cdninstagram.com",
+        protocol: "https"
       }
     ]
   }
