@@ -32,6 +32,7 @@ export default async function ClientsPage() {
           columns={columns}
           filterBy="name"
           title="Clients"
+          pdf
           className="rounded-md border" />
       </div>
     </section>
