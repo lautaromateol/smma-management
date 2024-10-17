@@ -50,6 +50,7 @@ export const columns = [
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
 
       const client = row.original

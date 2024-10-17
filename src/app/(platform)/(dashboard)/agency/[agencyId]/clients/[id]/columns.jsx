@@ -34,7 +34,7 @@ export const clientCampaignColumns = [
   },
   {
     accessorKey: "start",
-    header: "Start",
+    header: "Start Date",
     cell: ({ row }) => {
       const date = row.getValue("start")
       return <p>{formatDate(new Date(date))}</p>
@@ -42,7 +42,7 @@ export const clientCampaignColumns = [
   },
   {
     accessorKey: "end",
-    header: "End",
+    header: "End Date",
     cell: ({ row }) => {
       const date = row.getValue("end")
       return <p>{formatDate(new Date(date))}</p>
