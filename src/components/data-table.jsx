@@ -26,6 +26,7 @@ export function DataTable({
   data,
   filterBy,
   title,
+  pdf = false,
   className,
 }) {
 
@@ -57,18 +58,20 @@ export function DataTable({
       <div className="flex flex-col md:flex-row items-center gap-y-2">
         {filterBy &&
           <Input
-            placeholder="Filter by name..."
+            placeholder={`Filter by ${filterBy}...`}
             value={table.getColumn(filterBy)?.getFilterValue() ?? ""}
             onChange={(event) => table.getColumn(filterBy)?.setFilterValue(event.target.value)}
             className="max-w-sm"
           />
         }
         <div className="flex items-center gap-x-2 md:ml-auto w-full md:w-auto">
-          <Button
-            onClick={() =>  generatePDF(headers, data, title)} 
-            variant="outline">
-            Download to PDF
-          </Button>
+          {pdf && (
+            <Button
+              onClick={() => generatePDF(headers, data, title)}
+              variant="outline">
+              Download to PDF
+            </Button>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="w-full md:w-auto" variant="outline">
@@ -85,7 +88,7 @@ export function DataTable({
                       checked={column.getIsVisible()}
                       onCheckedChange={(value) => column.toggleVisibility(!!value)}
                     >
-                      {column.id}
+                      {column.columnDef.header}
                     </DropdownMenuCheckboxItem>
                   ))
               }

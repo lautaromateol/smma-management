@@ -3,10 +3,7 @@ import { cn } from "@/lib/utils";
 
 export function CardWrapper({ title, description, footer, children, className }) {
   return (
-    <Card className={cn(
-      "border-b-4 border-r-4 border-main shadow-none",
-      className
-    )}>
+    <Card className={cn("shadow-none border-none", className)}>
       <CardHeader>
         <CardTitle className="text-main-tint">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
