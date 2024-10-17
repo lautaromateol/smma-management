@@ -13,7 +13,7 @@ export function MetaCreateStoryButton({ data }) {
     <>
       <Button
         onClick={() => onOpen("meta-create-story-form")}
-        className="flex items-center font-medium gap-x-2"
+        className="flex items-center font-medium gap-x-2 col-span-2"
         variant="outline"
       >
         Create Story
