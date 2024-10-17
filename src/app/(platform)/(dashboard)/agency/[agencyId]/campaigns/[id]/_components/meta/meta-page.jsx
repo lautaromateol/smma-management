@@ -66,10 +66,9 @@ MetaPage.Skeleton = function MetaPageSkeleton() {
       </div>
     </div>
     <div className="grid grid-cols-6 gap-x-2">
-      <Skeleton className="h-10 col-span-3" />
-      <Skeleton className="h-10 col-span-1" />
-      <Skeleton className="h-10 col-span-1" />
-      <Skeleton className="h-10 col-span-1" />
+      <Skeleton className="h-10 col-span-2" />
+      <Skeleton className="h-10 col-span-2" />
+      <Skeleton className="h-10 col-span-2" />
     </div>
   </div>
   )

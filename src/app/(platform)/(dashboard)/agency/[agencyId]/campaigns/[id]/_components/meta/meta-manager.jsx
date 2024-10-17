@@ -70,21 +70,14 @@ export function MetaManager({ data }) {
       </div>
       <div className="grid grid-cols-6 gap-x-2">
         <MetaAddPostButton data={data} />
+        <MetaCreateStoryButton data={data} />
         <Button
-          className="flex items-center font-medium gap-x-2"
+          className="flex items-center font-medium gap-x-2 col-span-2"
           variant="outline"
         >
           Create Ad
           <Megaphone className="size-4" />
         </Button>
-        <Button
-          className="flex items-center font-medium gap-x-2"
-          variant="outline"
-        >
-          Create Reel
-          <FileVideo className="size-4" />
-        </Button>
-       <MetaCreateStoryButton data={data} />
       </div>
     </div>
   )
