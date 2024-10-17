@@ -1,4 +1,4 @@
-import { CardWrapper } from "../../../_components";
+import { CardWrapper } from "@/components/card-wrapper"
 import { LinkedInButton, MetaButton, TwitterButton } from ".";
 
 export async function SocialAccountsLink({ client }) {

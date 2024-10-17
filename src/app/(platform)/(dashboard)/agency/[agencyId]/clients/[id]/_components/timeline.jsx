@@ -1,4 +1,4 @@
-import { CardWrapper } from "../../../_components";
+import { CardWrapper } from "@/components/card-wrapper"
 import { ActivityLog } from "./activity-log";
 
 export async function Timeline({ activities }) {

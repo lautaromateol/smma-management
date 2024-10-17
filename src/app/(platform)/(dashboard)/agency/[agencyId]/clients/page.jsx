@@ -1,4 +1,5 @@
-import { DataTable, Heading } from "../_components";
+import { DataTable } from "@/components/data-table";
+import { Heading } from "../_components";
 import { ClientsButtons } from "./_components/clients-buttons";
 import { columns } from "./columns";
 import { prisma } from "@/lib/prisma";

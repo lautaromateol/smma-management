@@ -1,5 +1,5 @@
 "use client"
-import { CardWrapper } from "../../../_components";
+import { CardWrapper } from "@/components/card-wrapper"
 import { Contract } from "./contract";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";

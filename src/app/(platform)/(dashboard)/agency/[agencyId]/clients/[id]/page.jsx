@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
 import { ClientContracts, ClientInfo, SocialAccountsLink, Timeline } from "./_components"
-import { DataTable, Heading } from "../../_components"
+import { Heading } from "../../_components"
 import { clientCampaignColumns } from "./columns"
+import { DataTable } from "@/components/data-table"
 
 export default async function ClientPage({ params: { id } }) {
 

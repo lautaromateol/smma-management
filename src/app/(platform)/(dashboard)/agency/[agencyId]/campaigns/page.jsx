@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { CampaignButtons } from "./_components";
 import { auth } from "@clerk/nextjs/server";
 import { columns } from "./columns";
-import { DataTable, Heading } from "../_components";
+import { Heading } from "../_components";
+import { DataTable } from "@/components/data-table";
 
 export default async function CampaignsPage() {
 
