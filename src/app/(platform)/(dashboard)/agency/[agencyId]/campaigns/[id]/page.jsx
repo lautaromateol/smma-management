@@ -3,6 +3,7 @@ import { Heading } from "../../_components"
 import { prisma } from "@/lib/prisma"
 import { fetcher } from "@/lib/fetcher"
 import { notFound } from "next/navigation"
+import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook"
 
 export default async function CampaignPage({ params: { id } }) {
 
@@ -24,7 +25,7 @@ export default async function CampaignPage({ params: { id } }) {
 
   let metaPages
   if (campaign.client.metaAccessToken && campaign.platforms.includes("META")) {
-    metaPages = campaign.platforms.includes("META") ? await fetcher(`https://graph.facebook.com/v20.0/me/accounts?access_token=${campaign.client.metaAccessToken.token}`) : null
+    metaPages = campaign.platforms.includes("META") ? await fetcher(`${FACEBOOK_API_GRAPH_URL}/me/accounts?access_token=${campaign.client.metaAccessToken.token}`) : null
   }
 
 
