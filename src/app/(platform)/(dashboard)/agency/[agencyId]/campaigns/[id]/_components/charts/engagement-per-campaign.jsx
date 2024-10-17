@@ -22,7 +22,7 @@ const chartConfig = {
     color: "hsl(var(--chart-1))",
   },
 }
-import { CardWrapper } from "../../../../_components/card-wrapper";
+import { CardWrapper } from "@/components/card-wrapper"
 
 export function EngagementPerCampaign() {
   return (

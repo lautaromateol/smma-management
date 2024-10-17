@@ -1,5 +1,5 @@
 "use client"
-import { CardWrapper } from "../../../../_components/card-wrapper"
+import { CardWrapper } from "@/components/card-wrapper"
 import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 import {
