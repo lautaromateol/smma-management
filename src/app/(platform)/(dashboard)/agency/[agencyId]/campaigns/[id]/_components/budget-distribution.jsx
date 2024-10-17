@@ -5,7 +5,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { CardWrapper } from "../../../_components/card-wrapper"
+import { CardWrapper } from "@/components/card-wrapper"
 
 export const description = "A pie chart with a label list"
 
