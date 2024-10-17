@@ -1,5 +1,7 @@
 export * from "./meta-page"
 export * from "./meta-manager"
+export * from "./meta-posts"
+export * from "./meta-posts-table"
 export * from "./meta-add-post-button"
 export * from "./meta-create-story-button"
 export * from "./meta-add-post-form"
