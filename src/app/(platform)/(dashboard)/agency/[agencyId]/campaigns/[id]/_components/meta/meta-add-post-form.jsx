@@ -15,7 +15,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FacebookPostPreview, InsertLink, InstagramPostPreview, PlatformSelector, SchedulePost, UploadMedia, Targeting } from ".";
 
-export function MetaAddPostForm({ data }) {
+export function MetaAddPostForm({ data, editValues = {} }) {
+
+  const { id } = editValues
+
+  const isEditSession = Boolean(id)
 
   const { fbPageId, fbPageName, igPageId, igPageName, pageAccessToken, userAccessToken } = data
 
@@ -23,7 +27,7 @@ export function MetaAddPostForm({ data }) {
 
   const { inputs, setInputs, resetInputs } = useFormInputs((state) => state)
 
-  const { platform, published, attached_media, urls, message, targeting, link } = inputs
+  const { platform, published, attached_media, urls, message, targeting, link, scheduled_publish_time } = inputs
 
   const [linkValue, setLinkValue] = useState("")
   const [showLinkForm, setShowLinkForm] = useState(false)
@@ -32,7 +36,7 @@ export function MetaAddPostForm({ data }) {
 
   const form = useForm({
     resolver: zodResolver(platform === "FACEBOOK" ? FacebookPost : InstagramPost),
-    defaultValues: {
+    defaultValues: isEditSession ? { ...editValues } : {
       access_token: pageAccessToken,
       attached_media,
       urls,
@@ -40,8 +44,8 @@ export function MetaAddPostForm({ data }) {
       message,
       targeting,
       link,
-      published: true,
-      scheduled_publish_time: null,
+      published,
+      scheduled_publish_time,
     }
   })
 
@@ -72,13 +76,19 @@ export function MetaAddPostForm({ data }) {
   }
 
   useEffect(() => {
+    if (isEditSession) {
+      console.log(editValues.urls)
+      for(let prop of Object.keys(editValues)) {
+        setInputs(prop, editValues[prop])
+      }
+    }
     platform === "FACEBOOK" ? form.setValue("id", fbPageId) : form.setValue("id", igPageId)
     const subscription = form.watch((value, { name, type }) => {
       setInputs(name, value[name]);
     });
 
     return () => subscription.unsubscribe();
-  }, [form, setInputs, fbPageId, igPageId, platform]);
+  }, [form, setInputs, fbPageId, igPageId, platform, editValues, isEditSession]);
 
   return (
     <div className="bg-main-light grid grid-cols-2 gap-x-10 p-8 max-w-5xl">
