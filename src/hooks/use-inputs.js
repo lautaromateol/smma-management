@@ -10,6 +10,7 @@ const createPostInputs = {
   message: null,
   link: null,
   published: true,
+  scheduled_publish_time: null
 }
 
 const createStoryInputs = {
