@@ -5,6 +5,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Switch } from '@/components/ui/switch'
+import { useFormInputs } from '@/hooks/use-inputs'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
@@ -12,11 +13,15 @@ import { useState } from 'react'
 
 export function SchedulePost({ form, message }) {
   
-  const [scheduled, setScheduled] = useState(false)
-  const [selectedDateTime, setSelectedDateTime] = useState(null) 
+  const { inputs: { published, scheduled_publish_time } } = useFormInputs((state) => state)
+
+  const schedule = !published
+
+  const [schedulePost, setSchedulePost] = useState(schedule)
+  const [selectedDateTime, setSelectedDateTime] = useState(new Date(scheduled_publish_time)) 
 
   function onChange(value) {
-    setScheduled(value)
+    setSchedulePost(value)
     form.setValue("published", !value)
   }
 
@@ -70,10 +75,10 @@ export function SchedulePost({ form, message }) {
         <FormLabel>Scheduling options</FormLabel>
         <div className="flex items-center gap-x-2">
           <p className="text-sm">Program date and time</p>
-          <Switch checked={scheduled} onCheckedChange={onChange} />
+          <Switch checked={schedulePost} onCheckedChange={onChange} />
         </div>
       </div>
-      {scheduled && (
+      {schedulePost && (
         <div className="space-y-2">
           <p className="text-sm">Select a date and time in the future to publish your post.</p>
           <FormField
