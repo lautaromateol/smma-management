@@ -1,6 +1,7 @@
 "use client"
 import { formatDate } from "@/lib/utils"
 import { ImageIcon } from "lucide-react"
+import { PostDropdown } from "."
 import Image from "next/image"
 
 export const metaPostsColumns = [
@@ -54,5 +55,32 @@ export const metaPostsColumns = [
   {
     accessorKey: "caption",
     header: "Caption"
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+
+      const { post: { id, message, platform, media, url, published }, created_time, data } = row.original
+
+      const post = {
+        id,
+        message,
+        platform,
+        urls: media.filter(({ media_type }) => media_type !== "LINK").map(({ media_type, media_url }) => {
+          return {
+            type: media_type.toLowerCase(),
+            source: media_url
+          }
+        }),
+        url,
+        published,
+        scheduled_publish_time: !published ? created_time : null
+      }
+
+      return (
+        <PostDropdown data={data} post={post} />
+      )
+    }
   }
 ]
