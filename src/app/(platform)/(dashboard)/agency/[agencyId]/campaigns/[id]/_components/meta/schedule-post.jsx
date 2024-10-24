@@ -11,14 +11,14 @@ import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 
-export function SchedulePost({ form, message }) {
-  
+export function SchedulePost({ form, message, isEditSession }) {
+
   const { inputs: { published, scheduled_publish_time } } = useFormInputs((state) => state)
 
   const schedule = !published
 
   const [schedulePost, setSchedulePost] = useState(schedule)
-  const [selectedDateTime, setSelectedDateTime] = useState(new Date(scheduled_publish_time)) 
+  const [selectedDateTime, setSelectedDateTime] = useState(new Date(scheduled_publish_time))
 
   function onChange(value) {
     setSchedulePost(value)
@@ -35,11 +35,11 @@ export function SchedulePost({ form, message }) {
         selectedDateTime.getMinutes()
       )
       setSelectedDateTime(updatedDateTime)
-      form.setValue("scheduled_publish_time", updatedDateTime) 
+      form.setValue("scheduled_publish_time", updatedDateTime, { shouldDirty: true })
       form.setValue("unpublished_content_type", "SCHEDULED")
     } else {
       setSelectedDateTime(date)
-      form.setValue("scheduled_publish_time", date)
+      form.setValue("scheduled_publish_time", date, { shouldDirty: true })
       form.setValue("unpublished_content_type", "SCHEDULED")
     }
   }
@@ -58,26 +58,28 @@ export function SchedulePost({ form, message }) {
         minutes
       )
       setSelectedDateTime(updatedDateTime)
-      form.setValue("scheduled_publish_time", updatedDateTime)
+      form.setValue("scheduled_publish_time", updatedDateTime, { shouldDirty: true })
       form.setValue("unpublished_content_type", "SCHEDULED")
     } else {
       const now = new Date()
       const newDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes)
       setSelectedDateTime(newDateTime)
-      form.setValue("scheduled_publish_time", newDateTime)
+      form.setValue("scheduled_publish_time", newDateTime, { shouldDirty: true })
       form.setValue("unpublished_content_type", "SCHEDULED")
     }
   }
 
   return (
     <div className="bg-white space-y-4 p-4">
-      <div className="flex items-center justify-between">
-        <FormLabel>Scheduling options</FormLabel>
-        <div className="flex items-center gap-x-2">
-          <p className="text-sm">Program date and time</p>
-          <Switch checked={schedulePost} onCheckedChange={onChange} />
+      {!isEditSession && (
+        <div className="flex items-center justify-between">
+          <FormLabel>Scheduling options</FormLabel>
+          <div className="flex items-center gap-x-2">
+            <p className="text-sm">Program date and time</p>
+            <Switch checked={schedulePost} onCheckedChange={onChange} />
+          </div>
         </div>
-      </div>
+      )}
       {schedulePost && (
         <div className="space-y-2">
           <p className="text-sm">Select a date and time in the future to publish your post.</p>
