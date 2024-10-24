@@ -48,6 +48,7 @@ export const FacebookPost = z.object({
   message: "Post scheduled publish time is required",
   path: ["scheduled_publish_time"]
 }).refine((data) => {
+  if (!data.attached_media) return true
   if (data.attached_media.length > 0 && !data.link) return true
   if (data.attached_media.length === 0) return true
 }, {
