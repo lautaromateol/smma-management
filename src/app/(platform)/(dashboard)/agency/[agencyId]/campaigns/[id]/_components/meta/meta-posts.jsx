@@ -5,7 +5,7 @@ import { MetaPostsTable } from "."
 
 export async function MetaPosts({ data }) {
 
-  const { fbPageName, fbPageId, fbPictureUrl, igPageName, igPageId, igPictureUrl, pageAccessToken, userAccessToken } = data
+  const { fbPageName, fbPageId, fbPictureUrl, igPageName, igPageId, igPictureUrl, pageAccessToken } = data
 
   const fbData = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${fbPageId}/feed?fields=id,created_time,message,attachments{media_type,media,url}`, {
     "Authorization": `OAuth ${pageAccessToken}`
