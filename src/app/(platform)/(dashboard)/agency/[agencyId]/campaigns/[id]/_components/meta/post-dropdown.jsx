@@ -25,7 +25,7 @@ export function PostDropdown({ data, post }) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => onOpen(`edit-post-${post.id}-form`)}
+          onClick={() => onOpen(`edit-post-${post.post_id}-form`)}
           className="cursor-pointer"
         >
           Edit
@@ -57,7 +57,7 @@ export function PostDropdown({ data, post }) {
         )}
       </DropdownMenuContent>
       <Modal
-        modalId={`edit-post-${post.id}-form`}
+        modalId={`edit-post-${post.post_id}-form`}
         title="Edit client"
         description={`Fill out the form fields to edit this ${post.platform} post`}
       >

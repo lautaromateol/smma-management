@@ -64,7 +64,7 @@ export const metaPostsColumns = [
       const { post: { id, message, platform, media, url, published }, created_time, data } = row.original
 
       const post = {
-        id,
+        post_id: id,
         message,
         platform,
         urls: media.filter(({ media_type }) => media_type !== "LINK").map(({ media_type, media_url }) => {
@@ -75,7 +75,7 @@ export const metaPostsColumns = [
         }),
         url,
         published,
-        scheduled_publish_time: !published ? created_time : null
+        scheduled_publish_time: !published ? new Date(created_time) : null
       }
 
       return (
