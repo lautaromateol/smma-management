@@ -6,20 +6,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "@/hooks/use-action";
 import { useOpenModal } from "@/hooks/use-open-modal";
 import { useFormInputs } from "@/hooks/use-inputs";
-import { FacebookPost } from "@/actions/publish-facebook-post/schema";
-import { InstagramPost } from "@/actions/publish-instagram-post/schema";
-import { publishFacebookPost } from "@/actions/publish-facebook-post";
-import { publishInstagramPost } from "@/actions/publish-instagram-post";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FacebookPostPreview, InsertLink, InstagramPostPreview, PlatformSelector, SchedulePost, UploadMedia, Targeting } from ".";
+import { FacebookPost } from "@/actions/publish-facebook-post/schema";
+import { InstagramPost } from "@/actions/publish-instagram-post/schema";
+import { FacebookPostToUpdate } from "@/actions/update-facebook-post/schema";
+import { publishFacebookPost } from "@/actions/publish-facebook-post";
+import { publishInstagramPost } from "@/actions/publish-instagram-post";
+import { updateFacebookPost } from "@/actions/update-facebook-post";
 
 export function MetaAddPostForm({ data, editValues = {} }) {
 
-  const { id } = editValues
+  const { post_id } = editValues
 
-  const isEditSession = Boolean(id)
+  const isEditSession = Boolean(post_id)
 
   const { fbPageId, fbPageName, igPageId, igPageName, pageAccessToken, userAccessToken } = data
 
@@ -34,9 +36,11 @@ export function MetaAddPostForm({ data, editValues = {} }) {
 
   const [showTargetingForm, setShowTargetingForm] = useState(false)
 
+  const resolver = isEditSession && platform === "FACEBOOK" ? FacebookPostToUpdate : isEditSession && platform === "INSTAGRAM" ? InstagramPost : platform === "FACEBOOK" ? FacebookPost : InstagramPost
+
   const form = useForm({
-    resolver: zodResolver(platform === "FACEBOOK" ? FacebookPost : InstagramPost),
-    defaultValues: isEditSession ? { ...editValues } : {
+    resolver: zodResolver(resolver),
+    defaultValues: isEditSession ? { ...editValues, access_token: pageAccessToken } : {
       access_token: pageAccessToken,
       attached_media,
       urls,
@@ -49,7 +53,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
     }
   })
 
-  const { errors } = form.formState
+  const { errors, isDirty, dirtyFields } = form.formState
 
   const { execute: postOnFacebook, isPending: isPostingOnFacebook } = useAction(publishFacebookPost, {
     onSuccess: () => {
@@ -69,16 +73,39 @@ export function MetaAddPostForm({ data, editValues = {} }) {
     onError: (error) => toast.error(error)
   })
 
+  const { execute: updateOnFacebook, isPending: isUpdatingOnFacebook } = useAction(updateFacebookPost, {
+    onSuccess: () => {
+      toast.success("Facebook post successfully updated")
+      resetInputs()
+      onClose()
+    },
+    onError: (error) => toast.error(error)
+  })
+
 
   function onSubmit(data) {
-    console.log(data)
-    platform === "FACEBOOK" ? postOnFacebook(data) : postOnInstagram(data)
+    if (isEditSession) {
+      const payload = {}
+
+      for (let prop of Object.keys(data)) {
+        if (dirtyFields[prop]) {
+          payload[prop] = data[prop]
+        }
+      }
+
+      const postToUpdate = { id: data.id, post_id, access_token: data.access_token, ...payload }
+
+      platform === "FACEBOOK" ? updateOnFacebook(postToUpdate) : postOnInstagram()
+
+    } else {
+      platform === "FACEBOOK" ? postOnFacebook(data) : postOnInstagram(data)
+    }
+
   }
 
   useEffect(() => {
     if (isEditSession) {
-      console.log(editValues.urls)
-      for(let prop of Object.keys(editValues)) {
+      for (let prop of Object.keys(editValues)) {
         setInputs(prop, editValues[prop])
       }
     }
@@ -125,18 +152,16 @@ export function MetaAddPostForm({ data, editValues = {} }) {
                 )}
               />
               <div className="flex items-center gap-x-1">
-                {platform === "FACEBOOK" &&
-                  <InsertLink
-                    setShowLinkForm={setShowLinkForm}
-                  />}
-                {platform === "FACEBOOK" &&
-                  <Targeting
-                    setShowTargetingForm={setShowTargetingForm}
-                  />
+                {platform === "FACEBOOK" && !isEditSession &&
+                  <>
+                    <InsertLink
+                      setShowLinkForm={setShowLinkForm}
+                    />
+                    <Targeting
+                      setShowTargetingForm={setShowTargetingForm}
+                    />
+                  </>
                 }
-                {/* <Location 
-                  setShowLocationForm={setShowLocationForm}
-                /> */}
               </div>
               <InsertLink.Form
                 form={form}
@@ -153,21 +178,12 @@ export function MetaAddPostForm({ data, editValues = {} }) {
                 setShowTargetingForm={setShowTargetingForm}
                 showTargetingForm={showTargetingForm}
               />
-              {/* <Location.Form
-               form={form}
-               setShowLocationForm={setShowLocationForm}
-               showLocationForm={showLocationForm}
-               locationValue={locationValue}
-               setLocationValue={setLocationValue}
-               message={errors?.location?.message}
-               accessToken={userAccessToken}
-              /> */}
             </div>
-            {platform === "FACEBOOK" && (
-              <SchedulePost form={form} message={errors?.scheduled_publish_time?.message} />
+            {platform === "FACEBOOK" && !(isEditSession && published) && (
+              <SchedulePost form={form} message={errors?.scheduled_publish_time?.message} isEditSession={isEditSession}/>
             )}
             <Button
-              disabled={isPostingOnFacebook || isPostingOnInstagram}
+              disabled={isPostingOnFacebook || isPostingOnInstagram || isUpdatingOnFacebook || !isDirty}
               type="submit"
               variant="main"
               className="w-full"
