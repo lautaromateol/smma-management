@@ -12,7 +12,7 @@ export function InsertLink({ setShowLinkForm }) {
 
   const [showPopover, setShowPopover] = useState(false)
 
-  const { inputs: { attached_media } } = useFormInputs((state) => state)
+  const { inputs: { urls } } = useFormInputs((state) => state)
   return (
     <Popover open={showPopover} onOpenChange={setShowPopover}>
       <PopoverContent>
@@ -23,7 +23,7 @@ export function InsertLink({ setShowLinkForm }) {
         <Button
           variant="ghost"
           type="button"
-          disabled={attached_media?.length}
+          disabled={urls?.length}
           onMouseEnter={() => setShowPopover(true)}
           onMouseLeave={() => setShowPopover(false)}
           onClick={() => setShowLinkForm((curr) => !curr)}
