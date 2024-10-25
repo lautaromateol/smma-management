@@ -134,7 +134,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
               igPageName={igPageName}
               isEditSession={isEditSession}
             />
-            <UploadMedia
+            {!isEditSession && <UploadMedia
               form={form}
               fbPageId={fbPageId}
               igPageId={igPageId}
@@ -142,7 +142,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
               message={errors?.urls?.message}
               inputs={inputs}
               setInputs={setInputs}
-            />
+            />}
             <div className="bg-white space-y-2 p-4">
               <FormLabel>Post details</FormLabel>
               <FormField
