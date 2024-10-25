@@ -2,7 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FaFacebook, FaInstagram } from "react-icons/fa6";
 
-export function PlatformSelector({ form, fbPageName, igPageName }) {
+export function PlatformSelector({ form, fbPageName, igPageName, isEditSession }) {
 
   return (
     <div className="bg-white p-4">
@@ -12,7 +12,7 @@ export function PlatformSelector({ form, fbPageName, igPageName }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Platform</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isEditSession}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a platform" />
