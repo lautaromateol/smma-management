@@ -114,7 +114,13 @@ export function MetaAddPostForm({ data, editValues = {} }) {
       setInputs(name, value[name]);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe()
+
+      if (isEditSession) {
+        resetInputs()
+      }
+    }
   }, [form, setInputs, fbPageId, igPageId, platform, editValues, isEditSession]);
 
   return (
@@ -126,6 +132,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
               form={form}
               fbPageName={fbPageName}
               igPageName={igPageName}
+              isEditSession={isEditSession}
             />
             <UploadMedia
               form={form}
@@ -180,7 +187,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
               />
             </div>
             {platform === "FACEBOOK" && !(isEditSession && published) && (
-              <SchedulePost form={form} message={errors?.scheduled_publish_time?.message} isEditSession={isEditSession}/>
+              <SchedulePost form={form} message={errors?.scheduled_publish_time?.message} isEditSession={isEditSession} />
             )}
             <Button
               disabled={isPostingOnFacebook || isPostingOnInstagram || isUpdatingOnFacebook || !isDirty}
