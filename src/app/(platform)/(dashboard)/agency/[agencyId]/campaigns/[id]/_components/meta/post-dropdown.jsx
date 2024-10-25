@@ -1,14 +1,22 @@
 import Link from "next/link";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Ellipsis, Pencil, Trash } from "lucide-react";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
+import { useOpenModal } from "@/hooks/use-open-modal";
+import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/modal";
 import { MetaAddPostForm } from ".";
-import { useOpenModal } from "@/hooks/use-open-modal";
+import { useAction } from "@/hooks/use-action";
+import { deleteFacebookPost } from "@/actions/delete-facebook-post";
+import { toast } from "sonner";
 
 export function PostDropdown({ data, post }) {
 
   const { onOpen } = useOpenModal((state) => state)
+
+  const { execute, isPending } = useAction(deleteFacebookPost, {
+    onSuccess: () => toast.success("Facebook post deleted successfully"),
+    onError: (error) => toast.error(error)
+  })
 
   return (
     <DropdownMenu>
@@ -25,6 +33,7 @@ export function PostDropdown({ data, post }) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          disabled={post.platform === "INSTAGRAM"}
           onClick={() => onOpen(`edit-post-${post.post_id}-form`)}
           className="cursor-pointer"
         >
@@ -33,16 +42,16 @@ export function PostDropdown({ data, post }) {
             <Pencil className="size-4" />
           </DropdownMenuShortcut>
         </DropdownMenuItem>
-        {/* <DropdownMenuItem
-          disabled={isDeleting}
-          onClick={() => executeDelete({ id: post.id })}
+        <DropdownMenuItem
+          disabled={isPending || post.platform === "INSTAGRAM"}
+          onClick={() => execute({ post_id: post.post_id, access_token: data.pageAccessToken })}
           className="cursor-pointer"
         >
           Delete
           <DropdownMenuShortcut>
             <Trash className="size-4" />
           </DropdownMenuShortcut>
-        </DropdownMenuItem> */}
+        </DropdownMenuItem>
         {post.url && (
           <>
             <DropdownMenuSeparator />
@@ -63,6 +72,6 @@ export function PostDropdown({ data, post }) {
       >
         <MetaAddPostForm data={data} editValues={post} />
       </Modal>
-    </DropdownMenu>
+    </DropdownMenu >
   )
 }
