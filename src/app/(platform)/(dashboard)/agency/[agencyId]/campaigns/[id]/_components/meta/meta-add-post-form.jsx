@@ -23,7 +23,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
 
   const isEditSession = Boolean(post_id)
 
-  const { fbPageId, fbPageName, igPageId, igPageName, pageAccessToken, userAccessToken } = data
+  const { fbPageId, fbPageName, igPageId, igPageName, pageAccessToken, userAccessToken, campaignId } = data
 
   const { onClose } = useOpenModal((state) => state)
 
@@ -50,6 +50,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
       link,
       published,
       scheduled_publish_time,
+      campaign_id: campaignId
     }
   })
 

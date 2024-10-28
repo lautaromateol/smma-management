@@ -37,7 +37,7 @@ export default async function CampaignPage({ params: { id } }) {
         />
         <CampaignDescription campaign={campaign} />
       </header>
-      {metaPages?.data?.length > 0 && <MetaSection accessToken={campaign.client.metaAccessToken.token} pages={metaPages.data} />}
+      {metaPages?.data?.length > 0 && <MetaSection campaignId={campaign.id} accessToken={campaign.client.metaAccessToken.token} pages={metaPages.data} />}
     </section>
   )
 }
