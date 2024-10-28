@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 export const AddCampaign = z.object({
+  name: z.string({
+    message: "Campaign name is required"
+  }),
   client: z.string({
     message: "Client name is required"
   }),

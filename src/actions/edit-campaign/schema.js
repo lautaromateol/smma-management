@@ -4,6 +4,9 @@ export const EditCampaign = z.object({
   id: z.string({
     message: "Campaign ID is required"
   }),
+  name: z.string({
+    message: "Campaign name is required"
+  }),
   budget: z.string({
     message: "Budget is required"
   }),

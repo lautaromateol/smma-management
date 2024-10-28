@@ -14,7 +14,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { client, budget, start, end, objective, platforms } = data
+  const { name, client, budget, start, end, objective, platforms } = data
 
   const dbClient = await prisma.client.findUnique({
     where: { id: client }
@@ -28,7 +28,7 @@ export async function handler(data) {
 
     const campaign = await prisma.campaign.create({
       data: {
-        name: `${dbClient.name} - campaign`,
+        name,
         clientId: client,
         budget: Number(budget),
         start: new Date(start),
