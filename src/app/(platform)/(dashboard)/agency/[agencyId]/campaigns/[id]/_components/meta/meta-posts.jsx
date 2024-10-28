@@ -2,10 +2,18 @@ import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook"
 import { fetcher } from "@/lib/fetcher"
 import { FaFacebook, FaInstagram } from "react-icons/fa6"
 import { MetaPostsTable } from "."
+import { prisma } from "@/lib/prisma"
 
 export async function MetaPosts({ data }) {
 
-  const { fbPageName, fbPageId, fbPictureUrl, igPageName, igPageId, igPictureUrl, pageAccessToken } = data
+  const { fbPageName, fbPageId, fbPictureUrl, igPageName, igPageId, igPictureUrl, pageAccessToken, campaignId } = data
+
+  const dbPosts = await prisma.post.findMany({
+    where: {
+      campaignId
+    }
+  })
+    .then((posts) => posts.map((post) => post.id))
 
   const fbData = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${fbPageId}/feed?fields=id,created_time,message,attachments{media_type,media,url}`, {
     "Authorization": `OAuth ${pageAccessToken}`
@@ -86,7 +94,7 @@ export async function MetaPosts({ data }) {
     return { post, created_time: igPost.timestamp, caption: igPost.caption, data }
   })
 
-  const posts = [...fbPosts, ...igPosts].sort(
+  const posts = [...fbPosts, ...igPosts].filter(({ post }) => dbPosts.includes(post.id)).sort(
     (a, b) => new Date(b.created_time) - new Date(a.created_time)
   )
 
