@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { Ellipsis, Pencil, Trash } from "lucide-react";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 import { useOpenModal } from "@/hooks/use-open-modal";
-import { Button } from "@/components/ui/button";
-import { Modal } from "@/components/modal";
-import { MetaAddPostForm } from ".";
 import { useAction } from "@/hooks/use-action";
 import { deleteFacebookPost } from "@/actions/delete-facebook-post";
-import { toast } from "sonner";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/modal";
+import { MetaAddPostForm, PostDetail } from ".";
 
-export function PostDropdown({ data, post }) {
+export function PostDropdown({ post, data }) {
 
   const { onOpen } = useOpenModal((state) => state)
 
@@ -64,6 +64,13 @@ export function PostDropdown({ data, post }) {
             </DropdownMenuItem>
           </>
         )}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => onOpen(`post-${post.post_id}-info`)}
+          className="cursor-pointer"
+        >
+          View in detail
+        </DropdownMenuItem>
       </DropdownMenuContent>
       <Modal
         modalId={`edit-post-${post.post_id}-form`}
@@ -71,6 +78,13 @@ export function PostDropdown({ data, post }) {
         description={`Fill out the form fields to edit this ${post.platform} post`}
       >
         <MetaAddPostForm data={data} editValues={post} />
+      </Modal>
+      <Modal
+        modalId={`post-${post.post_id}-info`}
+        className="max-w-2xl"
+        title="Post information"
+      >
+        <PostDetail post={post} data={data} />
       </Modal>
     </DropdownMenu >
   )
