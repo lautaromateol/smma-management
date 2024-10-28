@@ -13,7 +13,7 @@ export function MetaPostsTable({ posts, scheduledPosts }) {
   return (
     <CardWrapper
       title="Content"
-      description="Review your published and scheduled posts and stories"
+      description="Review your published and scheduled posts in this campaign"
     >
       <div className="space-y-4">
         <div className="flex items-center gap-x-2">
