@@ -25,6 +25,9 @@ export const FacebookPost = z.object({
   platform: z.string({
     message: "Please select a platform"
   }),
+  campaign_id: z.string({
+    message: "Please provide the Campaign ID"
+  }),
   message: z.string({
     message: "Caption text cannot be empty"
   }).min(1, {
