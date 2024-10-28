@@ -61,7 +61,7 @@ export const metaPostsColumns = [
     header: "Actions",
     cell: ({ row }) => {
 
-      const { post: { id, message, platform, media, url, published }, created_time, data } = row.original
+      const { post: { id, message, platform, media, url, published, comments, likes }, created_time, data } = row.original
 
       const post = {
         post_id: id,
@@ -75,7 +75,9 @@ export const metaPostsColumns = [
         }),
         url,
         published,
-        scheduled_publish_time: !published ? new Date(created_time) : null
+        scheduled_publish_time: !published ? new Date(created_time) : null,
+        comments,
+        likes
       }
 
       return (

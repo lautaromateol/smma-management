@@ -15,7 +15,7 @@ export async function MetaPosts({ data }) {
   })
     .then((posts) => posts.map((post) => post.id))
 
-  const fbData = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${fbPageId}/feed?fields=id,created_time,message,attachments{media_type,media,url}`, {
+  const fbData = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${fbPageId}/feed?fields=id,created_time,message,attachments{media_type,media,url},comments.limit(0).summary(true),likes.limit(0).summary(true)`, {
     "Authorization": `OAuth ${pageAccessToken}`
   })
 
@@ -49,7 +49,9 @@ export async function MetaPosts({ data }) {
       }) : [],
       icon: <FaFacebook className="text-blue-500" />,
       platform: "FACEBOOK",
-      published: true
+      published: true,
+      likes: fbPost.likes.summary.total_count,
+      comments: fbPost.comments.summary.total_count
     }
 
     return { post, created_time: fbPost.created_time, url: fbPost.attachments?.data[0]?.url ?? "", caption: fbPost.message, data }
