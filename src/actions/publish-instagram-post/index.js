@@ -5,6 +5,7 @@ import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { publishContainerId } from "@/lib/publish-container-id";
 import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/prisma";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -13,7 +14,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { id, message, urls, access_token } = data
+  const { id, message, urls, access_token, campaign_id } = data
 
   try {
 
@@ -158,8 +159,16 @@ export async function handler(data) {
     const upload = await publishContainerId(data, creation_id)
 
     if (upload.id) {
+
+      const post = await prisma.post.create({
+        data: {
+          id: upload.id,
+          campaignId: campaign_id
+        }
+      })
+
       revalidatePath(`/agency/${orgId}/campaigns/${userId}`)
-      return { ok: true, id: upload.id }
+      return { ok: true, id: post.id }
     } else {
       console.log(upload)
       throw new Error(upload.error.message)

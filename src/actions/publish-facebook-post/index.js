@@ -4,6 +4,7 @@ import { FacebookPost } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/prisma";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -12,7 +13,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { id, message, link, published, scheduled_publish_time, targeting, attached_media, access_token } = data
+  const { id, message, link, published, scheduled_publish_time, targeting, attached_media, access_token, campaign_id } = data
 
   try {
     const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${id}/feed`, {
@@ -33,9 +34,18 @@ export async function handler(data) {
     
     const data = await response.json()
 
-    if(response.ok) {
+    if(data.id) {
+
+      const post = await prisma.post.create({
+        data: {
+          id: data.id,
+          campaignId: campaign_id
+        }
+      })
+
       revalidatePath(`/agency/${orgId}/campaigns/${userId}`)
-      return { ok: true, id: data.id }
+      
+      return { ok: true, id: post.id }
     } else {
       console.log(data)
       return { error: "Error uploading the post to Facebook!" }
