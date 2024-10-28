@@ -17,9 +17,9 @@ export function Modal({ title, description, className, children, modalId }) {
             <DialogTitle className="text-main-tint">
               {title}
             </DialogTitle>
-            <DialogDescription className="text-main font-light">
+            {description && <DialogDescription className="text-main font-light">
               {description}
-            </DialogDescription>
+            </DialogDescription>}
           </DialogHeader>
           {children}
         </DialogContent>
