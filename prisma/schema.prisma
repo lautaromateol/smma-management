@@ -10,7 +10,15 @@ datasource db {
 enum CampaignStatus {
   ACTIVE
   PAUSED
-  COMPLETED
+}
+
+enum CampaignObjectives {
+  OUTCOME_APP_PROMOTION
+  OUTCOME_AWARENESS
+  OUTCOME_ENGAGEMENT
+  OUTCOME_LEADS
+  OUTCOME_SALES
+  OUTCOME_TRAFFIC
 }
 
 enum Platforms {
@@ -60,17 +68,17 @@ model Client {
 }
 
 model Campaign {
-  id        String         @id @default(uuid())
+  id        String             @id @unique
   name      String
   start     DateTime
   end       DateTime
-  status    CampaignStatus @default(ACTIVE)
+  status    CampaignStatus     @default(ACTIVE)
   budget    Int
-  platforms Platforms[]
-  objective String         @db.Text()
+  platform  Platforms    
+  objective CampaignObjectives
   orgId     String
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 
   clientId String
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
