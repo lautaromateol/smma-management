@@ -1,7 +1,7 @@
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook"
 import { fetcher } from "@/lib/fetcher"
 import { prisma } from "@/lib/prisma"
-import { auth, Token } from "@clerk/nextjs/server"
+import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 
 export async function GET(req) {
@@ -61,17 +61,7 @@ export async function GET(req) {
       }
     }
 
-    const metaAdAccounts = await fetcher(`${FACEBOOK_API_GRAPH_URL}/me/adaccounts?access_token=${token}`)
-
-    await prisma.metaAdAccountId.create({
-      data: {
-        id: metaAdAccounts.data[0].id,
-        clientId
-      }
-    })
-
     return NextResponse.json(facebookProfile, { status: 200 })
-
 
   } catch (error) {
     return NextResponse.json(error, { status: 500 })
