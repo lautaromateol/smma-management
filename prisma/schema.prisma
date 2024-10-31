@@ -156,7 +156,7 @@ model ActivityLog {
 }
 
 model MetaAdAccountId {
-  id String @unique
+  id String @id @unique
 
   clientId String @unique
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
