@@ -24,8 +24,8 @@ export default async function CampaignPage({ params: { id } }) {
   if(!campaign.client) notFound()
 
   let metaPages
-  if (campaign.client.metaAccessToken && campaign.platforms.includes("META")) {
-    metaPages = campaign.platforms.includes("META") ? await fetcher(`${FACEBOOK_API_GRAPH_URL}/me/accounts?access_token=${campaign.client.metaAccessToken.token}`) : null
+  if (campaign.client.metaAccessToken && campaign.platform === "META") {
+    metaPages = campaign.platform === "META" ? await fetcher(`${FACEBOOK_API_GRAPH_URL}/me/accounts?access_token=${campaign.client.metaAccessToken.token}`) : null
   }
 
 
