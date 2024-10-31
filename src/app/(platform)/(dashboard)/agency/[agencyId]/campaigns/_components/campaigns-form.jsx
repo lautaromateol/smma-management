@@ -1,36 +1,70 @@
 "use client"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Skeleton } from "@/components/ui/skeleton"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { cloneElement, useState } from "react"
 import { useForm } from "react-hook-form"
-import { Platforms } from "@prisma/client"
-import { useState } from "react"
-import { CalendarIcon, Check } from "lucide-react"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
-import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
-import { AddCampaign } from "@/actions/add-campaign/schema"
-import { useAction } from "@/hooks/use-action"
-import { addCampaign } from "@/actions/add-campaign"
 import { toast } from "sonner"
+import { Briefcase, CalendarIcon, Megaphone, MessageSquare, MousePointer, ThumbsUp, Users } from "lucide-react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useAction } from "@/hooks/use-action"
 import { useOpenModal } from "@/hooks/use-open-modal"
+import { cn } from "@/lib/utils"
+import { AddCampaign } from "@/actions/add-campaign/schema"
+import { addCampaign } from "@/actions/add-campaign"
 import { EditCampaign } from "@/actions/edit-campaign/schema"
 import { editCampaign } from "@/actions/edit-campaign"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import { Textarea } from "@/components/ui/textarea"
+import { FaMeta } from "react-icons/fa6"
+
+const goals = [
+  {
+    goal: "Awareness",
+    objective: "OUTCOME_AWARENESS",
+    icon: <Megaphone />
+  },
+  {
+    goal: "Traffic",
+    objective: "OUTCOME_TRAFFIC",
+    icon: <MousePointer />
+  },
+  {
+    goal: "Engagement",
+    objective: "OUTCOME_ENGAGEMENT",
+    icon: <ThumbsUp />
+  },
+  {
+    goal: "Leads",
+    objective: "OUTCOME_LEADS",
+    icon: <MessageSquare />
+  },
+  {
+    goal: "App Promotion",
+    objective: "OUTCOME_APP_PROMOTION",
+    icon: <Users />
+  },
+  {
+    goal: "Sales",
+    objective: "OUTCOME_SALES",
+    icon: <Briefcase />
+  }
+]
 
 export function CampaignsForm({ editValues = {}, clients }) {
+
+  const [step, setStep] = useState(1)
+  const [objective, setObjective] = useState("")
 
   const { onClose } = useOpenModal((state) => state)
 
   const { id } = editValues
 
   const isEditSession = Boolean(id)
-
-  const [selectedPlatforms, setSelectedPlatforms] = useState(isEditSession ? editValues.platforms : [])
 
   const form = useForm({
     resolver: zodResolver(isEditSession ? EditCampaign : AddCampaign),
@@ -41,7 +75,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
       }
       :
       {
-        platforms: []
+        platform: "META"
       }
   })
 
@@ -61,26 +95,42 @@ export function CampaignsForm({ editValues = {}, clients }) {
     onError: (error) => toast.error(error)
   })
 
-  function handleSelectPlatform(platform) {
-    selectedPlatforms.includes(platform) ?
-      setSelectedPlatforms((prev) => {
-        form.setValue("platforms", prev.filter((p) => p !== platform))
-        return prev.filter((p) => p !== platform)
-      }) :
-      setSelectedPlatforms((prev) => {
-        form.setValue("platforms", [...prev, platform])
-        return [...prev, platform]
-      })
+  function handleSelectObjective(value) {
+    setObjective(value)
+    form.setValue("objective", value)
+    setStep(2)
   }
 
   function onSubmit(data) {
     isEditSession ? executeEdit(data) : execute(data)
   }
 
+  if (step === 1) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-lg font-medium">Choose a goal</h2>
+        <div className="grid grid-cols-4 gap-2">
+          {goals.map(({ goal, objective, icon }, i) => (
+            <AddGoalCard
+              key={i}
+              goal={goal}
+              icon={icon}
+              onClick={() => handleSelectObjective(objective)}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-      <FormField
+        <div className="space-y-2">
+          <FormLabel>Objective</FormLabel>
+          <Input disabled value={goals.filter((obj) => obj.objective === objective)[0].goal} />
+        </div>
+        <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
@@ -125,31 +175,27 @@ export function CampaignsForm({ editValues = {}, clients }) {
         }
         <FormField
           control={form.control}
-          name="platforms"
+          name="platform"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Platforms</FormLabel>
-              <Select multiple disabled={isEditSession} onValueChange={handleSelectPlatform}>
+              <FormLabel>Platform</FormLabel>
+              <FormDescription>Meta will be applied by default.</FormDescription>
+              <Select onValueChange={field.onChange} defaultValue={field.value} disabled>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder={selectedPlatforms.length > 0 ? selectedPlatforms.join("-") : "Select the platforms to run this campaign"}>
-                      {selectedPlatforms.length > 0 ? selectedPlatforms.join("-") : "Select the platforms to run this campaign"}
-                    </SelectValue>
+                    <SelectValue placeholder="Select a platform" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {Array.from(Object.keys(Platforms)).map((platform, i) => (
-                    <SelectItem hideCheck value={platform} key={i}>
-                      {selectedPlatforms.includes(platform) ?
-                        <div className="flex items-center gap-x-2">
-                          {platform}
-                          <Check className="size-4" />
-                        </div>
-                        : platform}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="META">
+                    <div className="flex items-center gap-x-2">
+                      <FaMeta className="size-4" />
+                      Meta
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -161,19 +207,6 @@ export function CampaignsForm({ editValues = {}, clients }) {
               <FormLabel>Budget</FormLabel>
               <FormControl>
                 <Input {...field} type="number" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-         <FormField
-          control={form.control}
-          name="objective"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Objective</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -294,6 +327,23 @@ CampaignsForm.Skeleton = function CampaignsFormSkeleton() {
         <Skeleton className="w-full h-14" />
       </div>
       <Skeleton className="h-10 w-full" />
+    </div>
+  )
+}
+
+function AddGoalCard({ goal, icon, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      role="button"
+      className="flex flex-col space-y-2 py-6 px-4 shadow rounded-md"
+    >
+      <div className="grid place-content-center size-12 p-4 rounded-full bg-muted">
+        {cloneElement(icon, { className: "size-8" })}
+      </div>
+      <p className="text-base font-medium">
+        {goal}
+      </p>
     </div>
   )
 }
