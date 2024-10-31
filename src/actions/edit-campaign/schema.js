@@ -10,7 +10,6 @@ export const EditCampaign = z.object({
   budget: z.string({
     message: "Budget is required"
   }),
-  platforms: z.array(z.string()).min(1),
   objective: z.string({
     message: "Campaign objective is required"
   }).min(10, {
@@ -20,6 +19,6 @@ export const EditCampaign = z.object({
     message: "Start date is required"
   }),
   end: z.date({
-    message: "Start date is required"
+    message: "End date is required"
   })
 })

@@ -10,7 +10,11 @@ export const AddCampaign = z.object({
   budget: z.string({
     message: "Budget is required"
   }),
-  platforms: z.array(z.string()).min(1),
+  platform: z.string({
+    message: "Campaign platform is required"
+  }).refine((value) => ["META", "TWITTER", "LINKEDIN"].includes(value), {
+    message: "Selected platform is incorrect",
+  }),
   objective: z.string({
     message: "Campaign objective is required"
   }).min(10, {
@@ -20,6 +24,6 @@ export const AddCampaign = z.object({
     message: "Start date is required"
   }),
   end: z.date({
-    message: "Start date is required"
+    message: "End date is required"
   })
 })
