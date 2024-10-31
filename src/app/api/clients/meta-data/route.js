@@ -36,7 +36,7 @@ export async function GET(req) {
       if (data.first_name) {
 
         const image = data.picture.data.is_silhouette ? "https://upload.wikimedia.org/wikipedia/commons/0/09/Man_Silhouette.png" : data.picture.data.url
-        
+
         const facebookProfile = await prisma.facebookProfile.create({
           data: {
             name: `${data.first_name} ${data.last_name}`,
@@ -45,13 +45,13 @@ export async function GET(req) {
           }
         })
 
-        const metaAdAccounts = await fetcher(`${FACEBOOK_API_GRAPH_URL}/me/adaccounts?access_token=${Token}`)
+        const metaAdAccounts = await fetcher(`${FACEBOOK_API_GRAPH_URL}/me/adaccounts?access_token=${token}`)
 
         await prisma.metaAdAccountId.create({
-           data: {
+          data: {
             id: metaAdAccounts.data[0].id,
             clientId
-           }
+          }
         })
 
         return NextResponse.json(facebookProfile, { status: 200 })
@@ -60,6 +60,15 @@ export async function GET(req) {
         return NextResponse.json("Invalid Token", { status: 403 })
       }
     }
+
+    const metaAdAccounts = await fetcher(`${FACEBOOK_API_GRAPH_URL}/me/adaccounts?access_token=${token}`)
+
+    await prisma.metaAdAccountId.create({
+      data: {
+        id: metaAdAccounts.data[0].id,
+        clientId
+      }
+    })
 
     return NextResponse.json(facebookProfile, { status: 200 })
 
