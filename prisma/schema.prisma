@@ -57,6 +57,7 @@ model Client {
   website             String?              @db.Text()
   campaigns           Campaign[]
   contracts           Contract[]
+  metaAdAccountId     MetaAdAccountId?
   metaAccessToken     MetaAccessToken?
   twitterAccessToken  TwitterAccessToken?
   linkedInAccessToken LinkedInAccessToken?
@@ -74,7 +75,7 @@ model Campaign {
   end       DateTime
   status    CampaignStatus     @default(ACTIVE)
   budget    Int
-  platform  Platforms    
+  platform  Platforms
   objective CampaignObjectives
   orgId     String
   createdAt DateTime           @default(now())
@@ -152,6 +153,13 @@ model ActivityLog {
   userName    String
   userImage   String
   createdAt   DateTime   @default(now())
+}
+
+model MetaAdAccountId {
+  id String @unique
+
+  clientId String @unique
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 }
 
 model MetaAccessToken {
