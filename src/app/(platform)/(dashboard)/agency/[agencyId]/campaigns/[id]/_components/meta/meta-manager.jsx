@@ -1,9 +1,7 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { FileVideo, Megaphone, PlusCircle } from "lucide-react";
 import { FaFacebook, FaInstagram } from "react-icons/fa6";
-import { EditFacebookProfile, EditInstagramProfile, MetaAddPostButton, MetaCreateStoryButton } from ".";
 import { Separator } from "@/components/ui/separator";
+import { EditFacebookProfile, EditInstagramProfile, MetaAddPostButton, MetaCreateAdButton, MetaCreateStoryButton } from ".";
 
 export function MetaManager({ data }) {
 
@@ -71,13 +69,7 @@ export function MetaManager({ data }) {
       <div className="grid grid-cols-6 gap-x-2">
         <MetaAddPostButton data={data} />
         <MetaCreateStoryButton data={data} />
-        <Button
-          className="flex items-center font-medium gap-x-2 col-span-2"
-          variant="outline"
-        >
-          Create Ad
-          <Megaphone className="size-4" />
-        </Button>
+        <MetaCreateAdButton data={data} />
       </div>
     </div>
   )
