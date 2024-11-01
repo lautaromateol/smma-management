@@ -50,6 +50,7 @@ export async function handler(data) {
         name,
         objective,
         status: "ACTIVE",
+        lifetime_budget: budget,
         special_ad_categories: [],
         start_time: new Date(start),
         stop_time: new Date(end)
