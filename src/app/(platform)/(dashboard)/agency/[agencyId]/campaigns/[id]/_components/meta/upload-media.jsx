@@ -1,6 +1,6 @@
 import { MediaPreview } from ".";
 import { toast } from "sonner";
-import { FormLabel, FormMessage } from "@/components/ui/form";
+import { FormDescription, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { fetcher } from "@/lib/fetcher";
@@ -136,13 +136,13 @@ export function UploadMedia({ form, fbPageId, accessToken, type, message, setInp
   return (
     <div className="bg-white space-y-2 p-4">
       <FormLabel className={cn(message && urls.length === 0 &&"text-destructive")}>Media</FormLabel>
-      <p className="text-sm">{
+      <FormDescription>{
         type === "story" ?
           "You can upload up to 10 images and videos."
           :
           "Share photos or a video. Instagram posts can't exceed 10 photos."
       }
-      </p>
+      </FormDescription>
       <div className="space-y-4">
         <Input
           type="file"
