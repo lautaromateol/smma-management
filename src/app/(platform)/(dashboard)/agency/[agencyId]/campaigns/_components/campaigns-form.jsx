@@ -173,6 +173,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Budget</FormLabel>
+              <FormDescription>You won&apos;t spend more than {form.getValues("budget") ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(form.getValues("budget")) : "$0.00"} during the lifetime of your campaign.</FormDescription>
               <FormControl>
                 <Input {...field} type="number" />
               </FormControl>
