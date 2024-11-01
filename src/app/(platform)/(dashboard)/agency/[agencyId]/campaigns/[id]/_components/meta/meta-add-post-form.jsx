@@ -122,13 +122,12 @@ export function MetaAddPostForm({ data, editValues = {} }) {
         resetInputs()
       }
     }
-  }, [form, setInputs, fbPageId, igPageId, platform, editValues, isEditSession]);
+  }, [form, setInputs, fbPageId, igPageId, platform, editValues, isEditSession, resetInputs]);
 
   return (
     <div className="bg-main-light grid grid-cols-2 gap-x-10 p-8 max-w-5xl">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex flex-col gap-y-4">
             <PlatformSelector
               form={form}
               fbPageName={fbPageName}
@@ -198,7 +197,6 @@ export function MetaAddPostForm({ data, editValues = {} }) {
             >
               Publish
             </Button>
-          </div>
         </form>
       </Form>
       {platform === "FACEBOOK" ?
