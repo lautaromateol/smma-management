@@ -33,7 +33,7 @@ export default async function CampaignPage({ params: { id } }) {
     <section className="space-y-8">
       <header className="space-y-4">
         <Heading
-          title={`${campaign.client.name}'s campaign`}
+          title={`${campaign.client.name} - ${campaign.name}`}
         />
         <CampaignDescription campaign={campaign} />
       </header>

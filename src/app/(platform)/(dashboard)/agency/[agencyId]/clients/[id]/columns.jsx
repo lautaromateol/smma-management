@@ -1,11 +1,12 @@
 "use client"
-import { formatDate } from "@/lib/utils"
+import { cn, formatDate } from "@/lib/utils"
 import { CampaignDropdown, CampaignPlatform } from "../../campaigns/_components"
+import { Badge } from "@/components/ui/badge"
 
 export const clientCampaignColumns = [
   {
-    accessorKey: "objective",
-    header: "Objective"
+    accessorKey: "name",
+    header: "Name"
   },
   {
     accessorKey: "budget",
@@ -21,16 +22,29 @@ export const clientCampaignColumns = [
     }
   },
   {
-    accessorKey: "platforms",
-    header: "Platforms",
+    accessorKey: "platform",
+    header: "Platform",
     cell: ({ row }) => {
-      const platforms = row.getValue("platforms")
-      return <CampaignPlatform platforms={platforms} />
+      const platform = row.getValue("platform")
+      return <CampaignPlatform platform={platform} />
     }
   },
   {
     accessorKey: "status",
-    header: "Status"
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status")
+
+      return (
+        <Badge className={cn(
+          "text-white font-medium",
+          status === "ACTIVE" ? "bg-green-500" : "bg-yellow-500"
+        )}
+        >
+          {status}
+        </Badge>
+      )
+    }
   },
   {
     accessorKey: "start",
