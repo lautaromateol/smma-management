@@ -23,7 +23,7 @@ export function MetaCreateAdButton({ data }) {
                 title="Create an new ad for this campaign"
                 modalId="meta-create-ad-form"
             >
-                <MetaAdForm /> 
+                <MetaAdForm data={data} /> 
             </Modal>
         </>
     )
