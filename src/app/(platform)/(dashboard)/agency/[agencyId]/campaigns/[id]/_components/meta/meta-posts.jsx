@@ -6,11 +6,11 @@ import { prisma } from "@/lib/prisma"
 
 export async function MetaPosts({ data }) {
 
-  const { fbPageName, fbPageId, fbPictureUrl, igPageName, igPageId, igPictureUrl, pageAccessToken, campaignId } = data
+  const { fbPageName, fbPageId, fbPictureUrl, igPageName, igPageId, igPictureUrl, pageAccessToken, campaign } = data
 
   const dbPosts = await prisma.post.findMany({
     where: {
-      campaignId
+      campaignId: campaign.id
     }
   })
     .then((posts) => posts.map((post) => post.id))

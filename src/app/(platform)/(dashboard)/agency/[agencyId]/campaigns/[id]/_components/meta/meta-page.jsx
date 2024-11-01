@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { MetaManager, MetaPosts } from ".";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 
-export async function MetaPage({ page: { id: fbPageId, name: fbPageName, access_token: pageAccessToken }, accessToken, campaignId }) {
+export async function MetaPage({ page: { id: fbPageId, name: fbPageName, access_token: pageAccessToken }, accessToken, campaign }) {
 
   const facebookPageData = await fetcher(`${FACEBOOK_API_GRAPH_URL}/${fbPageId}?access_token=${accessToken}&fields=instagram_business_account,picture,followers_count,about,cover,category,phone,emails,location,website`)
 
@@ -36,7 +36,7 @@ export async function MetaPage({ page: { id: fbPageId, name: fbPageName, access_
     igFollowers,
     pageAccessToken,
     userAccessToken: accessToken,
-    campaignId
+    campaign
   }
 
   return (
