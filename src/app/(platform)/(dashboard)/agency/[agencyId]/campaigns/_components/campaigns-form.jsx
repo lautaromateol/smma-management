@@ -77,10 +77,11 @@ export function CampaignsForm({ editValues = {}, clients }) {
       <div className="space-y-4">
         <h2 className="text-lg font-medium">Choose a goal</h2>
         <div className="grid grid-cols-4 gap-2">
-          {objectives.map(({ title, objective, icon }, i) => (
+          {objectives.map(({ title, objective, description, icon }, i) => (
             <AddGoalCard
               key={i}
               title={title}
+              description={description}
               icon={icon}
               onClick={() => handleSelectObjective(objective)}
             />
@@ -95,7 +96,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
           <FormLabel>Objective</FormLabel>
-          <Input disabled value={goals.filter((obj) => obj.objective === objective)[0].goal} />
+          <Input disabled value={objectives.filter((obj) => obj.objective === objective)[0].title} />
         </div>
         <FormField
           control={form.control}
@@ -272,38 +273,31 @@ export function CampaignsForm({ editValues = {}, clients }) {
 
 CampaignsForm.Skeleton = function CampaignsFormSkeleton() {
   return (
-    <div className="flex flex-col space-y-4">
-      <div className="space-y-2">
-        <Skeleton className="w-16 h-6" />
-        <Skeleton className="w-full h-14" />
-      </div>
-      <div className="space-y-2">
-        <Skeleton className="w-16 h-6" />
-        <Skeleton className="w-full h-14" />
-      </div>
-      <div className="space-y-2">
-        <Skeleton className="w-16 h-6" />
-        <Skeleton className="w-full h-14" />
-      </div>
-      <div className="space-y-2">
-        <Skeleton className="w-16 h-6" />
-        <Skeleton className="w-full h-14" />
-      </div>
-      <div className="space-y-2">
-        <Skeleton className="w-16 h-6" />
-        <Skeleton className="w-full h-14" />
-      </div>
-      <Skeleton className="h-10 w-full" />
+    <div className="grid grid-cols-4 gap-2">
+      <Skeleton className="w-60 h-40" />
+      <Skeleton className="w-60 h-40" />
+      <Skeleton className="w-60 h-40" />
+      <Skeleton className="w-60 h-40" />
+      <Skeleton className="w-60 h-40" />
+      <Skeleton className="w-60 h-40" />
     </div>
   )
 }
 
-function AddGoalCard({ title, icon, onClick }) {
+function AddGoalCard({ title, description, icon, onClick }) {
+
+  const [onHover, setOnHover] = useState(false)
+
   return (
     <div
       onClick={onClick}
+      onMouseEnter={() => setOnHover(true)}
+      onMouseLeave={() => setOnHover(false)}
       role="button"
-      className="flex flex-col space-y-2 py-6 px-4 shadow rounded-md"
+      className={cn(
+        "flex flex-col space-y-2 py-6 px-4 shadow rounded-md",
+        onHover && "bg-neutral-100"
+      )}
     >
       <div className="grid place-content-center size-12 p-4 rounded-full bg-muted">
         {cloneElement(icon, { className: "size-8" })}
@@ -311,6 +305,7 @@ function AddGoalCard({ title, icon, onClick }) {
       <p className="text-base font-medium">
         {title}
       </p>
+      {onHover && <p className="text-sm font-light">{description}</p>}
     </div>
   )
 }
