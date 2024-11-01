@@ -1,9 +1,10 @@
 "use client"
 import { cloneElement, useState } from "react"
 import { useForm } from "react-hook-form"
+import { FaMeta } from "react-icons/fa6"
+import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
-import { Briefcase, CalendarIcon, Megaphone, MessageSquare, MousePointer, ThumbsUp, Users } from "lucide-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useAction } from "@/hooks/use-action"
 import { useOpenModal } from "@/hooks/use-open-modal"
@@ -12,6 +13,7 @@ import { AddCampaign } from "@/actions/add-campaign/schema"
 import { addCampaign } from "@/actions/add-campaign"
 import { EditCampaign } from "@/actions/edit-campaign/schema"
 import { editCampaign } from "@/actions/edit-campaign"
+import { objectives } from "@/constants/campaign-objectives"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -19,41 +21,6 @@ import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { Textarea } from "@/components/ui/textarea"
-import { FaMeta } from "react-icons/fa6"
-
-const goals = [
-  {
-    goal: "Awareness",
-    objective: "OUTCOME_AWARENESS",
-    icon: <Megaphone />
-  },
-  {
-    goal: "Traffic",
-    objective: "OUTCOME_TRAFFIC",
-    icon: <MousePointer />
-  },
-  {
-    goal: "Engagement",
-    objective: "OUTCOME_ENGAGEMENT",
-    icon: <ThumbsUp />
-  },
-  {
-    goal: "Leads",
-    objective: "OUTCOME_LEADS",
-    icon: <MessageSquare />
-  },
-  {
-    goal: "App Promotion",
-    objective: "OUTCOME_APP_PROMOTION",
-    icon: <Users />
-  },
-  {
-    goal: "Sales",
-    objective: "OUTCOME_SALES",
-    icon: <Briefcase />
-  }
-]
 
 export function CampaignsForm({ editValues = {}, clients }) {
 
@@ -110,10 +77,10 @@ export function CampaignsForm({ editValues = {}, clients }) {
       <div className="space-y-4">
         <h2 className="text-lg font-medium">Choose a goal</h2>
         <div className="grid grid-cols-4 gap-2">
-          {goals.map(({ goal, objective, icon }, i) => (
+          {objectives.map(({ title, objective, icon }, i) => (
             <AddGoalCard
               key={i}
-              goal={goal}
+              title={title}
               icon={icon}
               onClick={() => handleSelectObjective(objective)}
             />
@@ -331,7 +298,7 @@ CampaignsForm.Skeleton = function CampaignsFormSkeleton() {
   )
 }
 
-function AddGoalCard({ goal, icon, onClick }) {
+function AddGoalCard({ title, icon, onClick }) {
   return (
     <div
       onClick={onClick}
@@ -342,7 +309,7 @@ function AddGoalCard({ goal, icon, onClick }) {
         {cloneElement(icon, { className: "size-8" })}
       </div>
       <p className="text-base font-medium">
-        {goal}
+        {title}
       </p>
     </div>
   )
