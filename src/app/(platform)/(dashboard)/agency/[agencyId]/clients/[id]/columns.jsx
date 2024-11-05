@@ -47,22 +47,6 @@ export const clientCampaignColumns = [
     }
   },
   {
-    accessorKey: "start",
-    header: "Start Date",
-    cell: ({ row }) => {
-      const date = row.getValue("start")
-      return <p>{formatDate(new Date(date))}</p>
-    }
-  },
-  {
-    accessorKey: "end",
-    header: "End Date",
-    cell: ({ row }) => {
-      const date = row.getValue("end")
-      return <p>{formatDate(new Date(date))}</p>
-    }
-  },
-  {
     id: "actions",
     cell: ({ row }) => {
 

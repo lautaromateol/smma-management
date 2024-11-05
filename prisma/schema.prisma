@@ -71,8 +71,6 @@ model Client {
 model Campaign {
   id        String             @id @unique
   name      String
-  start     DateTime
-  end       DateTime
   status    CampaignStatus     @default(ACTIVE)
   budget    Int
   platform  Platforms
