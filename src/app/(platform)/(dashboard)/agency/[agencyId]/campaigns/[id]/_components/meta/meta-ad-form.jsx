@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AdSet } from "@/actions/publish-ad-set/schema";
-import { AdTargeting, Locations, OptimizationGoal, ScheduleAdSet } from "./ads";
+import { Locales, Locations, OptimizationGoal, ScheduleAdSet } from "./ads";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -54,6 +54,7 @@ export function MetaAdForm({ data }) {
                             <FormDescription>Set criteria for where ads for this campaign can be delivered.</FormDescription>
                         </div>
                         <Locations data={data} form={form} />
+                        <Locales data={data} form={form} />
                     </div>
                     <Button
                         type="submit"
