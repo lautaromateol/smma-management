@@ -5,7 +5,8 @@ const geoLocationsSchema = z.object({
 })
 
 const targetingSchema = z.object({
-  geo_locations: geoLocationsSchema
+  geo_locations: geoLocationsSchema,
+  locales: z.array(z.number())
 })
 
 export const AdSet = z.object({
