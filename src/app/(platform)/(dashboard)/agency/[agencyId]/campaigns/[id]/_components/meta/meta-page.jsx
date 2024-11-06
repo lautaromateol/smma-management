@@ -1,7 +1,8 @@
 import { fetcher } from "@/lib/fetcher";
-import { Skeleton } from "@/components/ui/skeleton";
-import { MetaManager, MetaPosts } from ".";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
+import { MetaManager, MetaPosts } from ".";
+import { Skeleton } from "@/components/ui/skeleton";
+import { objectives } from "@/constants/campaign-objectives";
 
 export async function MetaPage({ page: { id: fbPageId, name: fbPageName, access_token: pageAccessToken }, accessToken, campaign }) {
 
@@ -16,6 +17,10 @@ export async function MetaPage({ page: { id: fbPageId, name: fbPageName, access_
   const fbPictureUrl = fbPicture.data.is_silhouette ? "https://upload.wikimedia.org/wikipedia/commons/0/09/Man_Silhouette.png" : fbPicture.data.url
 
   const { username: igPageName, profile_picture_url: igPictureUrl, followers_count: igFollowers, biography: igBiography, website: igWebsite } = instagramPageData
+
+  const optimizationGoals = objectives.find(({ objective }) => objective === campaign.objective).optimization_goals
+  
+  const objectiveTitle = objectives.find(({ objective }) => objective === campaign.objective).title
 
   const data = {
     fbPageId,
@@ -36,7 +41,9 @@ export async function MetaPage({ page: { id: fbPageId, name: fbPageName, access_
     igFollowers,
     pageAccessToken,
     userAccessToken: accessToken,
-    campaign
+    campaign,
+    optimizationGoals,
+    objectiveTitle
   }
 
   return (
