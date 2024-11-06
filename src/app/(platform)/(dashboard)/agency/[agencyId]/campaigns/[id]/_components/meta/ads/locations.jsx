@@ -31,20 +31,6 @@ export function Locations({ data, form }) {
     }
   }
 
-  function handleSubmit() {
-
-    const targeting = form.getValues()?.targeting
-
-    const newTargetingObj = {
-      ...targeting,
-      geo_locations: {
-        countries: selectedCountries.map((country) => country.key)
-      }
-    }
-
-    form.setValue("targeting", newTargetingObj)
-  }
-
   function handleInputChange(value) {
     setSearchTerm(value)
 
@@ -59,8 +45,25 @@ export function Locations({ data, form }) {
     setDebounceTimeout(timeoutId)
   }
 
-  function setter(state, result) {
-    setSelectedCountries([...state, { key: result.key, name: result.name }])
+  function setter(result) {
+
+    const targeting = form.getValues()?.targeting
+
+    setSelectedCountries((prev) => {
+
+      const newState = [...prev, { key: result.key, name: result.name }]
+
+      const newTargetingObj = {
+        ...targeting,
+        geo_locations: {
+          countries: newState.map((country) => country.key)
+        }
+      }
+
+      form.setValue("targeting", newTargetingObj)
+
+      return newState
+    })
   }
 
   return (
@@ -91,7 +94,6 @@ export function Locations({ data, form }) {
         setSearchTerm={setSearchTerm}
         state={selectedCountries}
         setter={setter}
-        handleSubmit={handleSubmit}
       />
     </div>
   )
