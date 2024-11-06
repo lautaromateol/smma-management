@@ -66,6 +66,28 @@ export function Locations({ data, form }) {
     })
   }
 
+  function deleteCountry(key) {
+
+    const targeting = form.getValues()?.targeting
+
+    setSelectedCountries((prev) => {
+
+      const newState = prev.filter((item) => key !== item.key)
+
+      const newTargetingObj = {
+        ...targeting,
+        geo_locations: {
+          countries: newState.map((country) => country.key)
+        }
+      }
+
+      form.setValue("targeting", newTargetingObj)
+
+      return newState
+
+    })
+  }
+
   return (
     <div className="space-y-2">
       <FormLabel>Locations</FormLabel>
@@ -82,9 +104,7 @@ export function Locations({ data, form }) {
             <p className="text-xs">
               {country.name}
             </p>
-            <X className="size-2 cursor-pointer" onClick={() => {
-              setSelectedCountries((curr) => curr.filter((item) => country.key !== item.key))
-            }} />
+            <X className="size-2 cursor-pointer" onClick={() => deleteCountry(country.key)} />
           </p>
         ))}
       </div>
