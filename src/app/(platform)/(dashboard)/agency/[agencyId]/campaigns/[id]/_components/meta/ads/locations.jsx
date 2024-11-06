@@ -8,7 +8,7 @@ import { SearchResults } from "..";
 
 export function Locations({ data, form }) {
 
-  const { accessToken } = data
+  const { userAccessToken } = data
 
   const [isPending, startTransition] = useTransition()
   const [searchTerm, setSearchTerm] = useState("")
@@ -20,7 +20,7 @@ export function Locations({ data, form }) {
     startTransition(async () => {
       if (value.length === 0) return
 
-      const countries = await fetcher(`${FACEBOOK_API_GRAPH_URL}/search?type=adgeolocation&q=${value}&location_types=["country"]&access_token=${accessToken}`)
+      const countries = await fetcher(`${FACEBOOK_API_GRAPH_URL}/search?type=adgeolocation&q=${value}&location_types=["country"]&access_token=${userAccessToken}`)
 
       if (countries.data) {
         const { data } = countries
@@ -61,6 +61,8 @@ export function Locations({ data, form }) {
       }
 
       form.setValue("targeting", newTargetingObj)
+
+      console.log(newState)
 
       return newState
     })
