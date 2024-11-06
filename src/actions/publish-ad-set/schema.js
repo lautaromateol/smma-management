@@ -18,7 +18,9 @@ export const AdSet = z.object({
   // billing_event: z.string({
   //   message: "Ad Set Billing Event is required"
   // }),
-  bid_amount: z.string().optional().nullable(),
+  bid_amount: z.string({
+    message: "Ad Set Bid Amount is required"
+  }),
   campaign_id: z.string({
     message: "Campaign ID is required"
   }),
