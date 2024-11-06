@@ -2,14 +2,13 @@ import { useState, useTransition } from "react";
 import { Dot, X } from "lucide-react";
 import { FormDescription, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { getMetaAccessToken } from "@/lib/get-meta-access-token";
 import { fetcher } from "@/lib/fetcher";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { SearchResults } from "..";
 
 export function Locations({ data, form }) {
 
-  const { campaign } = data
+  const { accessToken } = data
 
   const [isPending, startTransition] = useTransition()
   const [searchTerm, setSearchTerm] = useState("")
@@ -20,8 +19,6 @@ export function Locations({ data, form }) {
   function handleSearch(value) {
     startTransition(async () => {
       if (value.length === 0) return
-
-      const accessToken = await getMetaAccessToken(campaign.clientId)
 
       const countries = await fetcher(`${FACEBOOK_API_GRAPH_URL}/search?type=adgeolocation&q=${value}&location_types=["country"]&access_token=${accessToken}`)
 
