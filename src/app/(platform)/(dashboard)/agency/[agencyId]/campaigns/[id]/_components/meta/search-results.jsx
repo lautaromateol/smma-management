@@ -1,4 +1,4 @@
-export function SearchResults({ results, setResults, setSearchTerm, state, setter, handleSubmit, isPending }) {
+export function SearchResults({ results, setResults, setSearchTerm, state, setter, isPending }) {
 
   if (isPending) {
     return (
@@ -22,9 +22,8 @@ export function SearchResults({ results, setResults, setSearchTerm, state, sette
               onClick={() => {
                 setSearchTerm(result.name)
                 if (state.includes({ key: result.key, name: result.name })) return
-                setter(state, result)
+                setter(result)
                 setResults([])
-                handleSubmit()
               }}
             >
               {result.name}
