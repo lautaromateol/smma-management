@@ -1,4 +1,16 @@
-export function SearchResults({ results, setResults,  setSearchTerm, state, setter }) {
+export function SearchResults({ results, setResults, setSearchTerm, state, setter, handleSubmit, isPending }) {
+
+  if (isPending) {
+    return (
+      <div className="z-10 w-full bg-white border border-gray-300 rounded-md max-h-60">
+        <div className="flex items-center gap-x-2 px-4 py-2 text-sm font-medium">
+          Searching
+          <div className="size-4 animate-spin rounded-full border-2 border-solid border-black border-t-transparent" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       {results?.length > 0 && (
@@ -10,8 +22,9 @@ export function SearchResults({ results, setResults,  setSearchTerm, state, sett
               onClick={() => {
                 setSearchTerm(result.name)
                 if (state.includes({ key: result.key, name: result.name })) return
-                setter(result)
+                setter(state, result)
                 setResults([])
+                handleSubmit()
               }}
             >
               {result.name}

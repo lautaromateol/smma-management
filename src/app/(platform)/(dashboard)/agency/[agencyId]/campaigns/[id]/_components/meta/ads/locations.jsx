@@ -1,34 +1,37 @@
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { Dot, X } from "lucide-react";
 import { FormDescription, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { getMetaAccessToken } from "@/lib/get-meta-access-token";
 import { fetcher } from "@/lib/fetcher";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { SearchResults } from "..";
-import { Dot, X } from "lucide-react";
 
 export function Locations({ data, form }) {
 
   const { campaign } = data
 
+  const [isPending, startTransition] = useTransition()
   const [searchTerm, setSearchTerm] = useState("")
   const [debounceTimeout, setDebounceTimeout] = useState(null)
   const [results, setResults] = useState([])
   const [selectedCountries, setSelectedCountries] = useState([])
 
-  async function handleSearch(value) {
-    if (value.length === 0) return
+  function handleSearch(value) {
+    startTransition(async () => {
+      if (value.length === 0) return
 
-    const accessToken = await getMetaAccessToken(campaign.clientId)
+      const accessToken = await getMetaAccessToken(campaign.clientId)
 
-    const countries = await fetcher(`${FACEBOOK_API_GRAPH_URL}/search?type=adgeolocation&q=${value}&location_types=["country"]&access_token=${accessToken}`)
+      const countries = await fetcher(`${FACEBOOK_API_GRAPH_URL}/search?type=adgeolocation&q=${value}&location_types=["country"]&access_token=${accessToken}`)
 
-    if (countries.data) {
-      const { data } = countries
-      setResults(data)
-    } else {
-      setResults([])
-    }
+      if (countries.data) {
+        const { data } = countries
+        setResults(data)
+      } else {
+        setResults([])
+      }
+    })
   }
 
   function handleInputChange(value) {
@@ -94,6 +97,7 @@ export function Locations({ data, form }) {
         setSearchTerm={setSearchTerm}
         state={selectedCountries}
         setter={setter}
+        isPending={isPending}
       />
     </div>
   )
