@@ -1,10 +1,9 @@
 "use server"
 import { auth } from "@clerk/nextjs/server";
-import { FacebookPostToDelete, FacebookPostToUpdate } from "./schema";
+import { FacebookPostToDelete } from "./schema";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { revalidatePath } from "next/cache";
-import { parseISO } from "date-fns";
 
 export async function handler(data) {
   const { userId, orgId } = auth()
@@ -13,7 +12,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { post_id, access_token } = data
+  const { post_id, campaign_id, access_token } = data
 
   try {
 
@@ -27,7 +26,7 @@ export async function handler(data) {
     const data = await response.json()
 
     if (data.success) {
-      revalidatePath(`/agency/${orgId}/campaigns/${userId}`)
+      revalidatePath(`/agency/${orgId}/campaigns/${campaign_id}`)
       return { ok: true }
     } else {
       console.log(data)

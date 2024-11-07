@@ -44,7 +44,7 @@ export function PostDropdown({ post, data }) {
         </DropdownMenuItem>
         <DropdownMenuItem
           disabled={isPending || post.platform === "INSTAGRAM"}
-          onClick={() => execute({ post_id: post.post_id, access_token: data.pageAccessToken })}
+          onClick={() => execute({ post_id: post.post_id, campaign_id: data.campaign.id, access_token: data.pageAccessToken })}
           className="cursor-pointer"
         >
           Delete
