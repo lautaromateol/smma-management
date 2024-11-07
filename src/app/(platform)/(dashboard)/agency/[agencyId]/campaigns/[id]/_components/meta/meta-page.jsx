@@ -1,6 +1,6 @@
 import { fetcher } from "@/lib/fetcher";
 import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
-import { MetaManager, MetaPosts } from ".";
+import { MetaManager, MetaContent } from ".";
 import { Skeleton } from "@/components/ui/skeleton";
 import { objectives } from "@/constants/campaign-objectives";
 
@@ -49,7 +49,7 @@ export async function MetaPage({ page: { id: fbPageId, name: fbPageName, access_
   return (
     <div className="space-y-4">
       <MetaManager data={data} />
-      <MetaPosts data={data} />
+      <MetaContent data={data} />
     </div>
   )
 }

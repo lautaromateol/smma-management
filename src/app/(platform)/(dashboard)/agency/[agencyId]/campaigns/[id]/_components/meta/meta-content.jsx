@@ -4,7 +4,7 @@ import { FaFacebook, FaInstagram } from "react-icons/fa6"
 import { MetaPostsTable } from "."
 import { prisma } from "@/lib/prisma"
 
-export async function MetaPosts({ data }) {
+export async function MetaContent({ data }) {
 
   const { fbPageName, fbPageId, fbPictureUrl, igPageName, igPageId, igPictureUrl, pageAccessToken, campaign } = data
 
