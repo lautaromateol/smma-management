@@ -25,7 +25,6 @@ export function MetaAdForm({ data }) {
             campaign_id: campaign.id,
             access_token: pageAccessToken,
             status: "PAUSED",
-            age_min: "18",
             billing_event: "IMPRESSIONS"
         }
     })
