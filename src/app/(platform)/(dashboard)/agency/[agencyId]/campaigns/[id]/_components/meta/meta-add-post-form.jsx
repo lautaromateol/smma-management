@@ -40,7 +40,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
 
   const form = useForm({
     resolver: zodResolver(resolver),
-    defaultValues: isEditSession ? { ...editValues, access_token: pageAccessToken } : {
+    defaultValues: isEditSession ? { ...editValues, access_token: pageAccessToken, campaign_id: campaign.id } : {
       access_token: pageAccessToken,
       attached_media,
       urls,
