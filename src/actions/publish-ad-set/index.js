@@ -13,7 +13,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { client, campaign_id, bid_amount, targeting, age_min, ...rest } = data
+  const { client, campaign_id, bid_amount, ...rest } = data
 
   const dbClient = await prisma.client.findUnique({
     where: { id: client }
@@ -40,7 +40,6 @@ export async function handler(data) {
         ...rest,
         campaign_id,
         bid_amount: parseInt(bid_amount) * 100,
-        targeting: { ...targeting, age_min: parseInt(age_min) }
       })
     })
 

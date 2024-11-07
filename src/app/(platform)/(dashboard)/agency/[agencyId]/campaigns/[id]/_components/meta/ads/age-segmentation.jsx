@@ -9,6 +9,17 @@ export function AgeSegmentation({ form }) {
 
   const [showPopover, setShowPopover] = useState(false)
 
+  function handleAgeChange(value) {
+    const targeting = form.getValues()?.targeting
+
+    const newTargetingObj = {
+      ...targeting,
+      age_min: value
+    }
+
+    form.setValue("targeting", newTargetingObj)
+  }
+
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-x-1">
@@ -36,7 +47,13 @@ export function AgeSegmentation({ form }) {
         name="age_min"
         render={({ field }) => (
           <FormItem>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select
+              onValueChange={(value) => {
+                field.onChange(value)
+                handleAgeChange(value)
+              }}
+              defaultValue={field.value}
+            >
               <FormControl>
                 <SelectTrigger>
                   <SelectValue>

@@ -6,6 +6,7 @@ const geoLocationsSchema = z.object({
 
 const targetingSchema = z.object({
   geo_locations: geoLocationsSchema,
+  age_min: z.string().optional(),
   locales: z.array(z.number()).optional()
 })
 
@@ -41,5 +42,4 @@ export const AdSet = z.object({
   end_time: z.date({
     message: "End date is required"
   }),
-  age_min: z.string().optional()
 })
