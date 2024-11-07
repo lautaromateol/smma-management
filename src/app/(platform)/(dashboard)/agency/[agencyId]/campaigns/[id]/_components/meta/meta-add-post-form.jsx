@@ -23,7 +23,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
 
   const isEditSession = Boolean(post_id)
 
-  const { fbPageId, fbPageName, igPageId, igPageName, pageAccessToken, userAccessToken, campaignId } = data
+  const { fbPageId, fbPageName, igPageId, igPageName, pageAccessToken, userAccessToken, campaign } = data
 
   const { onClose } = useOpenModal((state) => state)
 
@@ -50,11 +50,13 @@ export function MetaAddPostForm({ data, editValues = {} }) {
       link,
       published,
       scheduled_publish_time,
-      campaign_id: campaignId
+      campaign_id: campaign.id
     }
   })
 
   const { errors, isDirty, dirtyFields } = form.formState
+
+  console.log(errors)
 
   const { execute: postOnFacebook, isPending: isPostingOnFacebook } = useAction(publishFacebookPost, {
     onSuccess: () => {
