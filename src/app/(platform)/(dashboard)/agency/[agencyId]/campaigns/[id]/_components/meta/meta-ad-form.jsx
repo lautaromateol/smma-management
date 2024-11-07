@@ -1,23 +1,32 @@
 "use client"
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAction } from "@/hooks/use-action";
+import { useOpenModal } from "@/hooks/use-open-modal";
 import { AdSet } from "@/actions/publish-ad-set/schema";
-import { Locales, Locations, OptimizationGoal, ScheduleAdSet } from "./ads";
+import { publishAdSet } from "@/actions/publish-ad-set";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Locales, Locations, OptimizationGoal, ScheduleAdSet } from "./ads";
 import { AgeSegmentation } from "./ads/age-segmentation";
 
 export function MetaAdForm({ data }) {
 
-    const { campaign } = data
+    const { campaign, pageAccessToken } = data
+
+    const { onClose } = useOpenModal((state) => state)
 
     const form = useForm({
         resolver: zodResolver(AdSet),
         defaultValues: {
-            status: "ACTIVE",
+            client: campaign.clientId,
             campaign_id: campaign.id,
-            age_min: "18"
+            access_token: pageAccessToken,
+            status: "PAUSED",
+            age_min: "18",
+            billing_event: "IMPRESSIONS"
         }
     })
 
@@ -25,8 +34,17 @@ export function MetaAdForm({ data }) {
 
     console.log(errors)
 
+    const { execute, isPending } = useAction(publishAdSet, {
+        onSuccess: () => {
+            toast.success("Ad Set created successfully")
+            onClose()
+        },
+        onError: (error) => toast.error(error)
+    })
+
     function onSubmit(data) {
-        console.log(data)
+        // console.log(data)
+        execute(data)
     }
 
     return (
@@ -60,6 +78,7 @@ export function MetaAdForm({ data }) {
                         <AgeSegmentation form={form} />
                     </div>
                     <Button
+                        disabled={isPending}
                         type="submit"
                         variant="main"
                     >

@@ -16,9 +16,15 @@ export const AdSet = z.object({
   optimization_goal: z.string({
     message: "Ad Set Optimization Goal is required"
   }),
-  // billing_event: z.string({
-  //   message: "Ad Set Billing Event is required"
-  // }),
+  client: z.string({
+    message: "Client ID is required"
+  }),
+  access_token: z.string({
+    message: "Page Access Token is required"
+  }),
+  billing_event: z.string({
+    message: "Ad Set Billing Event is required"
+  }),
   bid_amount: z.string({
     message: "Ad Set Bid Amount is required"
   }),
