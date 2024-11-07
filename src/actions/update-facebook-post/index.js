@@ -13,7 +13,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { id, post_id, access_token, scheduled_publish_time, ...rest } = data
+  const { id, post_id, access_token, scheduled_publish_time, campaign_id, ...rest } = data
 
   try {
 
@@ -36,7 +36,7 @@ export async function handler(data) {
     const data = await response.json()
 
     if (response.ok) {
-      revalidatePath(`/agency/${orgId}/campaigns/${userId}`)
+      revalidatePath(`/agency/${orgId}/campaigns/${campaign_id}`)
       return { ok: true, id: data.id }
     } else {
       console.log(data)

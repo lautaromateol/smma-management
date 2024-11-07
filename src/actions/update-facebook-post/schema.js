@@ -4,6 +4,9 @@ export const FacebookPostToUpdate = z.object({
   id: z.string({
     message: "Facebook page ID is required"
   }),
+  campaign_id: z.string({
+    message: "Campaign ID is required"
+  }),
   post_id: z.string({
     message: "Facebook post ID is required"
   }),
