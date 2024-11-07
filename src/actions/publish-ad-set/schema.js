@@ -34,5 +34,6 @@ export const AdSet = z.object({
   }),
   end_time: z.date({
     message: "End date is required"
-  })
+  }),
+  age_min: z.string().optional()
 })
