@@ -6,6 +6,7 @@ import { Locales, Locations, OptimizationGoal, ScheduleAdSet } from "./ads";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { AgeSegmentation } from "./ads/age-segmentation";
 
 export function MetaAdForm({ data }) {
 
@@ -15,7 +16,8 @@ export function MetaAdForm({ data }) {
         resolver: zodResolver(AdSet),
         defaultValues: {
             status: "ACTIVE",
-            campaign_id: campaign.id
+            campaign_id: campaign.id,
+            age_min: "18"
         }
     })
 
@@ -55,6 +57,7 @@ export function MetaAdForm({ data }) {
                         </div>
                         <Locations data={data} form={form} />
                         <Locales data={data} form={form} />
+                        <AgeSegmentation form={form} />
                     </div>
                     <Button
                         type="submit"
