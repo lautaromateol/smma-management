@@ -167,7 +167,7 @@ export async function handler(data) {
         }
       })
 
-      revalidatePath(`/agency/${orgId}/campaigns/${userId}`)
+      revalidatePath(`/agency/${orgId}/campaigns/${campaign_id}`)
       return { ok: true, id: post.id }
     } else {
       console.log(upload)
