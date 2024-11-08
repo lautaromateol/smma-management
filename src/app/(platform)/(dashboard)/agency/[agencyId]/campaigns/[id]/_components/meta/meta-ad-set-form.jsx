@@ -12,7 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Locales, Locations, OptimizationGoal, ScheduleAdSet } from "./ads";
 import { AgeSegmentation } from "./ads/age-segmentation";
 
-export function MetaAdForm({ data }) {
+export function MetaAdSetForm({ data, editValues = {} }) {
+
+    const { id, bid_amount } = editValues
+
+    const isEditSession = Boolean(id)
 
     const { campaign, pageAccessToken } = data
 
@@ -20,7 +24,7 @@ export function MetaAdForm({ data }) {
 
     const form = useForm({
         resolver: zodResolver(AdSet),
-        defaultValues: {
+        defaultValues: isEditSession ? { id, bid_amount: bid_amount / 100, ...editValues } : {
             client: campaign.clientId,
             campaign_id: campaign.id,
             access_token: pageAccessToken,
@@ -72,7 +76,7 @@ export function MetaAdForm({ data }) {
                             <FormLabel>Audience controls</FormLabel>
                             <FormDescription>Set criteria for where ads for this campaign can be delivered.</FormDescription>
                         </div>
-                        <Locations data={data} form={form} />
+                        <Locations form={form} isEditSession={isEditSession} />
                         <Locales data={data} form={form} />
                         <AgeSegmentation form={form} />
                     </div>

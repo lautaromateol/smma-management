@@ -3,7 +3,7 @@ import { Megaphone } from "lucide-react";
 import { useOpenModal } from "@/hooks/use-open-modal";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/modal";
-import { MetaAdForm } from ".";
+import { MetaAdSetForm } from ".";
 
 export function MetaCreateAdButton({ data }) {
 
@@ -23,7 +23,7 @@ export function MetaCreateAdButton({ data }) {
                 title="Create an new ad for this campaign"
                 modalId="meta-create-ad-form"
             >
-                <MetaAdForm data={data} /> 
+                <MetaAdSetForm data={data} /> 
             </Modal>
         </>
     )
