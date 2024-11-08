@@ -1,48 +1,46 @@
-import { useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { Dot, X } from "lucide-react";
 import { FormDescription, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { fetcher } from "@/lib/fetcher";
-import { FACEBOOK_API_GRAPH_URL } from "@/constants/facebook";
 import { SearchResults } from "..";
+import { countries } from "@/constants/countries";
 
-export function Locations({ data, form }) {
+export function Locations({ form, isEditSession }) {
 
-  const { userAccessToken } = data
-
-  const [isPending, startTransition] = useTransition()
-  const [searchTerm, setSearchTerm] = useState("")
-  const [debounceTimeout, setDebounceTimeout] = useState(null)
   const [results, setResults] = useState([])
+  const [searchTerm, setSearchTerm] = useState("")
   const [selectedCountries, setSelectedCountries] = useState([])
 
-  function handleSearch(value) {
-    startTransition(async () => {
-      if (value.length === 0) return
+  useEffect(() => {
+    if (isEditSession) {
+      const targeting = form.getValues()?.targeting
 
-      const countries = await fetcher(`${FACEBOOK_API_GRAPH_URL}/search?type=adgeolocation&q=${value}&location_types=["country"]&access_token=${userAccessToken}`)
-
-      if (countries.data) {
-        const { data } = countries
-        setResults(data)
-      } else {
-        setResults([])
+      if (targeting) {
+        const targetingCountries = targeting.geo_locations.countries
+        const selectedCountries = countries.filter((country) => targetingCountries.includes(country.key))
+        setSelectedCountries(selectedCountries)
       }
-    })
-  }
+    }
+  }, [form, isEditSession])
+
+
+  function handleSearch(value) {
+    const trimmedValue = value.trim()
+    
+    if (trimmedValue.length === 0) {
+        setResults([])
+        return
+    }
+
+    const results = countries.filter((country) => country.name.toLowerCase().includes(trimmedValue.toLowerCase()))
+    setResults(results)
+}
+
 
   function handleInputChange(value) {
     setSearchTerm(value)
 
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout)
-    }
-
-    const timeoutId = setTimeout(() => {
-      handleSearch(searchTerm)
-    }, 2000)
-
-    setDebounceTimeout(timeoutId)
+    handleSearch(searchTerm)
   }
 
   function setter(result) {
@@ -61,8 +59,6 @@ export function Locations({ data, form }) {
       }
 
       form.setValue("targeting", newTargetingObj)
-
-      console.log(newState)
 
       return newState
     })
@@ -86,7 +82,6 @@ export function Locations({ data, form }) {
       form.setValue("targeting", newTargetingObj)
 
       return newState
-
     })
   }
 
@@ -116,7 +111,6 @@ export function Locations({ data, form }) {
         setSearchTerm={setSearchTerm}
         state={selectedCountries}
         setter={setter}
-        isPending={isPending}
       />
     </div>
   )
