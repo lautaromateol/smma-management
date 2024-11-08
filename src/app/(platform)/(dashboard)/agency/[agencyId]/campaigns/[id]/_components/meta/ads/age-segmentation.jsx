@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Info } from "lucide-react";
 import { PopoverWrapper } from "@/components/popover-wrapper";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,13 @@ export function AgeSegmentation({ form }) {
 
     form.setValue("targeting", newTargetingObj)
   }
+
+  useEffect(() => {
+    const targeting = form.getValues()?.targeting
+    if (!targeting?.age_min) {
+      form.setValue("targeting.age_min", 18)
+    }
+  }, [form])
 
   return (
     <div className="space-y-2">
@@ -44,7 +51,7 @@ export function AgeSegmentation({ form }) {
       </div>
       <FormField
         control={form.control}
-        name="age_min"
+        name="targeting.age_min"
         render={({ field }) => (
           <FormItem>
             <Select
