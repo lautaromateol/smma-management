@@ -3,6 +3,7 @@ import { formatDate } from "@/lib/utils"
 import { ImageIcon } from "lucide-react"
 import { PostDropdown } from "."
 import Image from "next/image"
+import { AdSetDropdown } from "./ads"
 
 export const metaPostsColumns = [
   {
@@ -83,6 +84,77 @@ export const metaPostsColumns = [
       return (
         <PostDropdown data={data} post={post} />
       )
+    }
+  }
+]
+
+export const adSetsColumns = [
+  {
+    accessorKey: "name",
+    header: "Ad Set name",
+  },
+  {
+    accessorKey: "bid_amount",
+    header: "Bid cap",
+    cell: ({ row }) => {
+
+      const bid_amount = parseInt(row.getValue("bid_amount")) / 100
+      const formated = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(bid_amount)
+
+      return (
+        <strong>{formated}</strong>
+      )
+    }
+  },
+  {
+    accessorKey: "optimization_goal",
+    header: "Optimization Goal"
+  },
+  {
+    accessorKey: "billing_event",
+    header: "Billing event"
+  },
+  {
+    accessorKey: "targeting",
+    header: "Age range",
+    cell: ({ row }) => {
+
+      const targeting = row.getValue("targeting")
+
+      const age_min = targeting?.age_min
+      const age_max = targeting?.age_max
+
+      return (
+        <p>{age_min} - {age_max}</p>
+      )
+    },
+  },
+  {
+    accessorKey: "start_time",
+    header: "Date range",
+    cell: ({ row }) => {
+
+      const start_time = row.getValue("start_time")
+      const end_time = row.original.end_time
+
+      return (
+        <p>{formatDate(new Date(start_time))} - {formatDate(new Date(end_time))}</p>
+      )
+    }
+  },
+  {
+    id: "Actions",
+    header: "Actions",
+    cell: ({ row }) => {
+
+      const adSet = row.original
+
+      const { data } = adSet
+
+      return (
+        <AdSetDropdown adSet={adSet} data={data} />
+      )
+
     }
   }
 ]
