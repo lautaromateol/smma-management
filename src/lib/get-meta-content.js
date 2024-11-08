@@ -7,7 +7,7 @@ export async function getMetaContent(data) {
 
   const { fbPageId, igPageId, fbPageName, igPageName, fbPictureUrl, igPictureUrl, pageAccessToken, campaign } = data
 
-  const [dbPosts, fbData, fbScheduledData, igData] = await Promise.all([
+  const [dbPosts, fbData, fbScheduledData, igData, adSetsData] = await Promise.all([
     prisma.post.findMany({
       where: {
         campaignId: campaign.id
@@ -21,6 +21,9 @@ export async function getMetaContent(data) {
     }),
     fetcher(`${FACEBOOK_API_GRAPH_URL}/${igPageId}/media?fields=id,caption,media_url,thumbnail_url,children{media_type,media_url},timestamp`, {
       "Authorization": `OAuth ${pageAccessToken}`
+    }),
+    fetcher(`${FACEBOOK_API_GRAPH_URL}/${campaign.id}/adsets?fields=id,name,status,bid_amount,targeting,optimization_goal,billing_event,start_time,end_time`, {
+      "Authorization": `OAuth ${pageAccessToken}`
     })
   ])
 
@@ -29,6 +32,8 @@ export async function getMetaContent(data) {
   const { data: fbScheduledUnformatted } = fbScheduledData
 
   const { data: igUnformatted } = igData
+
+  const { data: adSets } = adSetsData
 
   const fbPosts = fbUnformatted.map((fbPost) => {
 
@@ -97,6 +102,6 @@ export async function getMetaContent(data) {
     (a, b) => new Date(b.created_time) - new Date(a.created_time)
   )
 
-  return { posts, scheduledPosts: fbScheduled }
+  return { posts, scheduledPosts: fbScheduled, adSets: adSets.map((el) => ({ ...el, data })) }
 
 }
