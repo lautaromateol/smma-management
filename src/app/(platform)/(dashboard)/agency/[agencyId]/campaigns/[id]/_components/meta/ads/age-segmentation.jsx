@@ -17,7 +17,7 @@ export function AgeSegmentation({ form }) {
       age_min: value
     }
 
-    form.setValue("targeting", newTargetingObj)
+    form.setValue("targeting", newTargetingObj, { shouldDirty: true })
   }
 
   useEffect(() => {

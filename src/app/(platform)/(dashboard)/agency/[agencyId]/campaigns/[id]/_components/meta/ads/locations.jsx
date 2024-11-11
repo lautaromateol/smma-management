@@ -26,15 +26,15 @@ export function Locations({ form, isEditSession }) {
 
   function handleSearch(value) {
     const trimmedValue = value.trim()
-    
+
     if (trimmedValue.length === 0) {
-        setResults([])
-        return
+      setResults([])
+      return
     }
 
     const results = countries.filter((country) => country.name.toLowerCase().includes(trimmedValue.toLowerCase()))
     setResults(results)
-}
+  }
 
 
   function handleInputChange(value) {
@@ -58,7 +58,7 @@ export function Locations({ form, isEditSession }) {
         }
       }
 
-      form.setValue("targeting", newTargetingObj)
+      form.setValue("targeting", newTargetingObj, { shouldDirty: true })
 
       return newState
     })
