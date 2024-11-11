@@ -1,11 +1,12 @@
 import { fetcher } from "./fetcher"
+import { prisma } from "./prisma"
 
 export async function getMetaAccessToken(clientId) {
-  const data = await fetcher(`/api/clients/meta-data/access_token?client_id=${clientId}`)
-
-  if(data.token) {
-    return data.token
-  } 
-
-  return null
+  const token = await prisma.metaAccessToken.findUnique({
+    where: {
+      clientId
+    }
+  })
+  
+  return token.token
 }
