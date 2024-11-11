@@ -47,7 +47,7 @@ export function CampaignDropdown({ campaign }) {
         </DropdownMenuItem>
         <DropdownMenuItem
           disabled={isPending}
-          onClick={() => execute({ id: campaign.id })}
+          onClick={() => execute({ id: campaign.id, client_id: campaign.clientId })}
           className="cursor-pointer"
         >
           Delete
