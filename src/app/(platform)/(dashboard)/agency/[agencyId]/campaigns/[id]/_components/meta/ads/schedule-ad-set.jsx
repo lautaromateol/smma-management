@@ -7,9 +7,11 @@ import { format } from "date-fns";
 import { CalendarIcon, Info } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 
-export function ScheduleAdSet({ form }) {
+export function ScheduleAdSet({ form, isEditSession }) {
 
   const [showPopover, setShowPopover] = useState(false)
+
+  const disabled = isEditSession && !(form.getValues()?.start_time < new Date())
 
   return (
     <div className="bg-white p-4 space-y-4">
@@ -46,7 +48,7 @@ export function ScheduleAdSet({ form }) {
               className="w-auto p-0"
               align="start"
               trigger={
-                <FormControl>
+                <FormControl disabled={disabled}>
                   <Button
                     variant="outline"
                     className={cn(
