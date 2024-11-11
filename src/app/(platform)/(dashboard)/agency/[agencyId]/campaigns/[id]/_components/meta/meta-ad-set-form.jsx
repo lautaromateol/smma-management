@@ -5,16 +5,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "@/hooks/use-action";
 import { useOpenModal } from "@/hooks/use-open-modal";
 import { AdSet } from "@/actions/publish-ad-set/schema";
+import { AdSetToUpdate } from "@/actions/update-ad-set/schema";
 import { publishAdSet } from "@/actions/publish-ad-set";
+import { updateAdSet as updateAdSetAction } from "@/actions/update-ad-set";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Locales, Locations, OptimizationGoal, ScheduleAdSet } from "./ads";
 import { AgeSegmentation } from "./ads/age-segmentation";
+import { Locales, Locations, OptimizationGoal, ScheduleAdSet } from "./ads";
 
 export function MetaAdSetForm({ data, editValues = {} }) {
 
-    const { id, bid_amount } = editValues
+    const { id, bid_amount, end_time, targeting } = editValues
 
     const isEditSession = Boolean(id)
 
@@ -23,31 +25,63 @@ export function MetaAdSetForm({ data, editValues = {} }) {
     const { onClose } = useOpenModal((state) => state)
 
     const form = useForm({
-        resolver: zodResolver(AdSet),
-        defaultValues: isEditSession ? { id, bid_amount: bid_amount / 100, ...editValues } : {
-            client: campaign.clientId,
-            campaign_id: campaign.id,
-            access_token: pageAccessToken,
-            status: "PAUSED",
-            billing_event: "IMPRESSIONS"
-        }
+        resolver: zodResolver(isEditSession ? AdSetToUpdate : AdSet),
+        defaultValues: isEditSession ?
+            {
+                ...editValues,
+                id,
+                client: campaign.clientId,
+                campaign_id: campaign.id,
+                access_token: pageAccessToken,
+                bid_amount: (bid_amount / 100).toString(),
+                end_time: new Date(end_time),
+                targeting: { ...targeting, age_min: targeting?.age_min.toString() }
+            }
+            :
+            {
+                client: campaign.clientId,
+                campaign_id: campaign.id,
+                access_token: pageAccessToken,
+                status: "PAUSED",
+                billing_event: "IMPRESSIONS"
+            }
     })
 
-    const { errors } = form.formState
+    const { errors, isDirty, dirtyFields } = form.formState
 
     console.log(errors)
 
-    const { execute, isPending } = useAction(publishAdSet, {
+    const { execute: postAdSet, isPending: isPostingAdSet } = useAction(publishAdSet, {
         onSuccess: () => {
-            toast.success("Ad Set created successfully")
+            toast.success("Ad Set created successfully!")
+            onClose()
+        },
+        onError: (error) => toast.error(error)
+    })
+
+    const { execute: updateAdSet, isPending: isUpdatingAdSet } = useAction(updateAdSetAction, {
+        onSuccess: () => {
+            toast.success("Ad Set updated successfully!")
             onClose()
         },
         onError: (error) => toast.error(error)
     })
 
     function onSubmit(data) {
-        // console.log(data)
-        execute(data)
+        if (isEditSession) {
+            const payload = {}
+
+            for (let prop of Object.keys(data)) {
+                if (dirtyFields[prop]) {
+                    payload[prop] = data[prop]
+                }
+            }
+
+            updateAdSet(data)
+            return
+        }
+
+        postAdSet(data)
     }
 
     return (
@@ -70,7 +104,7 @@ export function MetaAdSetForm({ data, editValues = {} }) {
                         />
                     </div>
                     <OptimizationGoal data={data} form={form} />
-                    <ScheduleAdSet form={form} />
+                    <ScheduleAdSet form={form} isEditSession={isEditSession} />
                     <div className="bg-white p-4 space-y-4">
                         <div className="flex flex-col space-y-2">
                             <FormLabel>Audience controls</FormLabel>
@@ -81,7 +115,7 @@ export function MetaAdSetForm({ data, editValues = {} }) {
                         <AgeSegmentation form={form} />
                     </div>
                     <Button
-                        disabled={isPending}
+                        disabled={isPostingAdSet || isUpdatingAdSet || !isDirty}
                         type="submit"
                         variant="main"
                     >
