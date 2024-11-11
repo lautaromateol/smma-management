@@ -1,5 +1,6 @@
 import { Ellipsis, Pencil, Trash } from "lucide-react";
 import { toast } from "sonner";
+import { deleteAdSet } from "@/actions/delete-ad-set";
 import { useOpenModal } from "@/hooks/use-open-modal";
 import { useAction } from "@/hooks/use-action";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
@@ -10,6 +11,11 @@ import { MetaAdSetForm } from "..";
 export function AdSetDropdown({ adSet, data }) {
 
   const { onOpen } = useOpenModal((state) => state)
+
+  const { execute, isPending } = useAction(deleteAdSet, {
+    onSuccess: () => toast.success("Ad Set deleted successfully!"),
+    onError: (error) => toast.error(error)
+  })
 
   return (
     <DropdownMenu>
@@ -35,6 +41,8 @@ export function AdSetDropdown({ adSet, data }) {
           </DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem
+          disabled={isPending}
+          onClick={() => execute({ id: adSet.id, campaign_id: data.campaign.id, access_token: data.pageAccessToken })}
           className="cursor-pointer"
         >
           Delete
