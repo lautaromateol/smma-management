@@ -47,7 +47,7 @@ export async function handler(data) {
 
     if (data.id) {
 
-      revalidatePath(`/agency/${orgId}/campaigns/${userId}`)
+      revalidatePath(`/agency/${orgId}/campaigns/${campaign_id}`)
 
       return { ok: true }
     } else throw new Error(data.error.message)
