@@ -127,7 +127,7 @@ export function MetaAddPostForm({ data, editValues = {} }) {
   }, [form, setInputs, fbPageId, igPageId, platform, editValues, isEditSession, resetInputs]);
 
   return (
-    <div className="bg-main-light grid grid-cols-2 gap-x-10 p-8 max-w-5xl">
+    <div className="bg-main-light grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-10 p-8 max-w-5xl">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <PlatformSelector
