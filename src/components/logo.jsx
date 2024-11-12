@@ -5,7 +5,7 @@ export function Logo() {
   return (
     <Link
       href="/"
-      className="flex items-center gap-x-1 w-auto"
+      className="flex items-center gap-x-1 w-auto px-2"
     >
       <div className="relative size-8">
         <Image
@@ -15,7 +15,7 @@ export function Logo() {
           alt="Adsync logo"
         />
       </div>
-      <p className="text-xl font-bold text-main-tint uppercase">Adsync</p>
+      <p className="text-xl font-extrabold text-main-tint uppercase">Adsync</p>
     </Link>
   )
 }
