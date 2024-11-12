@@ -3,6 +3,7 @@ import { Modal } from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import { useOpenModal } from "@/hooks/use-open-modal";
 import { ClientsForm } from "./clients-form";
+import { User } from "lucide-react";
 
 export function ClientsButtons() {
 
@@ -11,11 +12,13 @@ export function ClientsButtons() {
   return (
     <>
       <Button
+        className="flex items-center justify-center gap-x-1"
         onClick={() => onOpen("add-client-form")}
         variant="main"
         size="sm"
       >
         Add new client
+        <User className="size-5 text-white" />
       </Button>
       <Modal
         modalId="add-client-form"

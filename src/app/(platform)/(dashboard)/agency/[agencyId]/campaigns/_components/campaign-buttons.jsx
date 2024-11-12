@@ -5,6 +5,7 @@ import { useOpenModal } from "@/hooks/use-open-modal";
 import { CampaignsForm } from ".";
 import { useQuery } from "@tanstack/react-query";
 import { fetcher } from "@/lib/fetcher";
+import { Megaphone } from "lucide-react";
 
 export function CampaignButtons() {
 
@@ -19,10 +20,12 @@ export function CampaignButtons() {
     // <div className="flex items-center gap-x-4">
     <>
       <Button
+        className="flex items-center justify-center gap-x-1"
         onClick={() => onOpen("add-campaign-modal")}
         variant="main"
       >
         Start campaign
+        <Megaphone className="size-5 text-white" />
       </Button>
       <Modal
         modalId="add-campaign-modal"
