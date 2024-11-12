@@ -64,9 +64,9 @@ export function Sidebar({ orgId }) {
       {isLoaded && (
         <div className="flex items-center gap-x-2 px-2">
           <Avatar>
-            <AvatarImage src={user.imageUrl} alt={user.fullName} />
+            <AvatarImage src={user?.imageUrl} alt={user?.fullName} />
           </Avatar>
-          <p className="text-sm font-light">{user.fullName}</p>
+          <p className="text-sm font-light">{user?.fullName}</p>
         </div>
       )}
     </aside>
