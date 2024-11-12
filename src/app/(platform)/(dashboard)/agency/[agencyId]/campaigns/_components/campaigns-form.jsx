@@ -34,6 +34,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
     defaultValues: isEditSession ?
       {
         ...editValues,
+        client_id: editValues.clientId,
         budget: String(editValues.budget)
       }
       :
@@ -41,6 +42,8 @@ export function CampaignsForm({ editValues = {}, clients }) {
         platform: "META"
       }
   })
+
+  const { errors, dirtyFields, isDirty } = form.formState
 
   const { execute, isPending } = useAction(addCampaign, {
     onSuccess: () => {
@@ -65,10 +68,25 @@ export function CampaignsForm({ editValues = {}, clients }) {
   }
 
   function onSubmit(data) {
-    isEditSession ? executeEdit(data) : execute(data)
+
+    if (isEditSession) {
+
+      const payload = {}
+
+      for (let prop of Object.keys(data)) {
+        if (dirtyFields[prop]) {
+          payload[prop] = data[prop]
+        }
+      }
+
+      executeEdit({ ...payload, id, client_id: editValues.clientId })
+      return
+    }
+
+    execute(data)
   }
 
-  if (step === 1) {
+  if (step === 1 && !isEditSession) {
     return (
       <div className="space-y-4">
         <h2 className="text-lg font-medium">Choose a goal</h2>
@@ -90,10 +108,18 @@ export function CampaignsForm({ editValues = {}, clients }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2">
-          <FormLabel>Objective</FormLabel>
-          <Input disabled value={objectives.filter((obj) => obj.objective === objective)[0].title} />
-        </div>
+        {!isEditSession ?
+          <div className="space-y-2">
+            <FormLabel>Objective</FormLabel>
+            <Input disabled value={objectives.filter((obj) => obj.objective === objective)[0].title} />
+          </div>
+          :
+          <div className="space-y-2">
+            <FormLabel>Objective</FormLabel>
+            <Input disabled value={objectives.filter((obj) => obj.objective === editValues.objective)[0].title} />
+          </div>
+        }
+
         <FormField
           control={form.control}
           name="name"
@@ -181,7 +207,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
           type="submit"
           variant="main"
           className="w-full"
-          disabled={isPending || isEditing || !form.formState.isDirty}
+          disabled={isPending || isEditing || !isDirty}
         >
           Submit
         </Button>
