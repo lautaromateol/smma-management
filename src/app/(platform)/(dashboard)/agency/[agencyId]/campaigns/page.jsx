@@ -37,6 +37,7 @@ export default async function CampaignsPage() {
           data={campaigns}
           columns={columns}
           title="Campaigns"
+          filterBy="name"
         />
       </div>
     </section>

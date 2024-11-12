@@ -34,7 +34,7 @@ export default async function ClientsPage() {
           filterBy="name"
           title="Clients"
           pdf
-          className="rounded-md border" />
+        />
       </div>
     </section>
   )
