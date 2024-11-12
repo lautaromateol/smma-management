@@ -23,6 +23,7 @@ export function CampaignButtons() {
         className="flex items-center justify-center gap-x-1"
         onClick={() => onOpen("add-campaign-modal")}
         variant="main"
+        size="sm"
       >
         Start campaign
         <Megaphone className="size-5 text-white" />
