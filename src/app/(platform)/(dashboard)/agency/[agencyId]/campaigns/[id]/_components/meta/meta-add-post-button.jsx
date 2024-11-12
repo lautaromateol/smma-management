@@ -13,7 +13,7 @@ export function MetaAddPostButton({ data }) {
     <>
       <Button
         onClick={() => onOpen("meta-add-post-form")}
-        variant="primary"
+        variant="main"
         className="flex items-center gap-x-2 font-medium col-span-2"
       >
         Create post
