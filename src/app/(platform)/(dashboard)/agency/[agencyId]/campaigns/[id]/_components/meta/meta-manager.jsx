@@ -9,8 +9,8 @@ export function MetaManager({ data }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-x-2">
+      <div className="flex flex-col md:flex-row items-center md:justify-between">
+        <div className="flex flex-col md:flex-row items-center gap-x-2">
           <div className="relative w-32 h-32">
             <div className="absolute w-20 h-20 rounded-full bg-white -left-4 z-10">
               <Image
@@ -36,7 +36,7 @@ export function MetaManager({ data }) {
             </div>
           </div>
           <div className="space-y-0.5">
-            <p className="font-semibold text-lg">{fbPageName}</p>
+            <p className="font-semibold text-lg text-center md:text-left">{fbPageName}</p>
             <div className="flex items-center gap-x-1">
               <EditFacebookProfile data={data} />
               <span className="text-sm text-main">|</span>
@@ -66,7 +66,7 @@ export function MetaManager({ data }) {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-6 gap-x-2">
+      <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
         <MetaAddPostButton data={data} />
         <MetaCreateStoryButton data={data} />
         <MetaCreateAdButton data={data} />

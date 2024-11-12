@@ -25,7 +25,7 @@ export default async function CampaignsPage() {
 
   return (
     <section className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-y-2">
         <Heading
           title="Campaigns"
           subtitle="Start new campaigns here"
