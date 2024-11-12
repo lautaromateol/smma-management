@@ -28,7 +28,7 @@ export function MetaPostsTable({ posts, scheduledPosts, adSets }) {
                 onClick={() => setShowScheduled(false)}
                 role="button"
                 className={cn(
-                  "p-2 rounded-md text-sm",
+                  "p-2 text-sm",
                   !showScheduled && "bg-main-shade text-main-tint"
                 )}
               >
@@ -38,7 +38,7 @@ export function MetaPostsTable({ posts, scheduledPosts, adSets }) {
                 onClick={() => setShowScheduled(true)}
                 role="button"
                 className={cn(
-                  "p-2 rounded-md text-sm",
+                  "p-2 text-sm",
                   showScheduled && "bg-main-shade text-main-tint"
                 )}
               >
@@ -51,7 +51,7 @@ export function MetaPostsTable({ posts, scheduledPosts, adSets }) {
                 onClick={() => setShowAds(false)}
                 role="button"
                 className={cn(
-                  "p-2 rounded-md text-sm",
+                  "p-2 text-sm",
                   !showAds && "bg-main-shade text-main-tint"
                 )}
               >
@@ -61,7 +61,7 @@ export function MetaPostsTable({ posts, scheduledPosts, adSets }) {
                 onClick={() => setShowAds(true)}
                 role="button"
                 className={cn(
-                  "p-2 rounded-md text-sm",
+                  "p-2 text-sm",
                   showAds && "bg-main-shade text-main-tint"
                 )}
               >
