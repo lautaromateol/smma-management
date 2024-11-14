@@ -43,7 +43,8 @@ export function MetaAdSetForm({ data, editValues = {} }) {
                 campaign_id: campaign.id,
                 access_token: pageAccessToken,
                 status: "PAUSED",
-                billing_event: "IMPRESSIONS"
+                billing_event: "IMPRESSIONS",
+                targeting: { ...targeting, age_min: "18" }
             }
     })
 
@@ -80,14 +81,14 @@ export function MetaAdSetForm({ data, editValues = {} }) {
             updateAdSet(data)
             return
         }
-
+        
         postAdSet(data)
     }
 
     return (
         <div className="bg-main-light p-8 max-w-5xl">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
                     <div className="bg-white p-4">
                         <FormField
                             control={form.control}
@@ -112,7 +113,7 @@ export function MetaAdSetForm({ data, editValues = {} }) {
                         </div>
                         <Locations form={form} isEditSession={isEditSession} />
                         <Locales data={data} form={form} />
-                        <AgeSegmentation form={form} />
+                        <AgeSegmentation form={form} message={errors?.targeting?.message} />
                     </div>
                     <Button
                         disabled={isPostingAdSet || isUpdatingAdSet || !isDirty}
