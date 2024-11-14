@@ -12,7 +12,8 @@ export const objectives = [
     title: "Traffic",
     objective: "OUTCOME_TRAFFIC",
     description: "Send people to a destination, such as your website, app, Instagram profile or Facebook event.",
-    optimization_goals: ["LINK_CLICKS", "LANDING_PAGE_VIEWS", "VISIT_INSTAGRAM_PROFILE", "CONVERSATIONS", "QUALITY_CALLS"], 
+    // optimization_goals: ["LINK_CLICKS", "LANDING_PAGE_VIEWS", "VISIT_INSTAGRAM_PROFILE", "CONVERSATIONS", "QUALITY_CALLS"],
+    optimization_goals: ["LINK_CLICKS", "LANDING_PAGE_VIEWS", "VISIT_INSTAGRAM_PROFILE", "CONVERSATIONS"], 
     icon: <MousePointer />
   },
   {
