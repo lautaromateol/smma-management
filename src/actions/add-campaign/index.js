@@ -15,7 +15,7 @@ export async function handler(data) {
     error: "Unauthorized"
   }
 
-  const { name, client, budget, objective, platform } = data
+  const { name, client, lifetime_budget, daily_budget, objective, platform } = data
 
   const dbClient = await prisma.client.findUnique({
     where: { id: client }
@@ -50,7 +50,7 @@ export async function handler(data) {
         name,
         objective,
         status: "ACTIVE",
-        lifetime_budget: parseInt(budget) * 100,
+        [lifetime_budget ? "lifetime_budget" : "daily_budget"]: lifetime_budget ? parseInt(lifetime_budget) * 100 : parseInt(daily_budget) * 100,
         special_ad_categories: []
       })
     });
@@ -63,7 +63,7 @@ export async function handler(data) {
           id: campaignData.id,
           name,
           clientId: dbClient.id,
-          budget: Number(budget),
+          [lifetime_budget ? "lifetime_budget" : "daily_budget"]: lifetime_budget ? parseInt(lifetime_budget) : parseInt(daily_budget),
           platform,
           objective,
           orgId,  

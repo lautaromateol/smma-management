@@ -7,9 +7,8 @@ export const AddCampaign = z.object({
   client: z.string({
     message: "Client name is required"
   }),
-  budget: z.string({
-    message: "Budget is required"
-  }),
+  daily_budget: z.string().optional(),
+  lifetime_budget: z.string().optional(),
   platform: z.string({
     message: "Campaign platform is required"
   }).refine((value) => ["META", "TWITTER", "LINKEDIN"].includes(value), {
@@ -20,4 +19,10 @@ export const AddCampaign = z.object({
   }).min(10, {
     message: "Campaign objective must be at least of 10 characters"
   })
+})
+.refine((data) => {
+  return Boolean(data.daily_budget) || Boolean(data.lifetime_budget)
+}, {
+  message: "You have to provide a budget for this campaign.",
+  path: ["budget"]
 })
