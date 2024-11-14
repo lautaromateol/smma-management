@@ -240,7 +240,7 @@ function AddGoalCard({ title, description, icon, onClick }) {
       onMouseLeave={() => setOnHover(false)}
       role="button"
       className={cn(
-        "flex flex-col space-y-2 py-6 px-4 shadow rounded-md",
+        "flex flex-col space-y-2 py-6 px-4 shadow",
         onHover && "bg-neutral-100"
       )}
     >
