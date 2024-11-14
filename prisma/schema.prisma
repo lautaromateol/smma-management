@@ -27,23 +27,17 @@ enum Platforms {
   LINKEDIN
 }
 
-enum CardStatus {
-  PENDING
-  INPROGRESS
-  COMPLETED
-}
-
-enum CardPriority {
-  LOW
-  MEDIUM
-  HIGH
-}
-
 enum PostStatus {
   SCHEDULED
   PUBLISHED
   DRAFT
   CANCELED
+}
+
+enum BidStrategy {
+  LOWEST_COST_WITHOUT_CAP
+  LOWEST_COST_WITH_BID_CAP
+  COST_CAP
 }
 
 model Client {
@@ -69,15 +63,17 @@ model Client {
 }
 
 model Campaign {
-  id        String             @id @unique
-  name      String
-  status    CampaignStatus     @default(ACTIVE)
-  budget    Int
-  platform  Platforms
-  objective CampaignObjectives
-  orgId     String
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
+  id              String             @id @unique
+  name            String
+  status          CampaignStatus     @default(ACTIVE)
+  daily_budget    Int?
+  lifetime_budget Int?
+  bid_strategy    BidStrategy?
+  platform        Platforms
+  objective       CampaignObjectives
+  orgId           String
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 
   clientId String
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
@@ -92,20 +88,6 @@ model List {
 
   campaignId String
   campaing   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  Card       Card[]
-}
-
-model Card {
-  id          String        @id @default(uuid())
-  title       String
-  order       Int
-  description String?
-  status      CardStatus    @default(PENDING)
-  priority    CardPriority?
-  dueDate     DateTime
-
-  listId String
-  list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
 }
 
 model Post {
