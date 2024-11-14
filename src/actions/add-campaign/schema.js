@@ -9,6 +9,9 @@ export const AddCampaign = z.object({
   }),
   daily_budget: z.string().optional(),
   lifetime_budget: z.string().optional(),
+  bid_strategy: z.string({
+    message: "Campaing bid strategy is required"
+  }),
   platform: z.string({
     message: "Campaign platform is required"
   }).refine((value) => ["META", "TWITTER", "LINKEDIN"].includes(value), {
