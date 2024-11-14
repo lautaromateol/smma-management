@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
-import { SetCampaignBudget } from "."
+import { BidStrategy, SetCampaignBudget } from "."
 
 export function CampaignsForm({ editValues = {}, clients }) {
 
@@ -45,8 +45,6 @@ export function CampaignsForm({ editValues = {}, clients }) {
   })
 
   const { errors, dirtyFields, isDirty } = form.formState
-
-  console.log(errors)
 
   const { execute, isPending } = useAction(addCampaign, {
     onSuccess: () => {
@@ -193,6 +191,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
           )}
         />
         <SetCampaignBudget form={form} message={errors?.budget?.message} isEditSession={isEditSession} />
+        <BidStrategy form={form} objective={objective} />
         <Button
           type="submit"
           variant="main"
