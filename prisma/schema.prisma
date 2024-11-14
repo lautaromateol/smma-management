@@ -38,6 +38,7 @@ enum BidStrategy {
   LOWEST_COST_WITHOUT_CAP
   LOWEST_COST_WITH_BID_CAP
   COST_CAP
+  LOWEST_COST_WITH_MIN_ROAS
 }
 
 model Client {
@@ -77,17 +78,7 @@ model Campaign {
 
   clientId String
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  List     List[]
   Post     Post[]
-}
-
-model List {
-  id    String @id @default(uuid())
-  title String
-  order Int
-
-  campaignId String
-  campaing   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 }
 
 model Post {
