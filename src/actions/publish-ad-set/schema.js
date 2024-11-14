@@ -10,6 +10,10 @@ const targetingSchema = z.object({
   locales: z.array(z.number()).optional()
 })
 
+const promotedObjectSchema = z.object({
+  page_id: z.string(),
+})
+
 export const AdSet = z.object({
   name: z.string({
     message: "Ad Set Name is required"
@@ -17,6 +21,8 @@ export const AdSet = z.object({
   optimization_goal: z.string({
     message: "Ad Set Optimization Goal is required"
   }),
+  promoted_object: promotedObjectSchema.optional(),
+  destination_type: z.string().optional(),
   client: z.string({
     message: "Client ID is required"
   }),
