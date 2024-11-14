@@ -9,14 +9,14 @@ export const clientCampaignColumns = [
     header: "Name"
   },
   {
-    accessorKey: "budget",
+    id: "budget",
     header: "Budget",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("budget"))
-      const formated = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
+     const campaign = row.original
+
+     const { lifetime_budget, daily_budget } = campaign
+     
+     const formated = formatNumber(lifetime_budget ? lifetime_budget : daily_budget)
 
       return <strong>{formated}</strong>
     }

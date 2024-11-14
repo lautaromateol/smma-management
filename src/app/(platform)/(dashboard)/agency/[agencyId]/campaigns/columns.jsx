@@ -2,6 +2,8 @@
 import { cn, formatDate } from "@/lib/utils"
 import { CampaignDropdown, CampaignPlatform } from "./_components"
 import { Badge } from "@/components/ui/badge"
+import { objectives } from "@/constants/campaign-objectives"
+import { formatNumber } from "@/lib/format-number"
 
 export const columns = [
   {
@@ -17,14 +19,25 @@ export const columns = [
     header: "Name",
   },
   {
-    accessorKey: "budget",
+    accessorKey: "objective",
+    header: "Objective",
+    cell: ({ row }) => {
+      const objective = row.getValue("objective")
+      
+      return(
+        <p>{objectives.find((item) => item.objective === objective).title}</p>
+      )
+    }
+  },
+  {
+    id: "budget",
     header: "Budget",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("budget"))
-      const formated = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
+     const campaign = row.original
+
+     const { lifetime_budget, daily_budget } = campaign
+     
+     const formated = formatNumber(lifetime_budget ? lifetime_budget : daily_budget)
 
       return <strong>{formated}</strong>
     }
