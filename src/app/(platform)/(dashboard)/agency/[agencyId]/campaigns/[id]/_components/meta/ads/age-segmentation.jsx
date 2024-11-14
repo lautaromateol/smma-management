@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Info } from "lucide-react";
 import { PopoverWrapper } from "@/components/popover-wrapper";
 import { Button } from "@/components/ui/button";
-import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
-export function AgeSegmentation({ form }) {
+export function AgeSegmentation({ form, message }) {
 
   const [showPopover, setShowPopover] = useState(false)
 
@@ -30,7 +31,7 @@ export function AgeSegmentation({ form }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-x-1">
-        <FormLabel>Minimum age</FormLabel>
+        <FormLabel className={cn(message && "text-destructive")}>Minimum age</FormLabel>
         <PopoverWrapper
           open={showPopover}
           onOpenChange={setShowPopover}
@@ -76,6 +77,7 @@ export function AgeSegmentation({ form }) {
                 ))}
               </SelectContent>
             </Select>
+            {message && <FormMessage>{message}</FormMessage>}
           </FormItem>
         )}
       />
