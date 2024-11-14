@@ -27,6 +27,7 @@ module.exports = {
           DEFAULT: "#22b8cf",
           shade: "#e3fafc",
           tint: "#0b7285",
+          light: "#f8f9fa"
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
