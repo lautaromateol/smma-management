@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
+import { SetCampaignBudget } from "."
 
 export function CampaignsForm({ editValues = {}, clients }) {
 
@@ -44,6 +45,8 @@ export function CampaignsForm({ editValues = {}, clients }) {
   })
 
   const { errors, dirtyFields, isDirty } = form.formState
+
+  console.log(errors)
 
   const { execute, isPending } = useAction(addCampaign, {
     onSuccess: () => {
@@ -189,20 +192,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="budget"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Budget</FormLabel>
-              <FormDescription>You won&apos;t spend more than {form.getValues("budget") ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(form.getValues("budget")) : "$0.00"} during the lifetime of your campaign.</FormDescription>
-              <FormControl>
-                <Input {...field} type="number" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <SetCampaignBudget form={form} message={errors?.budget?.message} isEditSession={isEditSession} />
         <Button
           type="submit"
           variant="main"
