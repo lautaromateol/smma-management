@@ -7,7 +7,9 @@ import { format } from "date-fns";
 import { CalendarIcon, Info } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 
-export function ScheduleAdSet({ form, isEditSession }) {
+export function ScheduleAdSet({ form, isEditSession, campaign, message }) {
+
+  const isEndDateOptional = Boolean(campaign.daily_budget)
 
   const [showPopover, setShowPopover] = useState(false)
 
@@ -83,7 +85,7 @@ export function ScheduleAdSet({ form, isEditSession }) {
         name="end_time"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel>End date</FormLabel>
+            <FormLabel className={cn(message && !field.value && "text-destructive")}>End date {isEndDateOptional && "(optional)"}</FormLabel>
             <PopoverWrapper
               className="w-auto p-0"
               align="start"
@@ -114,7 +116,7 @@ export function ScheduleAdSet({ form, isEditSession }) {
                 initialFocus
               />
             </PopoverWrapper>
-            <FormMessage />
+            {message && !field.value && <FormMessage>{message}</FormMessage>}
           </FormItem>
         )}
       />

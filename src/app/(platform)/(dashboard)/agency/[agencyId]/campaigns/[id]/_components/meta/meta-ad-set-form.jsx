@@ -52,7 +52,7 @@ export function MetaAdSetForm({ data, editValues = {} }) {
 
     console.log(errors)
 
-    const { execute: postAdSet, isPending: isPostingAdSet } = useAction(publishAdSet, {
+    const { execute: postAdSet, isPending: isPostingAdSet, fieldErrors } = useAction(publishAdSet, {
         onSuccess: () => {
             toast.success("Ad Set created successfully!")
             onClose()
@@ -105,7 +105,7 @@ export function MetaAdSetForm({ data, editValues = {} }) {
                         />
                     </div>
                     <OptimizationGoal data={data} form={form} />
-                    <ScheduleAdSet form={form} isEditSession={isEditSession} />
+                    <ScheduleAdSet form={form} isEditSession={isEditSession} campaign={campaign} message={fieldErrors?.end_time} />
                     <div className="bg-white p-4 space-y-4">
                         <div className="flex flex-col space-y-2">
                             <FormLabel>Audience controls</FormLabel>
