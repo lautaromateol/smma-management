@@ -26,7 +26,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
 
   const { onClose } = useOpenModal((state) => state)
 
-  const { id } = editValues
+  const { id, lifetime_budget, daily_budget } = editValues
 
   const isEditSession = Boolean(id)
 
@@ -36,7 +36,7 @@ export function CampaignsForm({ editValues = {}, clients }) {
       {
         ...editValues,
         client_id: editValues.clientId,
-        budget: String(editValues.budget)
+        [lifetime_budget ? "lifetime_budget" : "daily_budget"]: lifetime_budget ? String(lifetime_budget) : String(daily_budget),
       }
       :
       {
@@ -45,6 +45,8 @@ export function CampaignsForm({ editValues = {}, clients }) {
   })
 
   const { errors, dirtyFields, isDirty } = form.formState
+
+  console.log(errors)
 
   const { execute, isPending } = useAction(addCampaign, {
     onSuccess: () => {
