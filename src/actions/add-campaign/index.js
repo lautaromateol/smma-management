@@ -83,6 +83,9 @@ export async function handler(data) {
 
       return { ok: true, data: campaign }
     } else {
+      if(campaignData.error.error_user_msg) {
+        return { error: campaignData.error.error_user_msg }
+      }
       throw new Error(campaignData.error.message)
     }
 
