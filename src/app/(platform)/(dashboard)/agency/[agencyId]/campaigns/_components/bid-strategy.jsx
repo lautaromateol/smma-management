@@ -14,7 +14,17 @@ export function BidStrategy({ form, objective }) {
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select a bid strategy">
-                  {field.value ? field.value : "Select a bid strategy"}
+                  {
+                    field.value === BidStrategies.LOWEST_COST_WITH_BID_CAP
+                      ? "Bid cap"
+                      : field.value === BidStrategies.LOWEST_COST_WITHOUT_CAP
+                        ? "Highest volume" :
+                        field.value === BidStrategies.COST_CAP
+                          ? "Cost per result goal" :
+                          field.value === BidStrategies.LOWEST_COST_WITH_MIN_ROAS
+                            ? "ROAS goal" :
+                            "Select a bid strategy"
+                  }
                 </SelectValue>
               </SelectTrigger>
             </FormControl>
