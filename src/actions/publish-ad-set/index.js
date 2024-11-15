@@ -31,6 +31,20 @@ export async function handler(data) {
       }
     })
 
+    const campaign = await prisma.campaign.findUnique({
+      where: {
+        id: campaign_id
+      }
+    })
+
+    if (!campaign) {
+      return { error: "The Ad Set's campaign ID is wrong. Try with another." }
+    }
+
+    if (!Boolean(campaign.daily_budget) && !rest.end_time) {
+      return { fieldErrors: { end_time: "End date is required for campaigns with lifetime budget." } }
+    }
+
     const response = await fetch(`${FACEBOOK_API_GRAPH_URL}/${metaAdAccountId.id}/adsets`, {
       method: "POST",
       headers: {

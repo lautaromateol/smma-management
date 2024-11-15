@@ -45,7 +45,5 @@ export const AdSet = z.object({
   start_time: z.date({
     message: "Start date is required"
   }),
-  end_time: z.date({
-    message: "End date is required"
-  }),
+  end_time: z.date().optional(),
 })
