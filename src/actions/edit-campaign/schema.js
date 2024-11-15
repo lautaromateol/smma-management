@@ -4,15 +4,12 @@ export const EditCampaign = z.object({
   id: z.string({
     message: "Campaign ID is required"
   }),
-  name: z.string({
-    message: "Campaign name is required"
+  client_id: z.string({
+    message: "Client ID is required"
   }),
-  budget: z.string({
-    message: "Budget is required"
-  }),
-  objective: z.string({
-    message: "Campaign objective is required"
-  }).min(10, {
-    message: "Campaign objective must be at least of 10 characters"
-  }),
+  name: z.string().optional(),
+  daily_budget: z.string().optional().nullable(),
+  lifetime_budget: z.string().optional().nullable(),
+  bid_strategy: z.string().optional(),
+  objective: z.string().optional(),
 })
