@@ -50,7 +50,13 @@ export async function handler(data) {
       revalidatePath(`/agency/${orgId}/campaigns/${campaign_id}`)
 
       return { ok: true }
-    } else throw new Error(data.error.message)
+    } else {
+      if (data.error.error_user_msg) {
+        console.log(data.error)
+        return { error: data.error.error_user_msg }
+      }
+      throw new Error(data.error.message)
+    }
 
   } catch (error) {
     console.log(error)
