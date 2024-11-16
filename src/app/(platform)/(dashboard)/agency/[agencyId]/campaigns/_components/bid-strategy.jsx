@@ -19,7 +19,7 @@ export function BidStrategy({ form, objective }) {
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {bidStrategies.filter((item) => item.compatible_objectives.includes[objective]).map((item) => (
+              {bidStrategies.filter((item) => item.compatible_objectives.includes(objective)).map((item) => (
                 <SelectItem key={item.key} value={item.key}>
                   <div className="space-y-0.5">
                     <p className="font-medium text-sm">{item.title}</p>
