@@ -1,6 +1,6 @@
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BidStrategy as BidStrategies } from "@prisma/client";
+import { bidStrategies } from "@/constants/bid-strategies";
 
 export function BidStrategy({ form, objective }) {
   return (
@@ -14,46 +14,19 @@ export function BidStrategy({ form, objective }) {
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select a bid strategy">
-                  {
-                    field.value === BidStrategies.LOWEST_COST_WITH_BID_CAP
-                      ? "Bid cap"
-                      : field.value === BidStrategies.LOWEST_COST_WITHOUT_CAP
-                        ? "Highest volume" :
-                        field.value === BidStrategies.COST_CAP
-                          ? "Cost per result goal" :
-                          field.value === BidStrategies.LOWEST_COST_WITH_MIN_ROAS
-                            ? "ROAS goal" :
-                            "Select a bid strategy"
-                  }
+                  {bidStrategies.find((item) => item.key === field.value)?.title ?? field.value}
                 </SelectValue>
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              <SelectItem value={BidStrategies.LOWEST_COST_WITH_BID_CAP}>
-                <div className="space-y-0.5">
-                  <p className="font-medium text-sm">Bid cap</p>
-                  <p className="text-xs">Set the highest that you want to bid in any auction.</p>
-                </div>
-              </SelectItem>
-              <SelectItem value={BidStrategies.LOWEST_COST_WITHOUT_CAP}>
-                <div className="space-y-0.5">
-                  <p className="font-medium text-sm">Highest volume</p>
-                  <p className="text-xs">Get the most results for your budget.</p>
-                </div>
-              </SelectItem>
-              <SelectItem value={BidStrategies.COST_CAP}>
-                <div className="space-y-0.5">
-                  <p className="font-medium text-sm">Cost per result goal</p>
-                  <p className="text-xs">Aim for a certain cost per result while maximising the volume of results.</p>
-                </div>
-              </SelectItem>
-              {objective === "OUTCOME_SALES" || objective === "OUTCOME_APP_PROMOTION" &&
-                <SelectItem value={BidStrategies.LOWEST_COST_WITH_MIN_ROAS}>
+              {bidStrategies.filter((item) => item.compatible_objectives.includes[objective]).map((item) => (
+                <SelectItem key={item.key} value={item.key}>
                   <div className="space-y-0.5">
-                    <p className="font-medium text-sm">ROAS goal</p>
-                    <p className="text-xs">Aim for a certain return on ad spend while maximising the value of results.</p>
+                    <p className="font-medium text-sm">{item.title}</p>
+                    <p className="text-xs">{item.description}</p>
                   </div>
-                </SelectItem>}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </FormItem>
