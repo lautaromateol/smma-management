@@ -4,26 +4,31 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { optimizationGoalsInfo } from "@/constants/optimization-goals-info";
 import { BidControl, ConversionLocation, PromotedObject } from ".";
-import { conversionLocation } from "@/constants/conversion-location";
+import { objectives } from "@/constants/campaign-objectives";
 
 export function OptimizationGoal({ data, form }) {
 
-  const [location, setLocation] = useState("Messaging apps")
-  const { optimizationGoals, objectiveTitle, campaign } = data
-  const { objective } = campaign
+  const { campaign } = data
+  const { objective, bid_strategy } = campaign
 
-  const isTraffic = objective === "OUTCOME_TRAFFIC"
-  const selectedLocation = conversionLocation.find((item) => item.title === location)
+  const campaignObjective = objectives.find((item) => item.objective === objective)
+  const hasConversionLocation = campaignObjective.has_conversion_location
+  const locations = hasConversionLocation ? campaignObjective.conversion_locations.find((item) => item.bid_strategy === bid_strategy).locations : []
+
+  const [location, setLocation] = useState(hasConversionLocation ? locations[0].key : "")
+
+  const optimizationGoals = hasConversionLocation ? locations.find((item) => item.key === location).optimization_goals : campaignObjective.optimization_goals.find((item) => item.bid_strategy === bid_strategy).goals
+  const relatedGoals = hasConversionLocation ? locations.find((item) => item.key === location).related_goals : []
 
   return (
     <div className="bg-white p-4 space-y-2">
-      {isTraffic ?
+      {hasConversionLocation ?
         <>
           <FormLabel>Conversion</FormLabel>
-          <ConversionLocation location={location} setLocation={setLocation} />
+          <ConversionLocation location={location} setLocation={setLocation} locations={locations} />
         </>
         :
-        <FormLabel>{objectiveTitle}</FormLabel>
+        <FormLabel>{campaignObjective.title}</FormLabel>
       }
       <FormField
         control={form.control}
@@ -44,11 +49,11 @@ export function OptimizationGoal({ data, form }) {
               </FormControl>
               <SelectContent>
                 {
-                  isTraffic ?
+                  hasConversionLocation ?
                     <>
                       <SelectGroup>
-                        <SelectLabel>Traffic goals</SelectLabel>
-                        {selectedLocation.related_goals.map((goal) => (
+                        <SelectLabel>Primary goals</SelectLabel>
+                        {optimizationGoals.map((goal) => (
                           <SelectItem key={goal} value={goal}>
                             <div className="flex flex-col gap-y-0.5">
                               <p className="text-sm">{optimizationGoalsInfo.find((item) => item.goal === goal).title}</p>
@@ -58,11 +63,11 @@ export function OptimizationGoal({ data, form }) {
                         ))}
                       </SelectGroup>
                       {
-                        selectedLocation.secondary_goals && (
+                        relatedGoals && (
                           <SelectGroup>
                             <SelectLabel>Other Goals</SelectLabel>
                             {
-                              selectedLocation.secondary_goals.map((goal) => (
+                              relatedGoals.map((goal) => (
                                 <SelectItem key={goal} value={goal}>
                                   <div className="flex flex-col gap-y-0.5">
                                     <p className="text-sm">{optimizationGoalsInfo.find((item) => item.goal === goal).title}</p>
@@ -95,7 +100,7 @@ export function OptimizationGoal({ data, form }) {
           </FormItem>
         )}
       />
-      {isTraffic && <PromotedObject form={form} location={location} data={data} />}
+      {hasConversionLocation && <PromotedObject form={form} location={location} data={data} />}
       <BidControl form={form} />
     </div>
   )
