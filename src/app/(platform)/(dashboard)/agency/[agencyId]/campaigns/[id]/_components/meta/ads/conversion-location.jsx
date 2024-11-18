@@ -1,8 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormDescription, FormLabel } from "@/components/ui/form";
-import { conversionLocation } from "@/constants/conversion-location";
 
-export function ConversionLocation({ location, setLocation }) {
+export function ConversionLocation({ location, setLocation, locations }) {
 
   function onCheckboxChange(value, title) {
    if(value) {
@@ -16,9 +15,9 @@ export function ConversionLocation({ location, setLocation }) {
         <FormLabel htmlFor="conversion">Conversion location</FormLabel>
         <FormDescription>Choose where you want to drive traffic. You&apos;ll enter more details about the destination later.</FormDescription>
       </div>
-      {conversionLocation.map((item, i) => (
-        <div key={i} className="flex items-center gap-x-2">
-          <Checkbox checked={location === item.title} onCheckedChange={(value) => onCheckboxChange(value, item.title)} id="conversion" />
+      {locations.map((item, i) => (
+        <div key={item.key} className="flex items-center gap-x-2">
+          <Checkbox checked={location === item.key} onCheckedChange={(value) => onCheckboxChange(value, item.key)} id="conversion" />
           <div className="space-y-0.5">
             <p className="text-sm">{item.title}</p>
             <p className="text-xs">{item.description}</p>
