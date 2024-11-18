@@ -1,5 +1,5 @@
 "use client"
-import { cloneElement, useState } from "react"
+import { cloneElement, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { FaMeta } from "react-icons/fa6"
 import { toast } from "sonner"
@@ -88,6 +88,13 @@ export function CampaignsForm({ editValues = {}, clients }) {
 
     execute(data)
   }
+
+  useEffect(() => {
+    if (isEditSession && editValues.objective) {
+      setObjective(editValues.objective);
+    }
+  }, [isEditSession, editValues.objective]);
+  
 
   if (step === 1 && !isEditSession) {
     return (
