@@ -1,4 +1,4 @@
-import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { bidStrategies } from "@/constants/bid-strategies";
 
@@ -14,7 +14,7 @@ export function BidStrategy({ form, objective }) {
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select a bid strategy">
-                  {bidStrategies.find((item) => item.key === field.value)?.title ?? field.value}
+                  {bidStrategies.find((item) => item.key === field.value)?.title ?? "Select a bid strategy"}
                 </SelectValue>
               </SelectTrigger>
             </FormControl>
@@ -29,6 +29,7 @@ export function BidStrategy({ form, objective }) {
               ))}
             </SelectContent>
           </Select>
+          <FormMessage />
         </FormItem>
       )}
     />
