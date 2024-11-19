@@ -2,6 +2,7 @@
 import { cn, formatDate } from "@/lib/utils"
 import { CampaignDropdown, CampaignPlatform } from "../../campaigns/_components"
 import { Badge } from "@/components/ui/badge"
+import { formatNumber } from "@/lib/format-number"
 
 export const clientCampaignColumns = [
   {
