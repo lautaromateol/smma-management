@@ -13,11 +13,11 @@ export function Sidebar({ orgId }) {
   const { isOpen } = useOpenSidebar((state) => state)
 
   const navLinks = [
-    {
-      title: "Dashboard",
-      href: `/agency/${orgId}`,
-      icon: <LayoutDashboardIcon />
-    },
+    // {
+    //   title: "Dashboard",
+    //   href: `/agency/${orgId}`,
+    //   icon: <LayoutDashboardIcon />
+    // },
     {
       title: "Clients",
       href: `/agency/${orgId}/clients`,
@@ -28,16 +28,16 @@ export function Sidebar({ orgId }) {
       href: `/agency/${orgId}/campaigns`,
       icon: <Megaphone />
     },
-    {
-      title: "Calendar",
-      href: `/agency/${orgId}/calendar`,
-      icon: <Calendar />
-    },
-    {
-      title: "Reports",
-      href: `/agency/${orgId}/reports`,
-      icon: <Info />
-    }
+    // {
+    //   title: "Calendar",
+    //   href: `/agency/${orgId}/calendar`,
+    //   icon: <Calendar />
+    // },
+    // {
+    //   title: "Reports",
+    //   href: `/agency/${orgId}/reports`,
+    //   icon: <Info />
+    // }
   ]
 
   const { user, isLoaded } = useUser()
