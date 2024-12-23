@@ -21,7 +21,7 @@ export default clerkMiddleware((auth, req) => {
     let path = "/create-agency";
 
     if (orgId) {
-      path = `/agency/${orgId}`;
+      path = `/agency/${orgId}/clients`;
     }
 
     const orgSelection = new URL(path, req.url);
